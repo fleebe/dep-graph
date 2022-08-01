@@ -2,32 +2,39 @@ import fs from "fs";
 
 
 export function createGraph(dependencyList, exportList, moduleList) {
-  result = "digraph {";
-  result += "node [shape=record];";
+  let result = "digraph {\n";
+  result += "node [shape=record];\n";
+  let ln;
 
-  for(const mod of moduleList) {
-    for (const exported of exportList.filter(ex => { return ex === mod})) {
-      result += '"', exported.name, '" [label={"', exported.name,
-        '|', exported.exported, '}"];';
+  for (const mod of moduleList) {
+    ln = '"' + mod + '" [label="{' + mod + '|';
+    for (const exported of exportList.filter(v => { return v.name === mod })) {
+      ln += exported.exported + '\\l';
+    }
+    result += ln + '}"];\n';
+    
+    // not in the module list because they are node_modules and not in the source directory
+    for (const imp of dependencyList.filter(v => { return v.importSrc !== mod })) {
+      ln = '"' + imp + '" [label="{' + mod + '|';
+      
+    }
+      
   }
-/*
-  for (var i = 0; i < exportList.length; i++) {
-    result += '"', dependencyList[i].importSrc, '" [label={"', dependencyList[i].importSrc,
-      '|', dependencyList[i].import, '}"];';
-    result += dependencyList[i].src, "->", dependencyList[i].importSrc, ";";
-  }
-
-  for (var i = 0; i < dependencyList.length; i++) {
-    result += '"', dependencyList[i].importSrc, '" [label={"', dependencyList[i].importSrc, 
-        '|', dependencyList[i].import, '}"];';
-    result += dependencyList[i].src, "->", dependencyList[i].importSrc, ";";
-  }
-*/
-  }
-  result += "}";
+  result += '}\n';
   return result;
 }
 /*
+
+         for (const x of dependencyList.filter(v1 => { return v1.importSrc === dependency.importSrc })) {
+            ln = '"' + x.importSrc + '" [label="{' + x.ImportSrc +
+              '|' + x.import + '\\l';
+            result += ln;
+          }
+          result += ln + '} "];\n';
+        }
+    
+
+
 digraph {
  node [shape=record];
 

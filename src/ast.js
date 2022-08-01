@@ -5,23 +5,21 @@ import { simple } from "acorn-walk";
 
 let exportList = [];
 let dependencyList = [];
-let moduleList = [];
 
 function getExtension(filename) {
   var i = filename.lastIndexOf('.');
   return (i < 0) ? '' : filename.substring(i);
 }
 
-export function processAST(symbol) {
+export function processAST(symbol, dir) {
   const ext = getExtension(symbol).toLowerCase();
   if (ext === ".js") {
     try {
-      if (moduleList.indexOf(symbol) === -1) moduleList.push(symbol);
-      const ast = parseAST(symbol);
+      const ast = parseAST(symbol, dir);
       const e = parseExports(ast, symbol);
-      const i = parseImports(ast, symbol);
+      const deps = parseImports(ast, symbol);
       exportList.push(...e);
-      dependencyList.push(...i);
+      dependencyList.push(...deps);
     } catch (err) {
       console.log("------------------");
       console.log("file=", symbol);
@@ -32,12 +30,16 @@ export function processAST(symbol) {
   } else {
     console.log("Can only parse javascript files at the moment. file=", symbol);
   }
-  return [dependencyList, exportList, moduleList];
+
+  let importList = [];
+  return [dependencyList, exportList];
 }
 
 
-function parseAST(symbol) {
-  const result = readFileSync(symbol, 'utf-8');
+function parseAST(symbol, dir) {
+  let f;
+  (dir) ? f = symbol.replace('.', dir): f = symbol;
+  const result = readFileSync(f, 'utf-8');
   //      console.log(`Retrieving file ast information for ${symbol}`);
   //const ast = parse(result, { sourceType: "module" });
 
@@ -56,9 +58,6 @@ function parseImports(ast, symbol) {
         const name = node.specifiers[i].type === "ImportSpecifier" ? node.specifiers[i].imported.name : node.specifiers[i].local.name;
         //            console.log(name);
         let impSrc = node.source.value;
-        impSrc.startsWith("./") ? impSrc.replace("./", "") : impSrc
-        if (moduleList.indexOf(impSrc) === -1) moduleList.push(impSrc);
-
         dependencies.push({
           src: symbol,
           importSrc: impSrc,

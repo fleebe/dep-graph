@@ -8,7 +8,9 @@ import fs from "fs";
 import { processAST } from './ast.js';
 import path from "path";
 import { createGraph } from './commands/graph.js';
-import { exit, hasUncaughtExceptionCaptureCallback } from 'process';
+import { getImportList, getBaseDir, getFilename } from "./file-fn.js";
+
+
 //import { getVersion } from "./json-package.cjs";
 //const pack = require('./json-package');
 //import pkg from './json-package.cjs';
@@ -47,45 +49,62 @@ program.action((symbol, options) => {
 
     let dependencyList = [];
     let exportList = [];
-    let moduleList = [];
+    let moduleList = [];  // a list of modules moving from dir in the form  .dir/file.js
+    let dir;  // the directory that is the base in the form ./dir/dir2
+    const sdir = "./";
 
-    let dir = path.dirname(symbol);
-    // TODO: the dir passed in is the same module as ./ for an import in that dir if it is a directory
-    // if a file then the dir as above is the same module as ./ for an import
-    
+    // symbol is what was based from the command line.
     if (stats.isFile()) {
-      console.log("** file ", dir, "** ", symbol);
-
+      dir = getBaseDir(path.dirname(symbol));
+      moduleList.push(sdir + getFilename(symbol));
     } else if (stats.isDirectory()) {
-      console.log("**dir ", dir, "** ", symbol);
-      dir = symbol;
-    }
-   
-    if (stats.isFile()) {
-      [dependencyList, exportList, moduleList] = processAST(symbol);
-    } else if (stats.isDirectory()) {
-      const arrayOfFiles = fs.readdirSync(symbol);
-      for (let i = 0; i < arrayOfFiles.length; i++) {
-        [dependencyList, exportList, moduleList] = processAST(path.join(symbol, arrayOfFiles[i]));
-      }
+      dir = getBaseDir(symbol);
+      moduleList = getImportList(symbol);
     } else {
       console.error("Neither a file or directory specified."); //Handle error
       return;
     }
+
+    for (let i = 0; i < moduleList.length; i++) {
+      if (!fs.existsSync(moduleList[i])) {
+        [dependencyList, exportList] = processAST(moduleList[i], dir);
+      }
+    }
+
+    let importSet = new Set();
+    let item;
+    for (let i = 0; i < dependencyList.length; i++) {
+      item = {
+        module: dependencyList[i].importSrc,
+        import: dependencyList[i].import
+      };
+      if (!importSet.has(item)) {
+        importSet.add(item);
+      }
+//      if (importList.indexOf(item) === -1) {
+//        importList.push(item);
+//      }
+    }
+
+    const importList = Array.from(importSet);
+    
 
     if (options.debug) {
       console.log("-----------------------------modules-----------------------------");
       console.log(moduleList);
       console.log("-----------------------------exports-----------------------------");
       console.log(exportList);
-      console.log("-----------------------------imports-----------------------------");
+      console.log("-----------------------------dependencies------------------------");
       console.log(dependencyList);
+      console.log("-----------------------------imports-----------------------------");
+      console.log(importList);
     }
 
     if (options.json) {
       fs.writeFileSync(path.join(options.output, "moduleList.json"), JSON.stringify(moduleList, null, 2), "utf8");
       fs.writeFileSync(path.join(options.output, "exportList.json"), JSON.stringify(exportList, null, 2), "utf8");
       fs.writeFileSync(path.join(options.output, "dependencyList.json"), JSON.stringify(dependencyList, null, 2), "utf8");
+      fs.writeFileSync(path.join(options.output, "importList.json"), JSON.stringify(importList, null, 2), "utf8");
     }
 
     if (options.graph) {
@@ -95,4 +114,3 @@ program.action((symbol, options) => {
 });
 
 program.parse(process.argv);
-

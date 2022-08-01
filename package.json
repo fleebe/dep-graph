@@ -7,7 +7,7 @@
     "dep-graph": "dep-graph.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "keywords": [],
   "author": "phil.who@live.com",
@@ -17,6 +17,7 @@
     "commander": "^9.4.0"
   },
   "devDependencies": {
-    "eslint": "^8.20.0"
+    "eslint": "^8.20.0",
+    "jest": "^28.1.3"
   }
 }
