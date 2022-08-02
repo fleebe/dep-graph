@@ -1,6 +1,7 @@
 import { readFileSync } from "fs";
 import { parse as acparse } from "acorn";
 import { simple } from "acorn-walk";
+import {normalizePath} from "./file-fn.js";
 
 
 let exportList = [];
@@ -57,10 +58,15 @@ function parseImports(ast, symbol) {
       for (var i = 0; i < node.specifiers.length; i++) {
         const name = node.specifiers[i].type === "ImportSpecifier" ? node.specifiers[i].imported.name : node.specifiers[i].local.name;
         //            console.log(name);
-        let impSrc = node.source.value;
+        let dest = node.source.value;
+        let src = symbol;
+        if (dest.indexOf("..") !== -1) { // up dirs in the importSrc
+          dest = normalizePath(dest, src); // + getFilename(node.source.value);
+        }
+
         dependencies.push({
-          src: symbol,
-          importSrc: impSrc,
+          src: src,
+          importSrc: dest,
           import: name
         });
       }

@@ -7,8 +7,8 @@ import { Command } from 'commander';
 import fs from "fs";
 import { processAST } from './ast.js';
 import path from "path";
-import { createGraph } from './commands/graph.js';
-import { getImportList, getBaseDir, getFilename } from "./file-fn.js";
+import { createGraph, createPackageGraph } from './commands/graph.js';
+import { getImportList, getBaseDir, getFilename, addToMapArray } from "./file-fn.js";
 
 
 //import { getVersion } from "./json-package.cjs";
@@ -39,21 +39,21 @@ program.action((symbol, options) => {
     }
 
     if (!options.json && !options.graph) {
-      console.error("Neither output format was specified."); //Handle error
+      console.error("Neither output format was specified."); 
     }
 
     if (!fs.existsSync(options.output)) {
       fs.mkdirSync(options.output);
-      console.log("created output directory ", options.output); //Handle error
+      console.log("created output directory ", options.output); 
     }
 
-    let dependencyList = [];
-    let exportList = [];
-    let moduleList = [];  // a list of modules moving from dir in the form  .dir/file.js
+    let dependencyList = []; // list of dependencies between modules including the functions
+    let exportList = []; // list of functions exported from modules
+    let moduleList = [];  // a list of modules from dir in the form  .dir/file.js
     let dir;  // the directory that is the base in the form ./dir/dir2
     const sdir = "./";
 
-    // symbol is what was based from the command line.
+    // symbol is what was used in the command line.
     if (stats.isFile()) {
       dir = getBaseDir(path.dirname(symbol));
       moduleList.push(sdir + getFilename(symbol));
@@ -70,25 +70,25 @@ program.action((symbol, options) => {
         [dependencyList, exportList] = processAST(moduleList[i], dir);
       }
     }
-
-    let importSet = new Set();
-    let item;
-    for (let i = 0; i < dependencyList.length; i++) {
-      item = {
-        module: dependencyList[i].importSrc,
-        import: dependencyList[i].import
-      };
-      if (!importSet.has(item)) {
-        importSet.add(item);
-      }
-//      if (importList.indexOf(item) === -1) {
-//        importList.push(item);
-//      }
+ 
+    let importMap = new Map();  // map of imports key=module value is an array of functions.
+    for (let dep of dependencyList) {
+      addToMapArray(importMap, dep.importSrc, dep.import);
     }
 
-    const importList = Array.from(importSet);
-    
+    // create the graph file for packages or all the modules.
+    if (options.graph) {
+      createPackageGraph(moduleList, dependencyList, options.output);
+    }
 
+    /*
+    let importSet = new Set(importArray);
+    let uniqueArray = Array.from(importSet);
+    uniqueArray.forEach((_e, i) => {
+      uniqueArray[i] = JSON.parse(uniqueArray[i]);
+    });
+*/
+// output the data structures to the screen.
     if (options.debug) {
       console.log("-----------------------------modules-----------------------------");
       console.log(moduleList);
@@ -97,20 +97,42 @@ program.action((symbol, options) => {
       console.log("-----------------------------dependencies------------------------");
       console.log(dependencyList);
       console.log("-----------------------------imports-----------------------------");
-      console.log(importList);
+      console.log(importMap);
     }
+// save data structures to json files. Cannot stringify a Map so need to convert it to an object.
 
     if (options.json) {
       fs.writeFileSync(path.join(options.output, "moduleList.json"), JSON.stringify(moduleList, null, 2), "utf8");
       fs.writeFileSync(path.join(options.output, "exportList.json"), JSON.stringify(exportList, null, 2), "utf8");
       fs.writeFileSync(path.join(options.output, "dependencyList.json"), JSON.stringify(dependencyList, null, 2), "utf8");
-      fs.writeFileSync(path.join(options.output, "importList.json"), JSON.stringify(importList, null, 2), "utf8");
+      fs.writeFileSync(path.join(options.output, "importMap.json"), JSON.stringify(importMap, null, 2), "utf8");
+      let obj = strMapToObj(importMap);
+      fs.writeFileSync(path.join(options.output, "importList.json"), JSON.stringify(obj, null, 2), "utf8");
     }
-
+// create the graph file
     if (options.graph) {
-      fs.writeFileSync(path.join(options.output, "dependencyList.dot"), createGraph(dependencyList, exportList, moduleList), "utf8");
+      fs.writeFileSync(path.join(options.output, "dependencyList.dot"), createGraph(dependencyList, exportList, moduleList, importMap), "utf8");
     }
   })
 });
 
 program.parse(process.argv);
+
+// https://2ality.com/2015/08/es6-map-json.html
+function strMapToObj(strMap) {
+  let obj = Object.create(null);
+  for (let [k, v] of strMap) {
+    // We don’t escape the key '__proto__'
+    // which can cause problems on older engines
+    obj[k] = v;
+  }
+  return obj;
+}
+// https://2ality.com/2015/08/es6-map-json.html
+function objToStrMap(obj) {
+  let strMap = new Map();
+  for (let k of Object.keys(obj)) {
+    strMap.set(k, obj[k]);
+  }
+  return strMap;
+}

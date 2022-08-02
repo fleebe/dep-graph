@@ -11,6 +11,7 @@ describe("Get the base directory", () => {
     expect(getBaseDir(".\\src\\cmd")).toBe("./src/cmd");
     expect(getBaseDir("./")).toBe("./");
     expect(getBaseDir(".\\")).toBe("./");
+    expect(getBaseDir("..\\..\\Spoke_NZGreens\\src\\server")).toBe("../../Spoke_NZGreens/src/server");
   })
 
   test("directory-files", () => {
