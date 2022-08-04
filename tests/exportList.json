@@ -1,0 +1,62 @@
+[
+  {
+    "name": "./ast.js",
+    "exported": "processAST",
+    "type": "FunctionDeclaration"
+  },
+  {
+    "name": "./json-package.js",
+    "exported": "getVersion",
+    "type": "VariableDeclaration"
+  },
+  {
+    "name": "./commands/debug.js",
+    "exported": "debug",
+    "type": "FunctionDeclaration"
+  },
+  {
+    "name": "./commands/graph.js",
+    "exported": "createGraphs",
+    "type": "FunctionDeclaration"
+  },
+  {
+    "name": "./commands/json.js",
+    "exported": "jsonOut",
+    "type": "FunctionDeclaration"
+  },
+  {
+    "name": "./commands/json.js",
+    "exported": "jsonIn",
+    "type": "FunctionDeclaration"
+  },
+  {
+    "name": "./utils/file-fn.js",
+    "exported": "getBaseDir",
+    "type": "VariableDeclaration"
+  },
+  {
+    "name": "./utils/file-fn.js",
+    "exported": "normalizePath",
+    "type": "FunctionDeclaration"
+  },
+  {
+    "name": "./utils/file-fn.js",
+    "exported": "getFilename",
+    "type": "FunctionDeclaration"
+  },
+  {
+    "name": "./utils/file-fn.js",
+    "exported": "getDirectoriesRecursive",
+    "type": "FunctionDeclaration"
+  },
+  {
+    "name": "./utils/file-fn.js",
+    "exported": "getModuleMap",
+    "type": "FunctionDeclaration"
+  },
+  {
+    "name": "./utils/map-fn.js",
+    "exported": "addToMapArray",
+    "type": "FunctionDeclaration"
+  }
+]

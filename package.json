@@ -7,7 +7,7 @@
     "dep-graph": "dep-graph.js"
   },
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
     "NZGreens": "cd C:/Code/Spoke_NZGreens && node ../dep-graph/src/dep-graph.js -g -j ./src/server"
   },
   "keywords": [],

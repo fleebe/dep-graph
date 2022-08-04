@@ -1,46 +1,74 @@
 import { readFileSync } from "fs";
 import { parse as acparse } from "acorn";
 import { simple } from "acorn-walk";
-import {normalizePath} from "./file-fn.js";
+import { normalizePath } from "./utils/file-fn.js";
+import addToMapArray from "./utils/map-fn.js";
 
-
-let exportList = [];
-let dependencyList = [];
 
 function getExtension(filename) {
   var i = filename.lastIndexOf('.');
   return (i < 0) ? '' : filename.substring(i);
 }
 
-export function processAST(symbol, dir) {
-  const ext = getExtension(symbol).toLowerCase();
-  if (ext === ".js") {
-    try {
-      const ast = parseAST(symbol, dir);
-      const e = parseExports(ast, symbol);
-      const deps = parseImports(ast, symbol);
-      exportList.push(...e);
-      dependencyList.push(...deps);
-    } catch (err) {
-      console.log("------------------");
-      console.log("file=", symbol);
-      console.log(err);
-      console.log("------------------");
+/**
+ * processes gets the ast for all the modules and creates the dependeciesList, exportList and importMap
+ * @param {*} moduleMap 
+ * @param {*} root 
+ * @returns 
+ */
+export function processAST(moduleMap, root) {
 
-    }
-  } else {
-    console.log("Can only parse javascript files at the moment. file=", symbol);
-  }
+  // list of dependencies between modules including the functions
+  let dependencyList = [];
+  // list of functions exported from modules/files
+  let exportList = [];
 
-  let importList = [];
-  return [dependencyList, exportList];
+  root = "./" + root;
+  // get the export list and dependency of each module/file
+  moduleMap.forEach((arr, k) => {
+    arr.forEach(e => {
+      const f = e.replace(".", root);
+      const ext = getExtension(f).toLowerCase();
+      if (ext === ".js") {
+        try {
+          const ast = parseAST(f);
+          const exp = parseExports(ast, e);
+          const deps = parseImports(ast, e);
+          exportList.push(...exp);
+          dependencyList.push(...deps);
+        } catch (err) {
+          console.log("------------------");
+          console.log("file=", f, " module=", e);
+          console.log(err);
+          console.log("------------------");
+
+        }
+      } else {
+        console.log("Can only parse javascript files at the moment. file=", f);
+      }
+    });
+  });
+  // map of imports key=module/file value=an array of functions.
+  let importMap = getImportMap(dependencyList);
+  return [dependencyList, exportList, importMap];
 }
 
 
-function parseAST(symbol, dir) {
-  let f;
-  (dir) ? f = symbol.replace('.', dir): f = symbol;
-  const result = readFileSync(f, 'utf-8');
+function getImportMap(dependencyList) {
+  let importMap = new Map();
+  for (let dep of dependencyList) {
+    addToMapArray(importMap, dep.importSrc, dep.import);
+  }
+  return importMap;
+}
+
+/**
+ *
+ * @param {*} symbol the file to get the ast from
+  * @returns ast object struture for parsing
+ */
+function parseAST(symbol) {
+  const result = readFileSync(symbol, 'utf-8');
   //      console.log(`Retrieving file ast information for ${symbol}`);
   //const ast = parse(result, { sourceType: "module" });
 
@@ -80,35 +108,48 @@ function parseExports(ast, symbol) {
   let exportList = [];
   simple(ast, {
     ExportNamedDeclaration(node) {
-      try {
-        if (node.source) {
-          console.log(`TODO: Found a source export: ${node.source.value}`);
-        } else if (node.declaration) {
-          const declarationList = node.declaration?.declarations;
-          if (declarationList) {
-            for (var i = 0; i < declarationList.length; i++) {
-              exportList.push({
-                name: symbol,
-                exported: declarationList[i].id.name,
-                type: node.declaration.type
-              });
-            }
-          } else if (node.declaration?.id) {
-            exportList.push({
-              name: symbol,
-              exported: node.declaration.id.name,
-              type: node.declaration.type
-            });
-          } else {
-            console.log(`TODO: Export parse failed`);
-          }
-        }
-      } catch (e) {
-        console.error(e);
-      }
+      exportDeclaration(node);
     }
   });
+
+  simple(ast, {
+    ExportDefaultDeclaration(node) {
+      exportDeclaration(node);
+    }
+  });
+
+
   return exportList;
+
+
+  function exportDeclaration(node) {
+    try {
+      if (node.source) {
+        console.log(`TODO: Found a source export: ${node.source.value}`);
+      } else if (node.declaration) {
+        const declarationList = node.declaration?.declarations;
+        if (declarationList) {
+          for (var i = 0; i < declarationList.length; i++) {
+            exportList.push({
+              name: symbol,
+              exported: declarationList[i].id.name,
+              type: node.declaration.type
+            });
+          }
+        } else if (node.declaration?.id) {
+          exportList.push({
+            name: symbol,
+            exported: node.declaration.id.name,
+            type: node.declaration.type
+          });
+        } else {
+          console.log(`TODO: Export parse failed`);
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
 }
 
 

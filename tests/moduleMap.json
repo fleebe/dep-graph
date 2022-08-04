@@ -1,0 +1,17 @@
+{
+  "./": [
+    "./ast.js",
+    "./cmd-test.js",
+    "./dep-graph.js",
+    "./json-package.js"
+  ],
+  "./commands": [
+    "./commands/debug.js",
+    "./commands/graph.js",
+    "./commands/json.js"
+  ],
+  "./utils": [
+    "./utils/file-fn.js",
+    "./utils/map-fn.js"
+  ]
+}

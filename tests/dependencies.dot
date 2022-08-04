@@ -1,0 +1,101 @@
+digraph {
+node [shape=record];
+"./ast.js" [label="{ ./ast.js | 
+	 processAST \l
+|		fs\l		readFileSync\r
+		acorn\l		parse\r
+		acorn-walk\l		simple\r
+		./utils/file-fn.js\l		normalizePath\r
+		./utils/map-fn.js\l		addToMapArray\r
+}"];
+
+"./cmd-test.js" [label="{ ./cmd-test.js | 
+|		commander\l		Command\r
+}"];
+
+"./dep-graph.js" [label="{ ./dep-graph.js | 
+|		commander\l		Command\r
+		fs\l		fs\r
+		./ast.js\l		processAST\r
+		./commands/graph.js\l		createGraphs\r
+		./commands/debug.js\l		debug\r
+		./commands/json.js\l		jsonOut\r
+		./utils/file-fn.js\l		getModuleMap\r
+}"];
+
+"./json-package.js" [label="{ ./json-package.js | 
+	 getVersion \l
+|}"];
+
+"./commands/debug.js" [label="{ ./commands/debug.js | 
+	 debug \l
+|}"];
+
+"./commands/graph.js" [label="{ ./commands/graph.js | 
+	 createGraphs \l
+|		fs\l		fs\r
+		path\l		path\r
+}"];
+
+"./commands/json.js" [label="{ ./commands/json.js | 
+	 jsonOut \l
+	 jsonIn \l
+|		fs\l		fs\r
+		path\l		path\r
+}"];
+
+"./utils/file-fn.js" [label="{ ./utils/file-fn.js | 
+	 getBaseDir \l
+	 normalizePath \l
+	 getFilename \l
+	 getDirectoriesRecursive \l
+	 getModuleMap \l
+|		path\l		path\r
+		fs\l		fs\r
+}"];
+
+"./utils/map-fn.js" [label="{ ./utils/map-fn.js | 
+	 addToMapArray \l
+|}"];
+
+"fs" [label="{fs|
+	readFileSync\l
+	fs\l
+}"];
+
+"acorn" [label="{acorn|
+	parse\l
+}"];
+
+"acorn-walk" [label="{acorn-walk|
+	simple\l
+}"];
+
+"commander" [label="{commander|
+	Command\l
+}"];
+
+"path" [label="{path|
+	path\l
+}"];
+
+"./ast.js"->"fs"
+"./ast.js"->"acorn"
+"./ast.js"->"acorn-walk"
+"./ast.js"->"./utils/file-fn.js"
+"./ast.js"->"./utils/map-fn.js"
+"./cmd-test.js"->"commander"
+"./dep-graph.js"->"commander"
+"./dep-graph.js"->"fs"
+"./dep-graph.js"->"./ast.js"
+"./dep-graph.js"->"./commands/graph.js"
+"./dep-graph.js"->"./commands/debug.js"
+"./dep-graph.js"->"./commands/json.js"
+"./dep-graph.js"->"./utils/file-fn.js"
+"./commands/graph.js"->"fs"
+"./commands/graph.js"->"path"
+"./commands/json.js"->"fs"
+"./commands/json.js"->"path"
+"./utils/file-fn.js"->"path"
+"./utils/file-fn.js"->"fs"
+}
