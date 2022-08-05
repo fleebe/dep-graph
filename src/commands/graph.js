@@ -1,37 +1,12 @@
-import fs from "fs";
 import path from "path";
-
-/**
- *  create the graph file for packages or directories for all the modules.
- *  create the graph file
- *  write  to the output dir
- * @param {*} moduleList list fo files to process
-* @param {*} exportList list of files and exported functions
-* [ { "name": "./ast.js", "exported": "processAST", "type": "FunctionDeclaration" } ]
- * @param {*} dependencyList list of imports and functions for the file. 
- * array dependencies src is the file it was found and importSrc 
- *  is where the imported function comes from. so the src depends on the importSrc
-* [ { "src": "./cmd-test.js", "importSrc": "commander","import": "Command"} ]
-* @param {*} importMap map of imports key=module/file value=an array of functions.
-
-* @param {*} dir output directory
- */
-export function createGraphs(moduleList, exportList, dependencyList, importMap, dir) {
-
-  createGraph(dependencyList, exportList, moduleList, importMap, dir);
-  createPackageGraph(moduleList, dependencyList, dir)
-}
-
-
 
 /**
  * Creates a graphviz .dot file of package dependencies called package.dot in the output directory. 
  * @param {*} moduleMap map of modules (directories) with array of files as value
  * @param {*} dependencyList array dependencies src is the file it was found and importSrc 
  *  is where the imported function comes from. so the src depends on the importSrc
- * @param {*} dir output directory
  */
-function createPackageGraph(moduleMap, dependencyList, dir) {
+export function createPackageGraph(moduleMap, dependencyList) {
   let result = digraph();
   /*
   // map of packages key=directory value=is an array of files/modules.  
@@ -64,8 +39,8 @@ function createPackageGraph(moduleMap, dependencyList, dir) {
     }
   }
   result += '}\n';
+  return result;
 
-  fs.writeFileSync(path.join(dir, "package.dot"), result, "utf8");
 }
 
 /**
@@ -76,14 +51,14 @@ function createPackageGraph(moduleMap, dependencyList, dir) {
 * loop through to add the the imported functions.
  * 
  * @param {*} importMap 
- * @param {*} moduleList 
+ * @param {*} moduleMap 
  * @returns 
  */
-function createNodes(importMap, moduleList) {
+function createNodes(importMap, moduleMap) {
   let ln = "";
   let result = "";
   for (const imp of importMap.keys()) {
-    if (moduleList.indexOf(imp) === -1) {
+    if (moduleMap.indexOf(imp) === -1) {
       ln = '"' + imp + '" [label="{' + imp + '|' + '\n';
       for (const fn of importMap.get(imp)) {
         ln += '\t' + fn + '\\l\n';
@@ -107,14 +82,13 @@ function createNodes(importMap, moduleList) {
 * [ { "src": "./cmd-test.js", "importSrc": "commander","import": "Command"} ]
 * @param {*} importMap map of imports key=module/file value=an array of functions.
 
-* @param {*} dir output directory
  */
-function createGraph(dependencyList, exportList, moduleMap, importMap, dir) {
+export function createGraph(dependencyList, exportList, moduleMap, importMap) {
   let result = digraph();
   let ln;
   let modList = [];
 
-  //add exported modules to graph
+  //add modules to graph
   moduleMap.forEach((arr, k) => {
     arr.forEach((mod) => {
       modList.push(mod);
@@ -169,9 +143,7 @@ function createGraph(dependencyList, exportList, moduleMap, importMap, dir) {
   }
 
   result += '}\n';
-
-  fs.writeFileSync(path.join(dir, "dependencies.dot"), result, "utf8");
-
+  return result;
 }
 
 function digraph() {

@@ -2,10 +2,11 @@
 // #!/usr/bin/env node
 import { Command } from 'commander';
 import fs from "fs";
+import path from "path";
 import { processAST } from './ast.js';
-import { createGraphs } from './commands/graph.js';
+import { createGraph, createPackageGraph } from './commands/graph.js';
 import debug from './commands/debug.js';
-import {jsonOut} from './commands/json.js';
+import {jsonOut, jsonIn} from './commands/json.js';
 import { getModuleMap } from "./utils/file-fn.js";
 
 // https://cheatcode.co/tutorials/how-to-build-a-command-line-interface-cli-using-node-js
@@ -31,32 +32,62 @@ program.action((symbol, options) => {
 
     validateOptions(options);
 
-     // a list of modules or files  from dir in the form  .dir/file.js list recursively walks the start directory
-    const [moduleList, dir] = getModuleMap(symbol); 
+    // a list of modules or files  from dir in the form  .dir/file.js list recursively walks the start directory
+    let [moduleMap, srcDir] = getModuleMap(symbol); 
 
-// get the export list and dependency of each module/file
-    [dependencyList, exportList, importMap] = processAST(moduleList, dir);
+    // prefix for the output files
+    const lastDir = removeDirChars(srcDir);
+ 
+    let dependencyList = [];
+    // list of functions exported from modules/files
+    let exportList = [];
+    let importMap = new Map();
+
+
+      // get the export list and dependency of each module/file
+      // only do this if the -j option is set otherwise read from the output directory
+    if (options.json) {
+      // a list of modules or files  from dir in the form  .dir/file.js list recursively walks the start directory
+      [dependencyList, exportList, importMap] = processAST(moduleMap, srcDir);
+      jsonOut(options.output, moduleMap, exportList, dependencyList, importMap, lastDir);
+    } else {
+      // read from output directory
+      moduleMap = jsonIn(path.join(options.output, lastDir + "ModuleMap.json"));
+      exportList = Array.from(jsonIn(path.join(options.output, lastDir + "ExportList.json")));
+      dependencyList = Array.from(jsonIn(path.join(options.output, lastDir + "DependencyList.json")));
+      importMap = jsonIn(path.join(options.output, lastDir + "ImportMap.json"));
+    }
 
     // output the data structures to the screen. -d option
     if (options.debug) {
-      debug(moduleList, exportList, dependencyList, importMap);
+      debug(moduleMap, exportList, dependencyList, importMap);
     }
 
     // create the graph file for packages or directories for all the modules. -g option
-    // output the graph file
     if (options.graph) {
-      createGraphs(moduleList, exportList, dependencyList, importMap, options.output);
-    }
- 
-// save data structures to json files. Cannot stringify a Map so need to convert it to an object.
-    if (options.json) {
-      jsonOut(options, moduleList, exportList, dependencyList, importMap);
+      let result = createPackageGraph(moduleMap, dependencyList);
+      const packFile = lastDir + "Package.dot";
+      fs.writeFileSync(path.join(options.output, packFile), result, "utf8");
+
+      result = createGraph(dependencyList, exportList, moduleMap, importMap);
+      const depFile = lastDir + "Dependencies.dot";
+      fs.writeFileSync(path.join(options.output, depFile), result, "utf8");
     }
 
   })
 });
 
 program.parse(process.argv);
+
+
+function removeDirChars(srcDir) {
+  let lastDir = srcDir.split("/").slice(-1).join("");
+  (lastDir.startsWith(".")) ? lastDir = lastDir.slice(1) : lastDir;
+  (lastDir.startsWith("/")) ? lastDir = lastDir.slice(1) : lastDir;
+  (lastDir.startsWith("\\")) ? lastDir = lastDir.slice(1) : lastDir;
+  return lastDir;
+}
+
 //-------------------------------------
 
 

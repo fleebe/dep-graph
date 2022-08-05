@@ -9,13 +9,13 @@ import path from "path";
  * @param {*} dependencyList 
  * @param {*} importMap 
  */
-export function jsonOut(output, moduleMap, exportList, dependencyList, importMap) {
+export function jsonOut(output, moduleMap, exportList, dependencyList, importMap, lastDir) {
   let obj = strMapToObj(moduleMap); 
-  fs.writeFileSync(path.join(output, "moduleMap.json"), JSON.stringify(obj, null, 2), "utf8");
-  fs.writeFileSync(path.join(output, "exportList.json"), JSON.stringify(exportList, null, 2), "utf8");
-  fs.writeFileSync(path.join(output, "dependencyList.json"), JSON.stringify(dependencyList, null, 2), "utf8");
+  fs.writeFileSync(path.join(output, lastDir + "ModuleMap.json"), JSON.stringify(obj, null, 2), "utf8");
+  fs.writeFileSync(path.join(output, lastDir + "ExportList.json"), JSON.stringify(exportList, null, 2), "utf8");
+  fs.writeFileSync(path.join(output, lastDir + "DependencyList.json"), JSON.stringify(dependencyList, null, 2), "utf8");
   obj = strMapToObj(importMap);
-  fs.writeFileSync(path.join(output, "importMap.json"), JSON.stringify(obj, null, 2), "utf8");
+  fs.writeFileSync(path.join(output, lastDir + "ImportMap.json"), JSON.stringify(obj, null, 2), "utf8");
 }
 
 export function jsonIn(file) {  

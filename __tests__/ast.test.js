@@ -6,27 +6,9 @@ import debug from '../src/commands/debug.js';
 import { jsonOut, jsonIn } from '../src/commands/json.js';
 import { createGraphs } from '../src/commands/graph.js';
 
-describe("Get the base directory", () => {
-  test("base-directory-file", () => {
-    expect(getBaseDir(".\\src\\")).toBe("src");
-    expect(getBaseDir("./src/")).toBe("src");
-    expect(getBaseDir(".")).toBe("");
-    expect(getBaseDir(".\\src")).toBe("src");
-    expect(getBaseDir(".\\src\\cmd")).toBe("src/cmd");
-    expect(getBaseDir("./")).toBe("");
-    expect(getBaseDir(".\\")).toBe("");
-    try {
-      expect(getBaseDir("..\\..\\Spoke_NZGreens\\src\\server")).toThrow("Cannot handle .. in the path name");
-    } catch (e) {
-      expect(e.message).toBe("Cannot handle .. in the path name");
-    }
-  })
-});
-
-describe("unit tests", () => {
-
+describe("unit-tests", () => {
   const output = "./out";
-  const input = "./tests";
+  const input = "./__tests__";
 
   beforeAll(() => {
   

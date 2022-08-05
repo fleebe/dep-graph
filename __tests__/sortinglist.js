@@ -1,6 +1,4 @@
 
-
-
 const list = [{
   "src": "./ast.js",
   "importSrc": "acorn",

@@ -1,8 +1,9 @@
-import { readFileSync } from "fs";
+import { writeFileSync, readFileSync, fstat } from "fs";
 import { parse as acparse } from "acorn";
 import { simple } from "acorn-walk";
 import { normalizePath } from "./utils/file-fn.js";
 import addToMapArray from "./utils/map-fn.js";
+import { assert } from "console";
 
 
 function getExtension(filename) {
@@ -12,19 +13,21 @@ function getExtension(filename) {
 
 /**
  * processes gets the ast for all the modules and creates the dependeciesList, exportList and importMap
- * @param {*} moduleMap 
- * @param {*} root 
+ * @param {*} moduleMap Map of packages with modules key=./directory, values=array[./directory/filename]
+ * @param {*} root the root directory where the modules root is passed without the ./ 
  * @returns 
  */
 export function processAST(moduleMap, root) {
+  assert(!root.startsWith("."), `${root} root cannot start with .`);
+  assert(!root.startsWith("/"), `${root} root cannot start with /`);
+  assert(!root.startsWith("\\"), `${root} root cannot start with \\`);
+
 
   // list of dependencies between modules including the functions
   let dependencyList = [];
   // list of functions exported from modules/files
   let exportList = [];
-
   root = "./" + root;
-  // get the export list and dependency of each module/file
   moduleMap.forEach((arr, k) => {
     arr.forEach(e => {
       const f = e.replace(".", root);
@@ -37,11 +40,8 @@ export function processAST(moduleMap, root) {
           exportList.push(...exp);
           dependencyList.push(...deps);
         } catch (err) {
-          console.log("------------------");
-          console.log("file=", f, " module=", e);
-          console.log(err);
-          console.log("------------------");
-
+          console.error(`file=${f}\nmodule=${e}\n${err.message}`);
+          console.error(err);
         }
       } else {
         console.log("Can only parse javascript files at the moment. file=", f);
@@ -54,7 +54,7 @@ export function processAST(moduleMap, root) {
 }
 
 
-function getImportMap(dependencyList) {
+export function getImportMap(dependencyList) {
   let importMap = new Map();
   for (let dep of dependencyList) {
     addToMapArray(importMap, dep.importSrc, dep.import);
@@ -84,7 +84,7 @@ function parseImports(ast, symbol) {
       //          im = node as ImportDeclaration;
       // console.log(`Found a import: ${node.source.value} type : ${typeof im.specifiers}  length : ${im.specifiers.length}`);
       for (var i = 0; i < node.specifiers.length; i++) {
-        const name = node.specifiers[i].type === "ImportSpecifier" ? node.specifiers[i].imported.name : node.specifiers[i].local.name;
+        const name = node.specifiers[i].type === "ImportSpecifier" ? node.specifiers[i].imported.name : "*" + node.specifiers[i].local.name;
         //            console.log(name);
         let dest = node.source.value;
         let src = symbol;
@@ -118,40 +118,61 @@ function parseExports(ast, symbol) {
     }
   });
 
-
   return exportList;
 
-
   function exportDeclaration(node) {
-    try {
-      if (node.source) {
-        console.log(`TODO: Found a source export: ${node.source.value}`);
+    if (node.source) {
+      node.specifiers.map(e => {
+        exportList.push({
+          name: symbol,
+          exported: e.exported.name,
+          type: "File"
+        });
+      });
+    } else if (node.declaration) {
+      const addVal = (exp) => {
+        exportList.push({
+          name: symbol,
+          exported: exp,
+          type: node.declaration.type
+        });
+      };
+      const declarationList = node.declaration?.declarations;
+      if (declarationList) {
+        declarationList.map(e => {
+          addVal(e.id.name);
+        });
       } else if (node.declaration) {
-        const declarationList = node.declaration?.declarations;
-        if (declarationList) {
-          for (var i = 0; i < declarationList.length; i++) {
-            exportList.push({
-              name: symbol,
-              exported: declarationList[i].id.name,
-              type: node.declaration.type
-            });
-          }
-        } else if (node.declaration?.id) {
-          exportList.push({
-            name: symbol,
-            exported: node.declaration.id.name,
-            type: node.declaration.type
+        const decl = node.declaration;
+        if (decl.id) {
+          addVal(decl.id.name);
+        } else if (decl.properties) {
+          /**
+            export default {
+              local: setupLocalAuthPassport,
+              auth0: setupAuth0Passport,
+              slack: setupSlackPassport
+            };
+            e.g.
+              e.value.name = setupLocalAuthPassport
+              e.key.name = local
+          */
+          decl.properties.map(e => {
+            addVal(e.key.name);
           });
+        } else if (decl.name) {
+          addVal(decl.name);
+        } else if (decl.type === 'ArrowFunctionExpression') {
+          addVal("???");
+        } else if (decl.type === 'ConditionalExpression') {
+          addVal(decl.test.name);
         } else {
-          console.log(`TODO: Export parse failed`);
+          throw new Error(`TODO: Export parse failed\n ${node}`);
         }
       }
-    } catch (e) {
-      console.error(e);
     }
   }
 }
-
 
   //      var visitor = new Visitor();
   //      visitor.visitNode(ast);

@@ -1,0 +1,37 @@
+{
+  "fs": [
+    "readFileSync",
+    "fs"
+  ],
+  "acorn": [
+    "parse"
+  ],
+  "acorn-walk": [
+    "simple"
+  ],
+  "./utils/file-fn.js": [
+    "normalizePath",
+    "getModuleMap"
+  ],
+  "./utils/map-fn.js": [
+    "addToMapArray"
+  ],
+  "commander": [
+    "Command"
+  ],
+  "./ast.js": [
+    "processAST"
+  ],
+  "./commands/graph.js": [
+    "createGraphs"
+  ],
+  "./commands/debug.js": [
+    "debug"
+  ],
+  "./commands/json.js": [
+    "jsonOut"
+  ],
+  "path": [
+    "path"
+  ]
+}
