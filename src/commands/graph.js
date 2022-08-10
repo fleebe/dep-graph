@@ -89,7 +89,7 @@ export function createGraph(dependencyList, exportList, moduleMap, importMap) {
   let modList = [];
 
   //add modules to graph
-  moduleMap.forEach((arr, k) => {
+  moduleMap.forEach((arr) => {
     arr.forEach((mod) => {
       modList.push(mod);
 

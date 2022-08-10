@@ -6,7 +6,7 @@
  * @returns boolean
  */
 const findInMap = (map, val) => {
-  for (let [key, v] of map) {
+  for (let [key] of map) {
     if (key === val) {
       return true;
     }

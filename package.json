@@ -1,19 +1,19 @@
 {
+  "name": "dep-graph",
   "version": "1.0.0",
   "description": "",
-  "main": "dep-graph.js",
+  "main": "./index.js",
   "type": "module",
   "bin": {
-    "dep-graph": "dep-graph.js"
+    "dep-graph": "./index.js"
   },
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
-    "NZGreens": "cd ../Spoke_NZGreens && node ../dep-graph/src/dep-graph.js -o ../dep-graph/out/NZGreens -g -j ./src/server/models",
-    "graph" : "cd ../Spoke_NZGreens && node ../dep-graph/src/dep-graph.js -o ../dep-graph/out/NZGreens -g ./src/server/models"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --detectOpenHandles",
+    "build": "node . -g -j ./src"
   },
-  "keywords": [],
+  "keywords": ["Dependency", "Graph", "Graphviz"],
   "author": "phil.who@live.com",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "acorn-walk": "^8.2.0",
     "commander": "^9.4.0"
