@@ -26,7 +26,7 @@ export function runProgram() {
   program.name("dep-graph")
     .version(getVersion())
     .description(`A cli to generate documentation for dependencies of a javascript file | directory.`)
-    .option("-g --graph", "produce a .dot file that graphviz can use to generate a graph of the dependencies to output directory.")
+    .option("-g --graph", "produce package and dependencies .dot files that graphviz can use to generate a graph of the dependencies to output directory.")
     .option("-j --json", "produce .json object files of the dependencies to output directory.")
     .option("-o --output <dir>", "directory that the outputs are sent to.", "./out")
     .argument("<file | directory>");
@@ -46,7 +46,7 @@ export function runProgram() {
       // prefix for the output files
       let lastDir;
       if (stat.isDirectory()) {
-      lastDir = removeDirChars(srcDir);
+        lastDir = getLastDir(srcDir);
       } else { // is a file
         lastDir = getFilename(symbol);
         lastDir = lastDir.split(".")[0];
@@ -56,14 +56,17 @@ export function runProgram() {
       // list of functions exported from modules/files
       let exportList = [];
       let importMap = new Map();
-
+      let errors = [];
 
       // get the export list and dependency of each module/file
       // only do this if the -j option is set otherwise read from the output directory
       if (options.json) {
         // a list of modules or files  from dir in the form  .dir/file.js list recursively walks the start directory
-        [dependencyList, exportList, importMap] = processAST(moduleMap, srcDir);
-        jsonOut(options.output, moduleMap, exportList, dependencyList, importMap, lastDir);
+          [dependencyList, exportList, importMap, errors] = processAST(moduleMap, srcDir);
+          if (errors.length > 0) {
+            fs.writeFileSync(path.join(options.output, lastDir + "Errors.json"), JSON.stringify(errors, null, 2), "utf8");
+          }
+          jsonOut(options.output, moduleMap, exportList, dependencyList, importMap, lastDir);
       } else {
         // read from output directory
         moduleMap = jsonIn(path.join(options.output, lastDir + "ModuleMap.json"));
@@ -89,7 +92,7 @@ export function runProgram() {
   program.parse(process.argv);
 }
 
-function removeDirChars(srcDir) {
+function getLastDir(srcDir) {
   let lastDir = srcDir.split("/").slice(-1).join("");
   (lastDir.startsWith(".")) ? lastDir = lastDir.slice(1) : lastDir;
   (lastDir.startsWith("/")) ? lastDir = lastDir.slice(1) : lastDir;

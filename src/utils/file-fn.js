@@ -27,7 +27,9 @@ export function normalizePath(dest, src) {
     const d = dest.split("/");
     const s = path.dirname(src).split("/");
     const count = (dest.split("..").length - 1); // count how many up dirs
-    return s.slice(0, -count).join("/") + "/" + d.slice(count).join("/"); // remove up dirs and rejoin to create a path
+    let res = s.slice(0, -count).join("/") + "/" + d.slice(count).join("/"); // remove up dirs and rejoin to create a path
+    if (res.startsWith("/")) res = "./" + res.substring(1, res.length);
+    return res;
   }
   return dest;
 }

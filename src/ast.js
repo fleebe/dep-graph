@@ -4,6 +4,8 @@ import { simple } from "acorn-walk";
 import { normalizePath } from "./utils/file-fn.js";
 import addToMapArray from "./utils/map-fn.js";
 import { assert } from "console";
+import path from "path";
+import { fileURLToPath } from 'url';
 
 
 function getExtension(filename) {
@@ -18,16 +20,16 @@ function getExtension(filename) {
  * @returns 
  */
 export function processAST(moduleMap, root) {
-  assert(!root.startsWith("."), `${root} root cannot start with .`);
-  assert(!root.startsWith("/"), `${root} root cannot start with /`);
-  assert(!root.startsWith("\\"), `${root} root cannot start with \\`);
-
-
+  if (root.startsWith(".")) root = root.substring(1, root.length);
+  if (root.startsWith("/")) root = root.substring(1, root.length);
+  if (root.startsWith("\\")) root = root.substring(1, root.length);
+  
   // list of dependencies between modules including the functions
   let dependencyList = [];
   // list of functions exported from modules/files
   let exportList = [];
   root = "./" + root;
+  let errors = [];
   moduleMap.forEach((arr, k) => {
     arr.forEach(e => {
       const f = e.replace(".", root);
@@ -40,6 +42,9 @@ export function processAST(moduleMap, root) {
           exportList.push(...exp);
           dependencyList.push(...deps);
         } catch (err) {
+          const lineno = new Error().lineNumber;
+          const __filename = fileURLToPath(import.meta.url);
+          errors.push({ "file": f, "err": err, "msg": err.message, "src": __filename, "lineno": lineno});
           console.error(`file=${f}\nmodule=${e}\n${err.message}`);
           console.error(err);
         }
@@ -50,7 +55,7 @@ export function processAST(moduleMap, root) {
   });
   // map of imports key=module/file value=an array of functions.
   let importMap = getImportMap(dependencyList);
-  return [dependencyList, exportList, importMap];
+  return [dependencyList, exportList, importMap, errors];
 }
 
 
@@ -163,7 +168,15 @@ function parseExports(ast, symbol) {
         } else if (decl.name) {
           addVal(decl.name);
         } else if (decl.type === 'ArrowFunctionExpression') {
-          addVal("???");
+          if (decl.params) {
+            let res = "(";
+            decl.params.map(e => {
+              res += e.name + ","})
+            res = res.substring(0, res.length - 1) + ")";
+            addVal(res);
+          } else {
+            addVal("???");
+          }
         } else if (decl.type === 'ConditionalExpression') {
           addVal(decl.test.name);
         } else {

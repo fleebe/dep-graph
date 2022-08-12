@@ -16,20 +16,20 @@ export function createPackageGraph(moduleMap, dependencyList) {
     }
   */
   // add packages to the graph
-  result += createNodes(moduleMap, []);
+  result += createPackageNodes(moduleMap);
   // create the depedencies for the packageMap
   let depArr = [];
   for (const dep of dependencyList) {
     let src = path.dirname(dep.src);
     let dest = path.dirname(dep.importSrc);
-    (src === ".") ? src ="./" : src;
+    (src === ".") ? src = "./" : src;
     (dest === ".") ? dest = "./" : dest;
     // node_module dependency so not mapped in the package
     if (dep.importSrc.indexOf("/") === -1) {
       continue;
     }
     // relationship between the src and dest packages
- //   let ln = '"' + dep.src + '"->"' + dep.importSrc + '"\n';
+    //   let ln = '"' + dep.src + '"->"' + dep.importSrc + '"\n';
     let ln = '"' + src + '"->"' + dest + '"\n';
 
     // add dependency to the array
@@ -42,6 +42,32 @@ export function createPackageGraph(moduleMap, dependencyList) {
   return result;
 
 }
+/**
+ * nodes that are in the importMap can have mulitple imported functions. 
+ * Some will also exist in the moduleLMap. So only need to create  the imported nodes as
+ *  module nodes have already been created from the exported functions.
+ * this excludes those that are in the moduleMap
+* loop through to add the the imported functions.
+ * 
+ * @param {*} importMap 
+ * @returns 
+ */
+function createPackageNodes(importMap) {
+  let ln = "";
+  let result = "";
+  for (const imp of importMap.keys()) {
+    ln = '"' + imp + '" [label="{' + imp + '|' + '\n';
+    for (var mod of importMap.get(imp)) {
+ //     mod = mod.replace(imp, ".");
+      ln += '\t' + mod + '\\l\n';
+    }
+    result += ln + '}"];\n\n';
+  }
+  return result;
+}
+
+
+
 
 /**
  * nodes that are in the importMap can have mulitple imported functions. 
@@ -88,8 +114,9 @@ export function createGraph(dependencyList, exportList, moduleMap, importMap) {
   let ln;
   let modList = [];
 
-  //add modules to graph
+  //add modules to graph for each directory
   moduleMap.forEach((arr) => {
+    // for each file in directory
     arr.forEach((mod) => {
       modList.push(mod);
 
@@ -112,8 +139,8 @@ export function createGraph(dependencyList, exportList, moduleMap, importMap) {
       */
       let newImp = "";
       for (const dep of dependencyList
-          .filter(v => { return v.src === mod })
-          .sort((a, b) => {(a.importSrc > b.importSrc) ? 1 : -1;})) {
+        .filter(v => { return v.src === mod })
+        .sort((a, b) => { (a.importSrc > b.importSrc) ? 1 : -1; })) {
         if (newImp !== dep.importSrc) {
           ln += `\t\t${dep.importSrc}\\l`;
           newImp = dep.importSrc;
