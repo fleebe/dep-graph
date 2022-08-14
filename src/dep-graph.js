@@ -2,7 +2,7 @@ import { Command } from 'commander';
 import fs from "fs";
 import path from "path";
 import { processAST } from './ast.js';
-import { createGraph, createPackageGraph } from './commands/graph.js';
+import { createGraph, createGraphRelations, createPackageGraph } from './commands/graph.js';
 import { jsonOut, jsonIn } from './commands/json.js';
 import { getFilename, getModuleMap } from "./utils/file-fn.js";
 import { fileURLToPath } from 'url';
@@ -84,6 +84,11 @@ export function runProgram() {
         result = createGraph(dependencyList, exportList, moduleMap, importMap);
         const depFile = lastDir + "Dependencies.dot";
         fs.writeFileSync(path.join(options.output, depFile), result, "utf8");
+
+        result = createGraphRelations(dependencyList, moduleMap);
+        const dep2File = lastDir + "Relations.dot";
+        fs.writeFileSync(path.join(options.output, dep2File), result, "utf8");
+
       }
 
     })

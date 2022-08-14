@@ -1,11 +1,11 @@
-import { writeFileSync, readFileSync, fstat } from "fs";
-import { parse as acparse } from "acorn";
+import { readFileSync } from "fs";
+import {parse as acparse } from "acorn";
+//import { Parser } from "acorn";
 import { simple } from "acorn-walk";
-import { normalizePath } from "./utils/file-fn.js";
+import { normalizePath, cleanPath } from "./utils/file-fn.js";
 import addToMapArray from "./utils/map-fn.js";
-import { assert } from "console";
-import path from "path";
 import { fileURLToPath } from 'url';
+//import jsx from "acorn-jsx";
 
 
 function getExtension(filename) {
@@ -20,9 +20,7 @@ function getExtension(filename) {
  * @returns 
  */
 export function processAST(moduleMap, root) {
-  if (root.startsWith(".")) root = root.substring(1, root.length);
-  if (root.startsWith("/")) root = root.substring(1, root.length);
-  if (root.startsWith("\\")) root = root.substring(1, root.length);
+  root = cleanPath(root);
   
   // list of dependencies between modules including the functions
   let dependencyList = [];
@@ -30,33 +28,37 @@ export function processAST(moduleMap, root) {
   let exportList = [];
   root = "./" + root;
   let errors = [];
-  moduleMap.forEach((arr, k) => {
+  moduleMap.forEach((arr) => {
     arr.forEach(e => {
       const f = e.replace(".", root);
       const ext = getExtension(f).toLowerCase();
-      if (ext === ".js") {
+ //     if ([".js", ".jsx"].indexOf(ext) !== -1) {
+      if ([".js"].indexOf(ext) !== -1) {
         try {
-          const ast = parseAST(f);
+          const ast = parseAST(f, ext);
           const exp = parseExports(ast, e);
           const deps = parseImports(ast, e);
           exportList.push(...exp);
           dependencyList.push(...deps);
         } catch (err) {
-          const lineno = new Error().lineNumber;
           const __filename = fileURLToPath(import.meta.url);
-          errors.push({ "file": f, "err": err, "msg": err.message, "src": __filename, "lineno": lineno});
+          errors.push({ "file": f, "err": err, "msg": err.message, "src": __filename});
           console.error(`file=${f}\nmodule=${e}\n${err.message}`);
           console.error(err);
         }
       } else {
+        errors.push({
+          "file": f, "err": null, "msg": "Can only parse javascript files at the moment.", "src": __filename });
         console.log("Can only parse javascript files at the moment. file=", f);
       }
     });
+  
   });
   // map of imports key=module/file value=an array of functions.
   let importMap = getImportMap(dependencyList);
   return [dependencyList, exportList, importMap, errors];
 }
+
 
 
 export function getImportMap(dependencyList) {
@@ -72,13 +74,22 @@ export function getImportMap(dependencyList) {
  * @param {*} symbol the file to get the ast from
   * @returns ast object struture for parsing
  */
-function parseAST(symbol) {
+function parseAST(symbol, ext) {
   const result = readFileSync(symbol, 'utf-8');
   //      console.log(`Retrieving file ast information for ${symbol}`);
   //const ast = parse(result, { sourceType: "module" });
+  let ast;
+  
+  if (ext === ".jsx") {
+//    const jsxParser = Parser.extend(jsx())
+//     ast = jsxParser.parse(result);
+  } else {
+  ast = acparse(result, { ecmaVersion: 2020, sourceType: "module" });
+  }
+  
+//  ast = acparse(result, { ecmaVersion: 2020, sourceType: "module", plugins: {jsx: {allowNamespaces: true}}});
 
-
-  return acparse(result, { ecmaVersion: 2020, sourceType: "module" });
+  return ast;
 }
 
 function parseImports(ast, symbol) {

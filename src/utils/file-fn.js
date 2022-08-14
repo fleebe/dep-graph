@@ -34,6 +34,21 @@ export function normalizePath(dest, src) {
   return dest;
 }
 
+/**
+ * 
+ * @param {*} root 
+ * @returns path without any leading directory delimiters
+ */
+export function cleanPath(root) {
+  if (root.startsWith("."))
+    root = root.substring(1, root.length);
+  if (root.startsWith("/"))
+    root = root.substring(1, root.length);
+  if (root.startsWith("\\"))
+    root = root.substring(1, root.length);
+  return root;
+}
+
 export function getFilename(fullPath) {
   return fullPath.replace(/^.*[\\/]/, '');
 }

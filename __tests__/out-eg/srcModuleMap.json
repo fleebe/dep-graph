@@ -1,12 +1,9 @@
 {
   "./": [
     "./ast.js",
-    "./cmd-test.js",
-    "./dep-graph.js",
-    "./json-package.js"
+    "./dep-graph.js"
   ],
   "./commands": [
-    "./commands/debug.js",
     "./commands/graph.js",
     "./commands/json.js"
   ],

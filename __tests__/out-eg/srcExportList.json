@@ -5,18 +5,28 @@
     "type": "FunctionDeclaration"
   },
   {
-    "name": "./json-package.js",
-    "exported": "getVersion",
-    "type": "VariableDeclaration"
+    "name": "./ast.js",
+    "exported": "getImportMap",
+    "type": "FunctionDeclaration"
   },
   {
-    "name": "./commands/debug.js",
-    "exported": "debug",
+    "name": "./dep-graph.js",
+    "exported": "runProgram",
     "type": "FunctionDeclaration"
   },
   {
     "name": "./commands/graph.js",
-    "exported": "createGraphs",
+    "exported": "createPackageGraph",
+    "type": "FunctionDeclaration"
+  },
+  {
+    "name": "./commands/graph.js",
+    "exported": "createGraph",
+    "type": "FunctionDeclaration"
+  },
+  {
+    "name": "./commands/graph.js",
+    "exported": "createGraphRelations",
     "type": "FunctionDeclaration"
   },
   {
@@ -37,6 +47,11 @@
   {
     "name": "./utils/file-fn.js",
     "exported": "normalizePath",
+    "type": "FunctionDeclaration"
+  },
+  {
+    "name": "./utils/file-fn.js",
+    "exported": "cleanPath",
     "type": "FunctionDeclaration"
   },
   {

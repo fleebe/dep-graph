@@ -9,16 +9,26 @@
   },
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --detectOpenHandles",
-    "build": "node . -g -j ./src"
+    "build": "node . -g -j -o ./__tests__/out ./src"
   },
-  "keywords": ["Dependency", "Graph", "Graphviz"],
-  "author": "phil.who@live.com",
+  "keywords": [
+    "Dependency",
+    "Graph",
+    "Graphviz",
+    "Abstract Syntax Tree",
+    "AST",
+    "Parse",
+    "Javascript",
+    "Parser"
+  ],
+  "author": "phlee0@gmail.com",
   "license": "MIT",
   "dependencies": {
     "acorn-walk": "^8.2.0",
     "commander": "^9.4.0"
   },
   "devDependencies": {
+    "acorn-jsx": "^5.3.2",
     "eslint": "^8.20.0",
     "jest": "^28.1.3"
   }

@@ -1,0 +1,164 @@
+<?xml version="1.0" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1463pt" height="403pt" viewBox="0.00 0.00 1462.54 402.60">
+<g id="graph0" class="graph" transform="translate(151.4084405279541,419.3971272439328) scale(1.7817973357722285)" data-name="">
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-398.6 1458.54,-398.6 1458.54,4 -4,4"/>
+<!-- ./ast.js -->
+<g id="node1" class="node" pointer-events="visible" data-name="./ast.js">
+
+<polygon fill="none" stroke="black" points="0,-50.9 0,-343.7 117.08,-343.7 117.08,-50.9 0,-50.9"/>
+<text text-anchor="middle" x="58.54" y="-327.1" font-family="Times,serif" font-size="14.00">./ast.js</text>
+<polyline fill="none" stroke="black" points="0,-318.9 117.08,-318.9 "/>
+<text text-anchor="start" x="8" y="-302.3" font-family="Times,serif" font-size="14.00">processAST </text>
+<text text-anchor="start" x="8" y="-285.5" font-family="Times,serif" font-size="14.00"> getImportMap </text>
+<polyline fill="none" stroke="black" points="0,-277.3 117.08,-277.3 "/>
+<text text-anchor="start" x="8" y="-260.7" font-family="Times,serif" font-size="14.00">fs</text>
+<text text-anchor="end" x="109.08" y="-243.9" font-family="Times,serif" font-size="14.00">readFileSync</text>
+<text text-anchor="start" x="8" y="-227.1" font-family="Times,serif" font-size="14.00">acorn</text>
+<text text-anchor="end" x="109.08" y="-210.3" font-family="Times,serif" font-size="14.00">parse</text>
+<text text-anchor="start" x="8" y="-193.5" font-family="Times,serif" font-size="14.00">acorn-walk</text>
+<text text-anchor="end" x="109.08" y="-176.7" font-family="Times,serif" font-size="14.00">simple</text>
+<text text-anchor="start" x="8" y="-159.9" font-family="Times,serif" font-size="14.00">./utils/file-fn.js</text>
+<text text-anchor="end" x="109.08" y="-143.1" font-family="Times,serif" font-size="14.00">normalizePath</text>
+<text text-anchor="end" x="109.08" y="-126.3" font-family="Times,serif" font-size="14.00">cleanPath</text>
+<text text-anchor="start" x="8" y="-109.5" font-family="Times,serif" font-size="14.00">./utils/map-fn.js</text>
+<text text-anchor="end" x="109.08" y="-92.7" font-family="Times,serif" font-size="14.00">*addToMapArray</text>
+<text text-anchor="start" x="8" y="-75.9" font-family="Times,serif" font-size="14.00">url</text>
+<text text-anchor="end" x="109.08" y="-59.1" font-family="Times,serif" font-size="14.00">fileURLToPath</text>
+</g>
+<!-- ./dep&#45;graph.js -->
+<g id="node2" class="node" pointer-events="visible" data-name="./dep-graph.js">
+
+<polygon fill="none" stroke="black" points="134.9,-0.5 134.9,-394.1 272.18,-394.1 272.18,-0.5 134.9,-0.5"/>
+<text text-anchor="middle" x="203.54" y="-377.5" font-family="Times,serif" font-size="14.00">./dep-graph.js</text>
+<polyline fill="none" stroke="black" points="134.9,-369.3 272.18,-369.3 "/>
+<text text-anchor="start" x="142.9" y="-352.7" font-family="Times,serif" font-size="14.00">runProgram </text>
+<polyline fill="none" stroke="black" points="134.9,-344.5 272.18,-344.5 "/>
+<text text-anchor="start" x="142.9" y="-327.9" font-family="Times,serif" font-size="14.00">commander</text>
+<text text-anchor="end" x="264.18" y="-311.1" font-family="Times,serif" font-size="14.00">Command</text>
+<text text-anchor="start" x="142.9" y="-294.3" font-family="Times,serif" font-size="14.00">fs</text>
+<text text-anchor="end" x="264.18" y="-277.5" font-family="Times,serif" font-size="14.00">*fs</text>
+<text text-anchor="start" x="142.9" y="-260.7" font-family="Times,serif" font-size="14.00">path</text>
+<text text-anchor="end" x="264.18" y="-243.9" font-family="Times,serif" font-size="14.00">*path</text>
+<text text-anchor="start" x="142.9" y="-227.1" font-family="Times,serif" font-size="14.00">./ast.js</text>
+<text text-anchor="end" x="264.18" y="-210.3" font-family="Times,serif" font-size="14.00">processAST</text>
+<text text-anchor="start" x="142.9" y="-193.5" font-family="Times,serif" font-size="14.00">./commands/graph.js</text>
+<text text-anchor="end" x="264.18" y="-176.7" font-family="Times,serif" font-size="14.00">createGraph</text>
+<text text-anchor="end" x="264.18" y="-159.9" font-family="Times,serif" font-size="14.00">createGraphRelations</text>
+<text text-anchor="end" x="264.18" y="-143.1" font-family="Times,serif" font-size="14.00">createPackageGraph</text>
+<text text-anchor="start" x="142.9" y="-126.3" font-family="Times,serif" font-size="14.00">./commands/json.js</text>
+<text text-anchor="end" x="264.18" y="-109.5" font-family="Times,serif" font-size="14.00">jsonOut</text>
+<text text-anchor="end" x="264.18" y="-92.7" font-family="Times,serif" font-size="14.00">jsonIn</text>
+<text text-anchor="start" x="142.9" y="-75.9" font-family="Times,serif" font-size="14.00">./utils/file-fn.js</text>
+<text text-anchor="end" x="264.18" y="-59.1" font-family="Times,serif" font-size="14.00">getFilename</text>
+<text text-anchor="end" x="264.18" y="-42.3" font-family="Times,serif" font-size="14.00">getModuleMap</text>
+<text text-anchor="start" x="142.9" y="-25.5" font-family="Times,serif" font-size="14.00">url</text>
+<text text-anchor="end" x="264.18" y="-8.7" font-family="Times,serif" font-size="14.00">fileURLToPath</text>
+</g>
+<!-- ./commands/graph.js -->
+<g id="node3" class="node" pointer-events="visible" data-name="./commands/graph.js">
+
+<polygon fill="none" stroke="black" points="290.4,-118.1 290.4,-276.5 434.68,-276.5 434.68,-118.1 290.4,-118.1"/>
+<text text-anchor="middle" x="362.54" y="-259.9" font-family="Times,serif" font-size="14.00">./commands/graph.js</text>
+<polyline fill="none" stroke="black" points="290.4,-251.7 434.68,-251.7 "/>
+<text text-anchor="start" x="298.4" y="-235.1" font-family="Times,serif" font-size="14.00">createPackageGraph </text>
+<text text-anchor="start" x="298.4" y="-218.3" font-family="Times,serif" font-size="14.00"> createGraph </text>
+<text text-anchor="start" x="298.4" y="-201.5" font-family="Times,serif" font-size="14.00"> createGraphRelations </text>
+<polyline fill="none" stroke="black" points="290.4,-193.3 434.68,-193.3 "/>
+<text text-anchor="start" x="298.4" y="-176.7" font-family="Times,serif" font-size="14.00">path</text>
+<text text-anchor="end" x="426.68" y="-159.9" font-family="Times,serif" font-size="14.00">*path</text>
+<text text-anchor="start" x="298.4" y="-143.1" font-family="Times,serif" font-size="14.00">./utils/file-fn.js</text>
+<text text-anchor="end" x="426.68" y="-126.3" font-family="Times,serif" font-size="14.00">cleanPath</text>
+</g>
+<!-- ./commands/json.js -->
+<g id="node4" class="node" pointer-events="visible" data-name="./commands/json.js">
+
+<polygon fill="none" stroke="black" points="452.48,-126.5 452.48,-268.1 576.59,-268.1 576.59,-126.5 452.48,-126.5"/>
+<text text-anchor="middle" x="514.54" y="-251.5" font-family="Times,serif" font-size="14.00">./commands/json.js</text>
+<polyline fill="none" stroke="black" points="452.48,-243.3 576.59,-243.3 "/>
+<text text-anchor="start" x="460.48" y="-226.7" font-family="Times,serif" font-size="14.00">jsonOut </text>
+<text text-anchor="start" x="460.48" y="-209.9" font-family="Times,serif" font-size="14.00"> jsonIn </text>
+<polyline fill="none" stroke="black" points="452.48,-201.7 576.59,-201.7 "/>
+<text text-anchor="start" x="460.48" y="-185.1" font-family="Times,serif" font-size="14.00">fs</text>
+<text text-anchor="end" x="568.59" y="-168.3" font-family="Times,serif" font-size="14.00">*fs</text>
+<text text-anchor="start" x="460.48" y="-151.5" font-family="Times,serif" font-size="14.00">path</text>
+<text text-anchor="end" x="568.59" y="-134.7" font-family="Times,serif" font-size="14.00">*path</text>
+</g>
+<!-- ./utils/file&#45;fn.js -->
+<g id="node5" class="node" pointer-events="visible" data-name="./utils/file-fn.js">
+
+<polygon fill="none" stroke="black" points="594.4,-92.9 594.4,-301.7 752.68,-301.7 752.68,-92.9 594.4,-92.9"/>
+<text text-anchor="middle" x="673.54" y="-285.1" font-family="Times,serif" font-size="14.00">./utils/file-fn.js</text>
+<polyline fill="none" stroke="black" points="594.4,-276.9 752.68,-276.9 "/>
+<text text-anchor="start" x="602.4" y="-260.3" font-family="Times,serif" font-size="14.00">getBaseDir </text>
+<text text-anchor="start" x="602.4" y="-243.5" font-family="Times,serif" font-size="14.00"> normalizePath </text>
+<text text-anchor="start" x="602.4" y="-226.7" font-family="Times,serif" font-size="14.00"> cleanPath </text>
+<text text-anchor="start" x="602.4" y="-209.9" font-family="Times,serif" font-size="14.00"> getFilename </text>
+<text text-anchor="start" x="602.4" y="-193.1" font-family="Times,serif" font-size="14.00"> getDirectoriesRecursive </text>
+<text text-anchor="start" x="602.4" y="-176.3" font-family="Times,serif" font-size="14.00"> getModuleMap </text>
+<polyline fill="none" stroke="black" points="594.4,-168.1 752.68,-168.1 "/>
+<text text-anchor="start" x="602.4" y="-151.5" font-family="Times,serif" font-size="14.00">path</text>
+<text text-anchor="end" x="744.68" y="-134.7" font-family="Times,serif" font-size="14.00">*path</text>
+<text text-anchor="start" x="602.4" y="-117.9" font-family="Times,serif" font-size="14.00">fs</text>
+<text text-anchor="end" x="744.68" y="-101.1" font-family="Times,serif" font-size="14.00">*fs</text>
+</g>
+<!-- ./utils/map&#45;fn.js -->
+<g id="node6" class="node" pointer-events="visible" data-name="./utils/map-fn.js">
+
+<polygon fill="none" stroke="black" points="770.75,-160.1 770.75,-234.5 884.33,-234.5 884.33,-160.1 770.75,-160.1"/>
+<text text-anchor="middle" x="827.54" y="-217.9" font-family="Times,serif" font-size="14.00">./utils/map-fn.js</text>
+<polyline fill="none" stroke="black" points="770.75,-209.7 884.33,-209.7 "/>
+<text text-anchor="start" x="778.75" y="-193.1" font-family="Times,serif" font-size="14.00">addToMapArray </text>
+<polyline fill="none" stroke="black" points="770.75,-184.9 884.33,-184.9 "/>
+<text text-anchor="middle" x="827.54" y="-168.3" font-family="Times,serif" font-size="14.00"> </text>
+</g>
+<!-- fs -->
+<g id="node7" class="node" pointer-events="visible" data-name="fs">
+
+<polygon fill="none" stroke="black" points="902.6,-164.1 902.6,-230.5 992.47,-230.5 992.47,-164.1 902.6,-164.1"/>
+<text text-anchor="middle" x="947.54" y="-213.9" font-family="Times,serif" font-size="14.00">fs</text>
+<polyline fill="none" stroke="black" points="902.6,-205.7 992.47,-205.7 "/>
+<text text-anchor="start" x="910.6" y="-189.1" font-family="Times,serif" font-size="14.00">readFileSync</text>
+<text text-anchor="start" x="910.6" y="-172.3" font-family="Times,serif" font-size="14.00">*fs</text>
+</g>
+<!-- acorn -->
+<g id="node8" class="node" pointer-events="visible" data-name="acorn">
+
+<polygon fill="none" stroke="black" points="1010.54,-172.5 1010.54,-222.1 1064.54,-222.1 1064.54,-172.5 1010.54,-172.5"/>
+<text text-anchor="middle" x="1037.08" y="-205.5" font-family="Times,serif" font-size="14.00">acorn</text>
+<polyline fill="none" stroke="black" points="1010.54,-197.3 1063.63,-197.3 "/>
+<text text-anchor="start" x="1018.54" y="-180.7" font-family="Times,serif" font-size="14.00">parse</text>
+</g>
+<!-- acorn&#45;walk -->
+<g id="node9" class="node" pointer-events="visible" data-name="acorn-walk">
+
+<polygon fill="none" stroke="black" points="1082.06,-172.5 1082.06,-222.1 1161.02,-222.1 1161.02,-172.5 1082.06,-172.5"/>
+<text text-anchor="middle" x="1121.54" y="-205.5" font-family="Times,serif" font-size="14.00">acorn-walk</text>
+<polyline fill="none" stroke="black" points="1082.06,-197.3 1161.02,-197.3 "/>
+<text text-anchor="start" x="1090.06" y="-180.7" font-family="Times,serif" font-size="14.00">simple</text>
+</g>
+<!-- url -->
+<g id="node10" class="node" pointer-events="visible" data-name="url">
+
+<polygon fill="none" stroke="black" points="1178.99,-172.5 1178.99,-222.1 1282.09,-222.1 1282.09,-172.5 1178.99,-172.5"/>
+<text text-anchor="middle" x="1230.54" y="-205.5" font-family="Times,serif" font-size="14.00">url</text>
+<polyline fill="none" stroke="black" points="1178.99,-197.3 1282.09,-197.3 "/>
+<text text-anchor="start" x="1186.99" y="-180.7" font-family="Times,serif" font-size="14.00">fileURLToPath</text>
+</g>
+<!-- commander -->
+<g id="node11" class="node" pointer-events="visible" data-name="commander">
+
+<polygon fill="none" stroke="black" points="1300.5,-172.5 1300.5,-222.1 1382.58,-222.1 1382.58,-172.5 1300.5,-172.5"/>
+<text text-anchor="middle" x="1341.54" y="-205.5" font-family="Times,serif" font-size="14.00">commander</text>
+<polyline fill="none" stroke="black" points="1300.5,-197.3 1382.58,-197.3 "/>
+<text text-anchor="start" x="1308.5" y="-180.7" font-family="Times,serif" font-size="14.00">Command</text>
+</g>
+<!-- path -->
+<g id="node12" class="node" pointer-events="visible" data-name="path">
+
+<polygon fill="none" stroke="black" points="1400.54,-172.5 1400.54,-222.1 1454.54,-222.1 1454.54,-172.5 1400.54,-172.5"/>
+<text text-anchor="middle" x="1427.09" y="-205.5" font-family="Times,serif" font-size="14.00">path</text>
+<polyline fill="none" stroke="black" points="1400.54,-197.3 1453.64,-197.3 "/>
+<text text-anchor="start" x="1408.54" y="-180.7" font-family="Times,serif" font-size="14.00">*path</text>
+</g>
+</g>
+</svg>

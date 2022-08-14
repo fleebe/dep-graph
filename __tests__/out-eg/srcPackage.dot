@@ -1,0 +1,22 @@
+digraph {
+node [shape=record];
+"./" [label="{./|
+	ast.js\l
+	dep-graph.js\l
+}"];
+
+"./commands" [label="{./commands|
+	graph.js\l
+	json.js\l
+}"];
+
+"./utils" [label="{./utils|
+	file-fn.js\l
+	map-fn.js\l
+}"];
+
+"./"->"./utils"
+"./"->"./"
+"./"->"./commands"
+"./commands"->"./utils"
+}

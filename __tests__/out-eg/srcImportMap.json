@@ -1,7 +1,7 @@
 {
   "fs": [
     "readFileSync",
-    "fs"
+    "*fs"
   ],
   "acorn": [
     "parse"
@@ -11,27 +11,32 @@
   ],
   "./utils/file-fn.js": [
     "normalizePath",
+    "cleanPath",
+    "getFilename",
     "getModuleMap"
   ],
   "./utils/map-fn.js": [
-    "addToMapArray"
+    "*addToMapArray"
+  ],
+  "url": [
+    "fileURLToPath"
   ],
   "commander": [
     "Command"
+  ],
+  "path": [
+    "*path"
   ],
   "./ast.js": [
     "processAST"
   ],
   "./commands/graph.js": [
-    "createGraphs"
-  ],
-  "./commands/debug.js": [
-    "debug"
+    "createGraph",
+    "createGraphRelations",
+    "createPackageGraph"
   ],
   "./commands/json.js": [
-    "jsonOut"
-  ],
-  "path": [
-    "path"
+    "jsonOut",
+    "jsonIn"
   ]
 }
