@@ -4,6 +4,8 @@ A cli program to generate dependency .dot files for use with [Graphviz](https://
 
 It can process a file or a directory. For a directory it processes recursively.
 
+It handles .js and .jsx files only. In the future it will handle typescript (.ts) files.
+
 From root directory where this file is.
 
 1. install for testing<br>
@@ -29,7 +31,7 @@ If only -g option is used it assumes the json files exist. If they do not exist 
 |----- | --- | --- |
 |-V | --version |output the version number
 |-g |--graph|produces package and dependencies  .dot files that graphviz <br>can use to generate a graph of the dependencies to <br>output directory (see files produced).
-|-j |--json    |produce .json object files used to output directory (see files produced).
+|-j |--json    |produce .json object files used  (see files produced).
 |-o |--output \<dir\> | directory that the outputs are sent to. (default: "./out")
 |-h |--help |display help for command
 
@@ -37,7 +39,9 @@ If only -g option is used it assumes the json files exist. If they do not exist 
 
 If you try it out and it does not work drop me an email. It is my first pass so I'm happy to try and improve it if you have some suggestions. Make a pull request if you want to change it yourself. Some ideas I have for future work include. Let me know any favourites. *Money or work would be gratefully accepted as I am not working at the moment.*
 
-- Enable it to parse typescript (ts) jsx and tsx files into the graph
+- Enable it to parse typescript (ts) and (tsx) files into the graph
+- Produce a summary table of module usage counts.
+- Develop and maintain tests
 - Create hyperlinks
 - Add JSDocs links.
 - Make the graph production more configurable
@@ -45,6 +49,8 @@ If you try it out and it does not work drop me an email. It is my first pass so 
 - Fix bugs and errors
 - Add in types and parameters for exported functions
 - See what happens for node modules.
+- normalise .js and non .js imports that are referencing the same package. (done)
+- parse (jsx) files (done)
 
 ## Other Projects
 
@@ -106,8 +112,27 @@ A * indicates it is the default export/import.
 </td></tr>
 </table>
 
+### Exported Function List
+
+This contains the name and code describing the type of export declaration.
+
+<table>
+<tr><th>Code</th><th>Description</th></tr>
+<tr><td>-cl</td><td>ClassDeclaration</td></tr>
+<tr><td>-ce</td><td>CallExpression</td></tr>
+<tr><td>-fn</td><td>FunctionDeclaration</td></tr>
+<tr><td>-vr</td><td>VariableDeclaration</td></tr>
+<tr><td>-id</td><td>Identifier</td></tr>
+<tr><td>-pr</td><td>ObjectExpression - property</td></tr>
+<tr><td>-af</td><td>ArrowFunctionExpression</td></tr>
+<tr><td>-cd</td><td>ConditionalExpression</td></tr>
+<tr><td></td><td></td></tr>
+</table>
+
+### Dependency Graph example
+
 <img src="./__tests__/out-eg/srcDependencies.svg" alt="
-Example srcDependencies.dot" style="height: 700px; width : 800px">
+Example srcDependencies.dot" style="height: 500px; width : 600px">
 
 ## Package.dot
 
@@ -116,7 +141,6 @@ Example srcDependencies.dot" style="height: 700px; width : 800px">
 <table>
 <tr><th>Description</th>
 <th>Format</th></tr>
-
 
 <tr>
 <td>The graphviz file used to produce a graph of package dependencies.</td>
@@ -138,8 +162,10 @@ Example srcDependencies.dot" style="height: 700px; width : 800px">
 
 \<Module> - *Depends on* -> \<Module>
 
+### Package Graph Example
+
 <img src="./__tests__/out-eg/srcPackage.svg" alt="
-Example srcPackage.dot" style="height: 300px; width : 800px">
+Example srcPackage.dot" style="height: 300px; width : 600px">
 
 ## Relations.dot
 
@@ -148,7 +174,6 @@ Example srcPackage.dot" style="height: 300px; width : 800px">
 <table>
 <tr><th>Description</th>
 <th>Format</th></tr>
-
 
 <tr>
 <td>The graphviz file used to produce a graph of relations between files. Includes node_moducle relationship where depended on in a module. </td>
@@ -176,8 +201,10 @@ Example srcPackage.dot" style="height: 300px; width : 800px">
 
 \<Module> - *Depend on* -> \<Module>
 
+### Relations Graph Example
+
 <img src="./__tests__/out-eg/srcRelations.svg" alt="
-Example srcRelations.dot" style="height: 500px; width : 800px">
+Example srcRelations.dot" style="height: 600px; width : 600px">
 
 # Json Files
 

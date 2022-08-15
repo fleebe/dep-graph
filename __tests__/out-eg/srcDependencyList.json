@@ -6,13 +6,8 @@
   },
   {
     "src": "./ast.js",
-    "importSrc": "acorn",
+    "importSrc": "@babel/parser",
     "import": "parse"
-  },
-  {
-    "src": "./ast.js",
-    "importSrc": "acorn-walk",
-    "import": "simple"
   },
   {
     "src": "./ast.js",
@@ -33,6 +28,11 @@
     "src": "./ast.js",
     "importSrc": "url",
     "import": "fileURLToPath"
+  },
+  {
+    "src": "./ast.js",
+    "importSrc": "babel-walk",
+    "import": "*walk"
   },
   {
     "src": "./dep-graph.js",

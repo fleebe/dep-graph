@@ -1,77 +1,77 @@
 [
   {
     "name": "./ast.js",
-    "exported": "processAST",
+    "exported": "-fn processAST",
     "type": "FunctionDeclaration"
   },
   {
     "name": "./ast.js",
-    "exported": "getImportMap",
+    "exported": "-fn getImportMap",
     "type": "FunctionDeclaration"
   },
   {
     "name": "./dep-graph.js",
-    "exported": "runProgram",
+    "exported": "-fn runProgram",
     "type": "FunctionDeclaration"
   },
   {
     "name": "./commands/graph.js",
-    "exported": "createPackageGraph",
+    "exported": "-fn createPackageGraph",
     "type": "FunctionDeclaration"
   },
   {
     "name": "./commands/graph.js",
-    "exported": "createGraph",
+    "exported": "-fn createGraph",
     "type": "FunctionDeclaration"
   },
   {
     "name": "./commands/graph.js",
-    "exported": "createGraphRelations",
+    "exported": "-fn createGraphRelations",
     "type": "FunctionDeclaration"
   },
   {
     "name": "./commands/json.js",
-    "exported": "jsonOut",
+    "exported": "-fn jsonOut",
     "type": "FunctionDeclaration"
   },
   {
     "name": "./commands/json.js",
-    "exported": "jsonIn",
+    "exported": "-fn jsonIn",
     "type": "FunctionDeclaration"
   },
   {
     "name": "./utils/file-fn.js",
-    "exported": "getBaseDir",
+    "exported": "-vr getBaseDir",
     "type": "VariableDeclaration"
   },
   {
     "name": "./utils/file-fn.js",
-    "exported": "normalizePath",
+    "exported": "-fn normalizePath",
     "type": "FunctionDeclaration"
   },
   {
     "name": "./utils/file-fn.js",
-    "exported": "cleanPath",
+    "exported": "-fn cleanPath",
     "type": "FunctionDeclaration"
   },
   {
     "name": "./utils/file-fn.js",
-    "exported": "getFilename",
+    "exported": "-fn getFilename",
     "type": "FunctionDeclaration"
   },
   {
     "name": "./utils/file-fn.js",
-    "exported": "getDirectoriesRecursive",
+    "exported": "-fn getDirectoriesRecursive",
     "type": "FunctionDeclaration"
   },
   {
     "name": "./utils/file-fn.js",
-    "exported": "getModuleMap",
+    "exported": "-fn getModuleMap",
     "type": "FunctionDeclaration"
   },
   {
     "name": "./utils/map-fn.js",
-    "exported": "addToMapArray",
+    "exported": "-fn addToMapArray",
     "type": "FunctionDeclaration"
   }
 ]

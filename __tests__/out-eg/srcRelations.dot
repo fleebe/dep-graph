@@ -6,8 +6,8 @@ Used By : 1\l
 |
 		./utils/file-fn.js\l
 		./utils/map-fn.js\l
-		acorn\l
-		acorn-walk\l
+		@babel/parser\l
+		babel-walk\l
 		fs\l
 		url\l
 |
@@ -70,8 +70,8 @@ Used By : 1\l
 }"];
 
 "node-modules" [label="{node-modules\n | 
- 		acorn\l
-		acorn-walk\l
+ 		@babel/parser\l
+		babel-walk\l
 		commander\l
 		fs\l
 		path\l
@@ -84,9 +84,4 @@ Used By : 1\l
 "./dep-graph.js"->"./commands/json.js"
 "./dep-graph.js"->"./utils/file-fn.js"
 "./commands/graph.js"->"./utils/file-fn.js"
-"./ast.js"->"node-modules"
-"./dep-graph.js"->"node-modules"
-"./commands/graph.js"->"node-modules"
-"./commands/json.js"->"node-modules"
-"./utils/file-fn.js"->"node-modules"
 }

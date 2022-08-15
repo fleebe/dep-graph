@@ -1,19 +1,19 @@
 digraph {
 node [shape=record];
 "./ast.js" [label="{ ./ast.js | 
-	 processAST \l
-	 getImportMap \l
+	 -fn processAST \l
+	 -fn getImportMap \l
 |		./utils/file-fn.js\l		cleanPath\r
 		normalizePath\r
 		./utils/map-fn.js\l		*addToMapArray\r
-		acorn\l		parse\r
-		acorn-walk\l		simple\r
+		@babel/parser\l		parse\r
+		babel-walk\l		*walk\r
 		fs\l		readFileSync\r
 		url\l		fileURLToPath\r
 }"];
 
 "./dep-graph.js" [label="{ ./dep-graph.js | 
-	 runProgram \l
+	 -fn runProgram \l
 |		./ast.js\l		processAST\r
 		./commands/graph.js\l		createPackageGraph\r
 		createGraphRelations\r
@@ -29,33 +29,33 @@ node [shape=record];
 }"];
 
 "./commands/graph.js" [label="{ ./commands/graph.js | 
-	 createPackageGraph \l
-	 createGraph \l
-	 createGraphRelations \l
+	 -fn createPackageGraph \l
+	 -fn createGraph \l
+	 -fn createGraphRelations \l
 |		./utils/file-fn.js\l		cleanPath\r
 		path\l		*path\r
 }"];
 
 "./commands/json.js" [label="{ ./commands/json.js | 
-	 jsonOut \l
-	 jsonIn \l
+	 -fn jsonOut \l
+	 -fn jsonIn \l
 |		fs\l		*fs\r
 		path\l		*path\r
 }"];
 
 "./utils/file-fn.js" [label="{ ./utils/file-fn.js | 
-	 getBaseDir \l
-	 normalizePath \l
-	 cleanPath \l
-	 getFilename \l
-	 getDirectoriesRecursive \l
-	 getModuleMap \l
+	 -vr getBaseDir \l
+	 -fn normalizePath \l
+	 -fn cleanPath \l
+	 -fn getFilename \l
+	 -fn getDirectoriesRecursive \l
+	 -fn getModuleMap \l
 |		fs\l		*fs\r
 		path\l		*path\r
 }"];
 
 "./utils/map-fn.js" [label="{ ./utils/map-fn.js | 
-	 addToMapArray \l
+	 -fn addToMapArray \l
 |}"];
 
 "fs" [label="{fs|
@@ -63,16 +63,16 @@ node [shape=record];
 	*fs\l
 }"];
 
-"acorn" [label="{acorn|
+"@babel/parser" [label="{@babel/parser|
 	parse\l
-}"];
-
-"acorn-walk" [label="{acorn-walk|
-	simple\l
 }"];
 
 "url" [label="{url|
 	fileURLToPath\l
+}"];
+
+"babel-walk" [label="{babel-walk|
+	*walk\l
 }"];
 
 "commander" [label="{commander|

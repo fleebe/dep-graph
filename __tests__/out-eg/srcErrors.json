@@ -1,0 +1,38 @@
+[
+  {
+    "file": "./src/ast.js",
+    "err": {},
+    "msg": "parseAST is not defined",
+    "src": "C:\\Code\\dep-graph\\src\\ast.js"
+  },
+  {
+    "file": "./src/dep-graph.js",
+    "err": {},
+    "msg": "parseAST is not defined",
+    "src": "C:\\Code\\dep-graph\\src\\ast.js"
+  },
+  {
+    "file": "./src/commands/graph.js",
+    "err": {},
+    "msg": "parseAST is not defined",
+    "src": "C:\\Code\\dep-graph\\src\\ast.js"
+  },
+  {
+    "file": "./src/commands/json.js",
+    "err": {},
+    "msg": "parseAST is not defined",
+    "src": "C:\\Code\\dep-graph\\src\\ast.js"
+  },
+  {
+    "file": "./src/utils/file-fn.js",
+    "err": {},
+    "msg": "parseAST is not defined",
+    "src": "C:\\Code\\dep-graph\\src\\ast.js"
+  },
+  {
+    "file": "./src/utils/map-fn.js",
+    "err": {},
+    "msg": "parseAST is not defined",
+    "src": "C:\\Code\\dep-graph\\src\\ast.js"
+  }
+]

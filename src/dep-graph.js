@@ -12,9 +12,12 @@ import { fileURLToPath } from 'url';
 
 export function runProgram() {
 
-  const program = new Command();
-
+  /**
+   * gets the version from package.json
+   * @returns 
+   */
   const getVersion = () => {
+    // sets the filename global to this file
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
     const packageJSONPath = path.resolve(__dirname, "../package.json")
@@ -22,6 +25,8 @@ export function runProgram() {
     const config = JSON.parse(content)
     return config.version
   }
+
+  const program = new Command();
 
   program.name("dep-graph")
     .version(getVersion())
@@ -57,22 +62,22 @@ export function runProgram() {
       let exportList = [];
       let importMap = new Map();
       let errors = [];
-
+      const output = path.join(options.output, lastDir);
       // get the export list and dependency of each module/file
       // only do this if the -j option is set otherwise read from the output directory
       if (options.json) {
         // a list of modules or files  from dir in the form  .dir/file.js list recursively walks the start directory
-          [dependencyList, exportList, importMap, errors] = processAST(moduleMap, srcDir);
+          [dependencyList, exportList, importMap, errors] = processAST(moduleMap, srcDir, output);
           if (errors.length > 0) {
-            fs.writeFileSync(path.join(options.output, lastDir + "Errors.json"), JSON.stringify(errors, null, 2), "utf8");
-          }
+              fs.writeFileSync(output + "Errors.json", JSON.stringify(errors, null, 2), "utf8");
+        }
           jsonOut(options.output, moduleMap, exportList, dependencyList, importMap, lastDir);
       } else {
         // read from output directory
-        moduleMap = jsonIn(path.join(options.output, lastDir + "ModuleMap.json"));
-        exportList = Array.from(jsonIn(path.join(options.output, lastDir + "ExportList.json")));
-        dependencyList = Array.from(jsonIn(path.join(options.output, lastDir + "DependencyList.json")));
-        importMap = jsonIn(path.join(options.output, lastDir + "ImportMap.json"));
+        moduleMap = jsonIn(output + "ModuleMap.json");
+        exportList = Array.from(jsonIn(output + "ExportList.json"));
+        dependencyList = Array.from(jsonIn(output + "DependencyList.json"));
+        importMap = jsonIn(output + "ImportMap.json");
       }
 
       // create the graph file for packages or directories for all the modules. -g option
@@ -97,6 +102,11 @@ export function runProgram() {
   program.parse(process.argv);
 }
 
+/**
+ * finds the last name in the path
+ * @param {*} srcDir 
+ * @returns 
+ */
 function getLastDir(srcDir) {
   let lastDir = srcDir.split("/").slice(-1).join("");
   (lastDir.startsWith(".")) ? lastDir = lastDir.slice(1) : lastDir;
@@ -105,9 +115,10 @@ function getLastDir(srcDir) {
   return lastDir;
 }
 
-//-------------------------------------
-
-
+/**
+ * validates the options passed
+ * @param {*} options 
+ */
 function validateOptions(options) {
   if (!options.json && !options.graph) {
     console.error("Neither output format was specified.");

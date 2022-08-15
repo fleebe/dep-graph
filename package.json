@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --detectOpenHandles",
-    "build": "node . -g -j -o ./__tests__/out ./src"
+    "build": "node . -g -j -o ./__tests__/out-eg ./src"
   },
   "keywords": [
     "Dependency",
@@ -24,7 +24,9 @@
   "author": "phlee0@gmail.com",
   "license": "MIT",
   "dependencies": {
-    "acorn-walk": "^8.2.0",
+    "@babel/parser": "^7.18.11",
+    "@babel/traverse": "^7.18.11",
+    "babel-walk": "^3.0.0",
     "commander": "^9.4.0"
   },
   "devDependencies": {

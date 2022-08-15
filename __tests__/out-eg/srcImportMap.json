@@ -3,11 +3,8 @@
     "readFileSync",
     "*fs"
   ],
-  "acorn": [
+  "@babel/parser": [
     "parse"
-  ],
-  "acorn-walk": [
-    "simple"
   ],
   "./utils/file-fn.js": [
     "normalizePath",
@@ -20,6 +17,9 @@
   ],
   "url": [
     "fileURLToPath"
+  ],
+  "babel-walk": [
+    "*walk"
   ],
   "commander": [
     "Command"
