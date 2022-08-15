@@ -1,22 +1,27 @@
 import fs from "fs";
-import path from "path";
 
 /**
  * save data structures to json files. Cannot stringify a Map so need to convert it to an object.
- * @param {*} output 
- * @param {*} moduleList 
- * @param {*} exportList 
- * @param {*} dependencyList 
- * @param {*} importMap 
+ * @param {*} output path and unique identifier
+ * @param {*} title file name
+ * @param {*} obj Map | Array to save to file
  */
-export function jsonOut(output, moduleMap, exportList, dependencyList, importMap, lastDir) {
-  let obj = strMapToObj(moduleMap); 
-  fs.writeFileSync(path.join(output, lastDir + "ModuleMap.json"), JSON.stringify(obj, null, 2), "utf8");
-  fs.writeFileSync(path.join(output, lastDir + "ExportList.json"), JSON.stringify(exportList, null, 2), "utf8");
-  fs.writeFileSync(path.join(output, lastDir + "DependencyList.json"), JSON.stringify(dependencyList, null, 2), "utf8");
-  obj = strMapToObj(importMap);
-  fs.writeFileSync(path.join(output, lastDir + "ImportMap.json"), JSON.stringify(obj, null, 2), "utf8");
+export function jsonOut(output, title, obj) {
+  switch (title) {
+    case "ModuleMap": case "ImportMap": {
+      const map = strMapToObj(obj);
+      fs.writeFileSync(output + title + ".json", JSON.stringify(map, null, 2), "utf8");
+      break;
+    }
+    case "ExportList": case "DependencyList": case "Errors": case "ModuleArray": {
+      fs.writeFileSync(output + title + ".json", JSON.stringify(obj, null, 2), "utf8");
+      break;
+    }
+    default:
+      break
+  }
 }
+
 
 export function jsonIn(file) {  
   const obj = JSON.parse(fs.readFileSync(file, "utf-8"));

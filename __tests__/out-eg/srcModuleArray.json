@@ -1,0 +1,38 @@
+[
+  {
+    "dir": "./",
+    "file": "./ast.js",
+    "dependsOnCnt": 6,
+    "usedByCnt": 1
+  },
+  {
+    "dir": "./",
+    "file": "./dep-graph.js",
+    "dependsOnCnt": 8,
+    "usedByCnt": 0
+  },
+  {
+    "dir": "./commands",
+    "file": "./commands/graph.js",
+    "dependsOnCnt": 2,
+    "usedByCnt": 1
+  },
+  {
+    "dir": "./commands",
+    "file": "./commands/json.js",
+    "dependsOnCnt": 1,
+    "usedByCnt": 1
+  },
+  {
+    "dir": "./utils",
+    "file": "./utils/file-fn.js",
+    "dependsOnCnt": 2,
+    "usedByCnt": 3
+  },
+  {
+    "dir": "./utils",
+    "file": "./utils/map-fn.js",
+    "dependsOnCnt": 0,
+    "usedByCnt": 1
+  }
+]

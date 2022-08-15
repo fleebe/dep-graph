@@ -5,7 +5,7 @@ node [shape=record];
 	 -fn getImportMap \l
 |		./utils/file-fn.js\l		cleanPath\r
 		normalizePath\r
-		./utils/map-fn.js\l		*addToMapArray\r
+		./utils/map-fn.js\l		addToMapArray\r
 		@babel/parser\l		parse\r
 		babel-walk\l		*walk\r
 		fs\l		readFileSync\r
@@ -16,11 +16,11 @@ node [shape=record];
 	 -fn runProgram \l
 |		./ast.js\l		processAST\r
 		./commands/graph.js\l		createPackageGraph\r
-		createGraphRelations\r
+		createRelationsGraph\r
 		createGraph\r
 		./commands/json.js\l		jsonIn\r
 		jsonOut\r
-		./utils/file-fn.js\l		getModuleMap\r
+		./utils/file-fn.js\l		getModuleArray\r
 		getFilename\r
 		commander\l		Command\r
 		fs\l		*fs\r
@@ -31,7 +31,7 @@ node [shape=record];
 "./commands/graph.js" [label="{ ./commands/graph.js | 
 	 -fn createPackageGraph \l
 	 -fn createGraph \l
-	 -fn createGraphRelations \l
+	 -fn createRelationsGraph \l
 |		./utils/file-fn.js\l		cleanPath\r
 		path\l		*path\r
 }"];
@@ -40,7 +40,6 @@ node [shape=record];
 	 -fn jsonOut \l
 	 -fn jsonIn \l
 |		fs\l		*fs\r
-		path\l		*path\r
 }"];
 
 "./utils/file-fn.js" [label="{ ./utils/file-fn.js | 
@@ -49,7 +48,7 @@ node [shape=record];
 	 -fn cleanPath \l
 	 -fn getFilename \l
 	 -fn getDirectoriesRecursive \l
-	 -fn getModuleMap \l
+	 -fn getModuleArray \l
 |		fs\l		*fs\r
 		path\l		*path\r
 }"];

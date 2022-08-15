@@ -16,13 +16,13 @@ const findInMap = (map, val) => {
 
 /**
  * Adds the arrVal to the map with the passed key 
- * if the key exists then adds the arrVal if it does not exist in the array already.
+ * if the key exists then adds the arrVal to the array if it does not exist in it already.
  * @param {*} map 
  * @param {*} key 
  * @param {*} arrVal primitive | array
  * * @returns map with arrVal added to the array specified by the key
  */
-export default function addToMapArray(map, key, arrVal) {
+export function addToMapArray(map, key, arrVal) {
   if (!findInMap(map, key)) {
     return map.set(key, [arrVal]);
   } else {

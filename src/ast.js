@@ -1,7 +1,7 @@
 import { readFileSync } from "fs";
 import { parse as babelParse } from "@babel/parser";
 import { normalizePath, cleanPath } from "./utils/file-fn.js";
-import addToMapArray from "./utils/map-fn.js";
+import { addToMapArray } from "./utils/map-fn.js";
 import { fileURLToPath } from 'url';
 import * as walk from 'babel-walk';
 
@@ -11,7 +11,7 @@ import * as walk from 'babel-walk';
  * @param {*} root the root directory where the modules root is passed without the ./ 
  * @returns 
  */
-export function processAST(moduleMap, root) {
+export function processAST(moduleArray, root) {
   root = cleanPath(root);
 
   // list of dependencies between modules including the functions
@@ -21,35 +21,33 @@ export function processAST(moduleMap, root) {
   root = "./" + root;
   let errors = [];
   const __filename = fileURLToPath(import.meta.url);
-  moduleMap.forEach((arr) => {
-    arr.forEach(e => {
-      const f = e.replace(".", root);
-      const ext = getExtension(f).toLowerCase();
-      if ([".js", ".jsx"].indexOf(ext) !== -1) {
-        try {
-          const result = readFileSync(f, 'utf-8');
-          // parse file into ast handles js, jsx, and experimental exportDefaultFrom
-          const ast = babelParse(result, { plugins: ["jsx", "exportDefaultFrom"], sourceType: "module" });
-          const exp = parseExports(ast, e);
-          const deps = parseImports(ast, e);
-          //adds results of export and import parse to global lists
-          exportList.push(...exp);
-          dependencyList.push(...deps);
-        } catch (err) {
- //         writeFileSync(output + ".ast", JSON.stringify(ast, null, 2), "utf8");
-          errors.push({ "file": f, "err": err, "msg": err.message, "src": __filename });
-          console.error(`file=${f}\nmodule=${e}\n${err.message}`);
-          console.error(err);
-        }
-      } else {
-        errors.push({
-          "file": f, "err": null, "msg": "Can only parse javascript files at the moment.", "src": __filename
-        });
-        console.log("Can only parse javascript files at the moment. file=", f);
+  moduleArray.forEach((mod) => {
+    const f = mod.file.replace(".", root);
+    const ext = getExtension(f).toLowerCase();
+    if ([".js", ".jsx"].indexOf(ext) !== -1) {
+      try {
+        const result = readFileSync(f, 'utf-8');
+        // parse file into ast handles js, jsx, and experimental exportDefaultFrom
+        const ast = babelParse(result, { plugins: ["jsx", "exportDefaultFrom"], sourceType: "module" });
+        const exp = parseExports(ast, mod.file);
+        const deps = parseImports(ast, mod.file);
+        //adds results of export and import parse to global lists
+        exportList.push(...exp);
+        dependencyList.push(...deps);
+      } catch (err) {
+        //         writeFileSync(output + ".ast", JSON.stringify(ast, null, 2), "utf8");
+        errors.push({ "file": f, "err": err, "msg": err.message, "src": __filename });
+        console.error(`file=${f}\nmodule=${mod.file}\n${err.message}`);
+        console.error(err);
       }
-    });
-
+    } else {
+      errors.push({
+        "file": f, "err": null, "msg": "Can only parse javascript files at the moment.", "src": __filename
+      });
+      console.log("Can only parse javascript files at the moment. file=", f);
+    }
   });
+
   // remove .js imports if a non .js import exists.
   normaliseDeps(dependencyList);
   // map of imports key=module/file value=an array of functions.
@@ -90,7 +88,7 @@ function parseImports(ast, symbol) {
       let dest = node.source.value;
       let src = symbol;
       if (dest.indexOf("..") !== -1) { // go up dirs in the importSrc
-        dest = normalizePath(dest, src); 
+        dest = normalizePath(dest, src);
       }
 
       dependencies.push({
@@ -141,7 +139,7 @@ function parseExports(ast, symbol) {
           type: "File"
         });
       });
-    } else if (node.declaration) {       
+    } else if (node.declaration) {
       const declarationList = node.declaration?.declarations;
       if (declarationList) {
         declarationList.map(e => {
@@ -155,7 +153,7 @@ function parseExports(ast, symbol) {
             break;
           }
           case "CallExpression": {
-            if (decl.callee.name) 
+            if (decl.callee.name)
               addVal("-ce " + decl.callee.name);
             else
               addVal("-ce " + decl.callee.callee.name);
@@ -223,15 +221,15 @@ function normaliseDeps(deps) {
     if (fndImp.indexOf(nonJs) !== -1) {
       dep.importSrc = nonJs;
     } else {
-    // find a non .js dependency
-    deps.find((o) => {
-      if (o.importSrc === nonJs) {
-        fndImp.push(o.importSrc);
-        dep.importSrc = nonJs;
-        return true;
-      }
-    });
-  }
+      // find a non .js dependency
+      deps.find((o) => {
+        if (o.importSrc === nonJs) {
+          fndImp.push(o.importSrc);
+          dep.importSrc = nonJs;
+          return true;
+        }
+      });
+    }
 
   }
   return deps;

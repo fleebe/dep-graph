@@ -98,18 +98,17 @@ export function getDirectoriesRecursive(srcpath) {
  * @param {*} symbol the directory or file to create the dependency graphs from
  * @param {*} stat the stats of the symbol to determine if a file or directory was called. 
  * @returns 1. Map of directories with files
- *  2. the root directory
+ *  2. the root directory that the list starts from
  */
 
 
-export function getModuleMap(symbol, stats) {
-  let map = new Map();
+export function getModuleArray(symbol, stats) {
   let root = "";
-
+  let arr = [];
 
   if (stats.isFile()) {
     root = "./" + getBaseDir(path.dirname(symbol));
-    map.set(root, new Array(symbol.replace(root, ".")));
+    arr.push({dir: root, file: symbol.replace(root, "."), dependsOnCnt: 0, usedByCnt: 0});
   } else if (stats.isDirectory()) {
     // array of directories
     root = getBaseDir(symbol);
@@ -122,12 +121,12 @@ export function getModuleMap(symbol, stats) {
     dirArr.forEach(e => {
       const k = (e.startsWith(root + "/")) ? e.replace(root, ".") : e.replace(root, "./");
       // sets map to the key=file values are the functions returned by getFiles
-      map.set(k,
-        getFiles(e).map(f => f.replace(root, ".")));
+      const fileList = getFiles(e).map(f => {return f.replace(root, ".")});
+      fileList.forEach(f => arr.push({ dir: k, file: f, dependsOnCnt: 0, usedByCnt: 0 }));
     });
   }
 
 
-  return [map, root];
+  return [root, arr];
 
 }

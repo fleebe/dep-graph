@@ -22,7 +22,7 @@
   {
     "src": "./ast.js",
     "importSrc": "./utils/map-fn.js",
-    "import": "*addToMapArray"
+    "import": "addToMapArray"
   },
   {
     "src": "./ast.js",
@@ -62,7 +62,7 @@
   {
     "src": "./dep-graph.js",
     "importSrc": "./commands/graph.js",
-    "import": "createGraphRelations"
+    "import": "createRelationsGraph"
   },
   {
     "src": "./dep-graph.js",
@@ -87,7 +87,7 @@
   {
     "src": "./dep-graph.js",
     "importSrc": "./utils/file-fn.js",
-    "import": "getModuleMap"
+    "import": "getModuleArray"
   },
   {
     "src": "./dep-graph.js",
@@ -108,11 +108,6 @@
     "src": "./commands/json.js",
     "importSrc": "fs",
     "import": "*fs"
-  },
-  {
-    "src": "./commands/json.js",
-    "importSrc": "path",
-    "import": "*path"
   },
   {
     "src": "./utils/file-fn.js",

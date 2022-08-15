@@ -2,9 +2,9 @@ import { Command } from 'commander';
 import fs from "fs";
 import path from "path";
 import { processAST } from './ast.js';
-import { createGraph, createGraphRelations, createPackageGraph } from './commands/graph.js';
+import { createGraph, createRelationsGraph, createPackageGraph } from './commands/graph.js';
 import { jsonOut, jsonIn } from './commands/json.js';
-import { getFilename, getModuleMap } from "./utils/file-fn.js";
+import { getFilename, getModuleArray } from "./utils/file-fn.js";
 import { fileURLToPath } from 'url';
 
 // https://cheatcode.co/tutorials/how-to-build-a-command-line-interface-cli-using-node-js
@@ -46,7 +46,7 @@ export function runProgram() {
       validateOptions(options);
 
       // a list of modules or files  from dir in the form  .dir/file.js list recursively walks the start directory
-      let [moduleMap, srcDir] = getModuleMap(symbol, stat);
+      let [srcDir, moduleArray] = getModuleArray(symbol, stat);
 
       // prefix for the output files
       let lastDir;
@@ -67,14 +67,16 @@ export function runProgram() {
       // only do this if the -j option is set otherwise read from the output directory
       if (options.json) {
         // a list of modules or files  from dir in the form  .dir/file.js list recursively walks the start directory
-          [dependencyList, exportList, importMap, errors] = processAST(moduleMap, srcDir, output);
+          [dependencyList, exportList, importMap, errors] = processAST(moduleArray, srcDir, output);
           if (errors.length > 0) {
-              fs.writeFileSync(output + "Errors.json", JSON.stringify(errors, null, 2), "utf8");
-        }
-          jsonOut(options.output, moduleMap, exportList, dependencyList, importMap, lastDir);
+            jsonOut(output, "Errors", errors);
+          }
+          jsonOut(output, "ExportList", exportList);
+          jsonOut(output, "DependencyList", dependencyList);
+          jsonOut(output, "ImportMap", importMap);
       } else {
         // read from output directory
-        moduleMap = jsonIn(output + "ModuleMap.json");
+        moduleArray = jsonIn(output + "ModuleArray.json");
         exportList = Array.from(jsonIn(output + "ExportList.json"));
         dependencyList = Array.from(jsonIn(output + "DependencyList.json"));
         importMap = jsonIn(output + "ImportMap.json");
@@ -82,19 +84,17 @@ export function runProgram() {
 
       // create the graph file for packages or directories for all the modules. -g option
       if (options.graph) {
-        let result = createPackageGraph(moduleMap, dependencyList);
-        const packFile = lastDir + "Package.dot";
-        fs.writeFileSync(path.join(options.output, packFile), result, "utf8");
+        let result = createPackageGraph(moduleArray, dependencyList);
+        fs.writeFileSync(output + "Package.dot", result, "utf8");
 
-        result = createGraph(dependencyList, exportList, moduleMap, importMap);
-        const depFile = lastDir + "Dependencies.dot";
-        fs.writeFileSync(path.join(options.output, depFile), result, "utf8");
+        result = createGraph(dependencyList, exportList, moduleArray, importMap);
+        fs.writeFileSync(output + "Dependencies.dot", result, "utf8");
 
-        result = createGraphRelations(dependencyList, moduleMap);
-        const dep2File = lastDir + "Relations.dot";
-        fs.writeFileSync(path.join(options.output, dep2File), result, "utf8");
-
+        result = createRelationsGraph(dependencyList, moduleArray);
+        fs.writeFileSync(output + "Relations.dot", result, "utf8");
       }
+      // moduleArray is updated in the createRelationsGraph
+      jsonOut(output, "ModuleArray", moduleArray);
 
     })
   });

@@ -10,10 +10,10 @@
     "normalizePath",
     "cleanPath",
     "getFilename",
-    "getModuleMap"
+    "getModuleArray"
   ],
   "./utils/map-fn.js": [
-    "*addToMapArray"
+    "addToMapArray"
   ],
   "url": [
     "fileURLToPath"
@@ -32,7 +32,7 @@
   ],
   "./commands/graph.js": [
     "createGraph",
-    "createGraphRelations",
+    "createRelationsGraph",
     "createPackageGraph"
   ],
   "./commands/json.js": [

@@ -40,11 +40,10 @@ Used By : 1\l
 }"];
 
 "./commands/json.js" [label="{ ./commands/json.js\n
-Depend On : 2\l
+Depend On : 1\l
 Used By : 1\l
 |
 		fs\l
-		path\l
 |
 		./dep-graph.js\l
 }"];
