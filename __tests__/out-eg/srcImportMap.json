@@ -35,6 +35,9 @@
     "createRelationsGraph",
     "createPackageGraph"
   ],
+  "./commands/html.js": [
+    "createModuleHtml"
+  ],
   "./commands/json.js": [
     "jsonOut",
     "jsonIn"

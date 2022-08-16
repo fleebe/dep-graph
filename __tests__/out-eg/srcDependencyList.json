@@ -71,6 +71,11 @@
   },
   {
     "src": "./dep-graph.js",
+    "importSrc": "./commands/html.js",
+    "import": "createModuleHtml"
+  },
+  {
+    "src": "./dep-graph.js",
     "importSrc": "./commands/json.js",
     "import": "jsonOut"
   },

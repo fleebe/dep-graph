@@ -30,6 +30,11 @@
     "type": "FunctionDeclaration"
   },
   {
+    "name": "./commands/html.js",
+    "exported": "-fn createModuleHtml",
+    "type": "FunctionDeclaration"
+  },
+  {
     "name": "./commands/json.js",
     "exported": "-fn jsonOut",
     "type": "FunctionDeclaration"

@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import { processAST } from './ast.js';
 import { createGraph, createRelationsGraph, createPackageGraph } from './commands/graph.js';
+import { createModuleHtml } from './commands/html.js';
 import { jsonOut, jsonIn } from './commands/json.js';
 import { getFilename, getModuleArray } from "./utils/file-fn.js";
 import { fileURLToPath } from 'url';
@@ -92,9 +93,12 @@ export function runProgram() {
 
         result = createRelationsGraph(dependencyList, moduleArray);
         fs.writeFileSync(output + "Relations.dot", result, "utf8");
+
+        // moduleArray is updated in the createRelationsGraph
+        jsonOut(output, "ModuleArray", moduleArray);
+        result = createModuleHtml(moduleArray, dependencyList, exportList);
+        fs.writeFileSync(output + "ModuleArray.html", result, "utf8"); 
       }
-      // moduleArray is updated in the createRelationsGraph
-      jsonOut(output, "ModuleArray", moduleArray);
 
     })
   });

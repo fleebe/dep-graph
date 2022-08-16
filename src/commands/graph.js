@@ -42,6 +42,7 @@ export function createPackageGraph(moduleArray, dependencyList) {
 
 }
 
+
 /**
  * 
  * @param {*} moduleArray 
@@ -51,12 +52,12 @@ function createPackageNodes(moduleArray) {
   let ln = "";
   let result = "";
 
-  const getUniqueSet = (arr) => {
+  const getUniqueSetDir = (arr) => {
     return new Set(arr.map(a => a.dir));
   }
 
   // uniques set of directories
-  const dirList = getUniqueSet(moduleArray);
+  const dirList = getUniqueSetDir(moduleArray);
 
   // the files in the directory
   const getFilesInDir = (arr, dir) => {
@@ -113,7 +114,7 @@ export function createGraph(dependencyList, exportList, moduleArray, importMap) 
      */
     for (const dep of dependencyList
       .filter(v => { return v.src === mod.file })
-      .sort((a, b) => { return (a.importSrc > b.importSrc) ? 1 : -1; })) {
+      .sort((a, b) => { return a.importSrc.localeCompare(b.importSrc) })) {
       if (newImp !== dep.importSrc) {
         ln += `\t\t${dep.importSrc}\\l`;
         newImp = dep.importSrc;
@@ -206,7 +207,7 @@ export function createRelationsGraph(dependencyList, moduleArray) {
      */
     for (const dep of dependencyList
       .filter(v => { return v.src === mod.file; })
-      .sort((a, b) => { return (a.importSrc > b.importSrc) ? 1 : -1; })) {
+      .sort((a, b) => { return a.importSrc.localeCompare( b.importSrc) })) {
       if (newImp !== dep.importSrc) {
         newImp = dep.importSrc;
         // newImp is a node-module so add the List to the set of mods that depend on node-modules

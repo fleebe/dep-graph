@@ -7,6 +7,7 @@ node [shape=record];
 
 "./commands" [label="{./commands|
 	graph.js\l
+	html.js\l
 	json.js\l
 }"];
 

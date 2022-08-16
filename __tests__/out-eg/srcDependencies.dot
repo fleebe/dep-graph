@@ -3,8 +3,8 @@ node [shape=record];
 "./ast.js" [label="{ ./ast.js | 
 	 -fn processAST \l
 	 -fn getImportMap \l
-|		./utils/file-fn.js\l		cleanPath\r
-		normalizePath\r
+|		./utils/file-fn.js\l		normalizePath\r
+		cleanPath\r
 		./utils/map-fn.js\l		addToMapArray\r
 		@babel/parser\l		parse\r
 		babel-walk\l		*walk\r
@@ -15,13 +15,14 @@ node [shape=record];
 "./dep-graph.js" [label="{ ./dep-graph.js | 
 	 -fn runProgram \l
 |		./ast.js\l		processAST\r
-		./commands/graph.js\l		createPackageGraph\r
+		./commands/graph.js\l		createGraph\r
 		createRelationsGraph\r
-		createGraph\r
-		./commands/json.js\l		jsonIn\r
-		jsonOut\r
-		./utils/file-fn.js\l		getModuleArray\r
-		getFilename\r
+		createPackageGraph\r
+		./commands/html.js\l		createModuleHtml\r
+		./commands/json.js\l		jsonOut\r
+		jsonIn\r
+		./utils/file-fn.js\l		getFilename\r
+		getModuleArray\r
 		commander\l		Command\r
 		fs\l		*fs\r
 		path\l		*path\r
@@ -35,6 +36,10 @@ node [shape=record];
 |		./utils/file-fn.js\l		cleanPath\r
 		path\l		*path\r
 }"];
+
+"./commands/html.js" [label="{ ./commands/html.js | 
+	 -fn createModuleHtml \l
+|}"];
 
 "./commands/json.js" [label="{ ./commands/json.js | 
 	 -fn jsonOut \l

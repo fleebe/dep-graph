@@ -1,0 +1,213 @@
+<html>
+<h1>Module List</h1>
+<table border=1>
+	<tr><th><a href="#node_modules">Node Modules</a></th>
+	<th>Count</th><th>6</th}</th></tr>
+</table><br>
+<table border=1>
+<tr><th>Directory</th>
+<th>File</th>
+<th>Depends On</th>
+<th>Used By</th></tr>
+	<tr><td>./</td><td><a href="#./ast.js">./ast.js</a></td><td>6</td><td>1</td></tr>
+	<tr><td>./</td><td><a href="#./dep-graph.js">./dep-graph.js</a></td><td>9</td><td>0</td></tr>
+	<tr><td>./commands</td><td><a href="#./commands/graph.js">./commands/graph.js</a></td><td>2</td><td>1</td></tr>
+	<tr><td>./commands</td><td><a href="#./commands/html.js">./commands/html.js</a></td><td>0</td><td>1</td></tr>
+	<tr><td>./commands</td><td><a href="#./commands/json.js">./commands/json.js</a></td><td>1</td><td>1</td></tr>
+	<tr><td>./utils</td><td><a href="#./utils/file-fn.js">./utils/file-fn.js</a></td><td>2</td><td>3</td></tr>
+	<tr><td>./utils</td><td><a href="#./utils/map-fn.js">./utils/map-fn.js</a></td><td>0</td><td>1</td></tr>
+</table>
+<h2 id=./ast.js>./ast.js</h2>
+<h3>Exported</h3>
+<table border=1>
+	<tr><td>-fn getImportMap</td>
+	<td>FunctionDeclaration</td></tr>
+	<tr><td>-fn processAST</td>
+	<td>FunctionDeclaration</td></tr>
+</table><br>
+<h3>Depends On</h3>
+<table border=1>
+	<tr><td>./utils/file-fn.js</td>
+	<td>normalizePath</td></tr>
+	<tr><td>./utils/file-fn.js</td>
+	<td>cleanPath</td></tr>
+	<tr><td>./utils/map-fn.js</td>
+	<td>addToMapArray</td></tr>
+	<tr><td>@babel/parser</td>
+	<td>parse</td></tr>
+	<tr><td>babel-walk</td>
+	<td>*walk</td></tr>
+	<tr><td>fs</td>
+	<td>readFileSync</td></tr>
+	<tr><td>url</td>
+	<td>fileURLToPath</td></tr>
+</table><br>
+<h3>Used By</h3>
+<table border=1>
+	<tr><td>./dep-graph.js</td>
+	<td>processAST</td></tr>
+</table><br>
+<h2 id=./dep-graph.js>./dep-graph.js</h2>
+<h3>Exported</h3>
+<table border=1>
+	<tr><td>-fn runProgram</td>
+	<td>FunctionDeclaration</td></tr>
+</table><br>
+<h3>Depends On</h3>
+<table border=1>
+	<tr><td>./ast.js</td>
+	<td>processAST</td></tr>
+	<tr><td>./commands/graph.js</td>
+	<td>createGraph</td></tr>
+	<tr><td>./commands/graph.js</td>
+	<td>createRelationsGraph</td></tr>
+	<tr><td>./commands/graph.js</td>
+	<td>createPackageGraph</td></tr>
+	<tr><td>./commands/html.js</td>
+	<td>createModuleHtml</td></tr>
+	<tr><td>./commands/json.js</td>
+	<td>jsonOut</td></tr>
+	<tr><td>./commands/json.js</td>
+	<td>jsonIn</td></tr>
+	<tr><td>./utils/file-fn.js</td>
+	<td>getFilename</td></tr>
+	<tr><td>./utils/file-fn.js</td>
+	<td>getModuleArray</td></tr>
+	<tr><td>commander</td>
+	<td>Command</td></tr>
+	<tr><td>fs</td>
+	<td>*fs</td></tr>
+	<tr><td>path</td>
+	<td>*path</td></tr>
+	<tr><td>url</td>
+	<td>fileURLToPath</td></tr>
+</table><br>
+<h3>Used By</h3>
+<table border=1>
+</table><br>
+<h2 id=./commands/graph.js>./commands/graph.js</h2>
+<h3>Exported</h3>
+<table border=1>
+	<tr><td>-fn createGraph</td>
+	<td>FunctionDeclaration</td></tr>
+	<tr><td>-fn createPackageGraph</td>
+	<td>FunctionDeclaration</td></tr>
+	<tr><td>-fn createRelationsGraph</td>
+	<td>FunctionDeclaration</td></tr>
+</table><br>
+<h3>Depends On</h3>
+<table border=1>
+	<tr><td>./utils/file-fn.js</td>
+	<td>cleanPath</td></tr>
+	<tr><td>path</td>
+	<td>*path</td></tr>
+</table><br>
+<h3>Used By</h3>
+<table border=1>
+	<tr><td>./dep-graph.js</td>
+	<td>createGraph</td></tr>
+	<tr><td>./dep-graph.js</td>
+	<td>createRelationsGraph</td></tr>
+	<tr><td>./dep-graph.js</td>
+	<td>createPackageGraph</td></tr>
+</table><br>
+<h2 id=./commands/html.js>./commands/html.js</h2>
+<h3>Exported</h3>
+<table border=1>
+	<tr><td>-fn createModuleHtml</td>
+	<td>FunctionDeclaration</td></tr>
+</table><br>
+<h3>Depends On</h3>
+<table border=1>
+</table><br>
+<h3>Used By</h3>
+<table border=1>
+	<tr><td>./dep-graph.js</td>
+	<td>createModuleHtml</td></tr>
+</table><br>
+<h2 id=./commands/json.js>./commands/json.js</h2>
+<h3>Exported</h3>
+<table border=1>
+	<tr><td>-fn jsonIn</td>
+	<td>FunctionDeclaration</td></tr>
+	<tr><td>-fn jsonOut</td>
+	<td>FunctionDeclaration</td></tr>
+</table><br>
+<h3>Depends On</h3>
+<table border=1>
+	<tr><td>fs</td>
+	<td>*fs</td></tr>
+</table><br>
+<h3>Used By</h3>
+<table border=1>
+	<tr><td>./dep-graph.js</td>
+	<td>jsonOut</td></tr>
+	<tr><td>./dep-graph.js</td>
+	<td>jsonIn</td></tr>
+</table><br>
+<h2 id=./utils/file-fn.js>./utils/file-fn.js</h2>
+<h3>Exported</h3>
+<table border=1>
+	<tr><td>-fn cleanPath</td>
+	<td>FunctionDeclaration</td></tr>
+	<tr><td>-fn getDirectoriesRecursive</td>
+	<td>FunctionDeclaration</td></tr>
+	<tr><td>-fn getFilename</td>
+	<td>FunctionDeclaration</td></tr>
+	<tr><td>-fn getModuleArray</td>
+	<td>FunctionDeclaration</td></tr>
+	<tr><td>-fn normalizePath</td>
+	<td>FunctionDeclaration</td></tr>
+	<tr><td>-vr getBaseDir</td>
+	<td>VariableDeclaration</td></tr>
+</table><br>
+<h3>Depends On</h3>
+<table border=1>
+	<tr><td>fs</td>
+	<td>*fs</td></tr>
+	<tr><td>path</td>
+	<td>*path</td></tr>
+</table><br>
+<h3>Used By</h3>
+<table border=1>
+	<tr><td>./ast.js</td>
+	<td>normalizePath</td></tr>
+	<tr><td>./ast.js</td>
+	<td>cleanPath</td></tr>
+	<tr><td>./commands/graph.js</td>
+	<td>cleanPath</td></tr>
+	<tr><td>./dep-graph.js</td>
+	<td>getFilename</td></tr>
+	<tr><td>./dep-graph.js</td>
+	<td>getModuleArray</td></tr>
+</table><br>
+<h2 id=./utils/map-fn.js>./utils/map-fn.js</h2>
+<h3>Exported</h3>
+<table border=1>
+	<tr><td>-fn addToMapArray</td>
+	<td>FunctionDeclaration</td></tr>
+</table><br>
+<h3>Depends On</h3>
+<table border=1>
+</table><br>
+<h3>Used By</h3>
+<table border=1>
+	<tr><td>./ast.js</td>
+	<td>addToMapArray</td></tr>
+</table><br>
+<h2 id="node_modules">Node Modules</h2>
+<table border=1>
+	<tr><td>@babel/parser</td>
+	<td>parse</td></tr>
+	<tr><td>babel-walk</td>
+	<td>*walk</td></tr>
+	<tr><td>commander</td>
+	<td>Command</td></tr>
+	<tr><td>fs</td>
+	<td>*fs</td></tr>
+	<tr><td>path</td>
+	<td>*path</td></tr>
+	<tr><td>url</td>
+	<td>fileURLToPath</td></tr>
+</table><br>
+</html>

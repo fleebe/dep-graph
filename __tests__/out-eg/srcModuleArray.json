@@ -8,13 +8,19 @@
   {
     "dir": "./",
     "file": "./dep-graph.js",
-    "dependsOnCnt": 8,
+    "dependsOnCnt": 9,
     "usedByCnt": 0
   },
   {
     "dir": "./commands",
     "file": "./commands/graph.js",
     "dependsOnCnt": 2,
+    "usedByCnt": 1
+  },
+  {
+    "dir": "./commands",
+    "file": "./commands/html.js",
+    "dependsOnCnt": 0,
     "usedByCnt": 1
   },
   {
