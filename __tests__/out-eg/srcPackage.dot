@@ -13,7 +13,6 @@ node [shape=record];
 
 "./utils" [label="{./utils|
 	file-fn.js\l
-	map-fn.js\l
 }"];
 
 "./"->"./utils"

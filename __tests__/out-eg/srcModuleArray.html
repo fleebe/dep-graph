@@ -2,20 +2,16 @@
 <h1>Module List</h1>
 <table border=1>
 	<tr><th><a href="#node_modules">Node Modules</a></th>
-	<th>Count</th><th>6</th}</th></tr>
+	<th>Count</th><th>6</th></tr>
 </table><br>
 <table border=1>
-<tr><th>Directory</th>
-<th>File</th>
-<th>Depends On</th>
-<th>Used By</th></tr>
-	<tr><td>./</td><td><a href="#./ast.js">./ast.js</a></td><td>6</td><td>1</td></tr>
+	<tr><th>Directory</th><th>File</th><th>Depends On</th><th>Used By</th></tr>
+	<tr><td>./</td><td><a href="#./ast.js">./ast.js</a></td><td>5</td><td>1</td></tr>
 	<tr><td>./</td><td><a href="#./dep-graph.js">./dep-graph.js</a></td><td>9</td><td>0</td></tr>
 	<tr><td>./commands</td><td><a href="#./commands/graph.js">./commands/graph.js</a></td><td>2</td><td>1</td></tr>
-	<tr><td>./commands</td><td><a href="#./commands/html.js">./commands/html.js</a></td><td>0</td><td>1</td></tr>
+	<tr><td>./commands</td><td><a href="#./commands/html.js">./commands/html.js</a></td><td>1</td><td>1</td></tr>
 	<tr><td>./commands</td><td><a href="#./commands/json.js">./commands/json.js</a></td><td>1</td><td>1</td></tr>
-	<tr><td>./utils</td><td><a href="#./utils/file-fn.js">./utils/file-fn.js</a></td><td>2</td><td>3</td></tr>
-	<tr><td>./utils</td><td><a href="#./utils/map-fn.js">./utils/map-fn.js</a></td><td>0</td><td>1</td></tr>
+	<tr><td>./utils</td><td><a href="#./utils/file-fn.js">./utils/file-fn.js</a></td><td>2</td><td>4</td></tr>
 </table>
 <h2 id=./ast.js>./ast.js</h2>
 <h3>Exported</h3>
@@ -28,11 +24,15 @@
 <h3>Depends On</h3>
 <table border=1>
 	<tr><td>./utils/file-fn.js</td>
+	<td>addToMapArray</td></tr>
+	<tr><td>./utils/file-fn.js</td>
 	<td>normalizePath</td></tr>
 	<tr><td>./utils/file-fn.js</td>
 	<td>cleanPath</td></tr>
-	<tr><td>./utils/map-fn.js</td>
-	<td>addToMapArray</td></tr>
+	<tr><td>./utils/file-fn.js</td>
+	<td>hasExtension</td></tr>
+	<tr><td>./utils/file-fn.js</td>
+	<td>removeExtension</td></tr>
 	<tr><td>@babel/parser</td>
 	<td>parse</td></tr>
 	<tr><td>babel-walk</td>
@@ -99,6 +99,8 @@
 <table border=1>
 	<tr><td>./utils/file-fn.js</td>
 	<td>cleanPath</td></tr>
+	<tr><td>./utils/file-fn.js</td>
+	<td>getUsedList</td></tr>
 	<tr><td>path</td>
 	<td>*path</td></tr>
 </table><br>
@@ -119,6 +121,8 @@
 </table><br>
 <h3>Depends On</h3>
 <table border=1>
+	<tr><td>./utils/file-fn.js</td>
+	<td>getUsedList</td></tr>
 </table><br>
 <h3>Used By</h3>
 <table border=1>
@@ -148,6 +152,8 @@
 <h2 id=./utils/file-fn.js>./utils/file-fn.js</h2>
 <h3>Exported</h3>
 <table border=1>
+	<tr><td>-fn addToMapArray</td>
+	<td>FunctionDeclaration</td></tr>
 	<tr><td>-fn cleanPath</td>
 	<td>FunctionDeclaration</td></tr>
 	<tr><td>-fn getDirectoriesRecursive</td>
@@ -156,9 +162,15 @@
 	<td>FunctionDeclaration</td></tr>
 	<tr><td>-fn getModuleArray</td>
 	<td>FunctionDeclaration</td></tr>
+	<tr><td>-fn getUsedList</td>
+	<td>FunctionDeclaration</td></tr>
 	<tr><td>-fn normalizePath</td>
 	<td>FunctionDeclaration</td></tr>
 	<tr><td>-vr getBaseDir</td>
+	<td>VariableDeclaration</td></tr>
+	<tr><td>-vr hasExtension</td>
+	<td>VariableDeclaration</td></tr>
+	<tr><td>-vr removeExtension</td>
 	<td>VariableDeclaration</td></tr>
 </table><br>
 <h3>Depends On</h3>
@@ -171,29 +183,25 @@
 <h3>Used By</h3>
 <table border=1>
 	<tr><td>./ast.js</td>
+	<td>addToMapArray</td></tr>
+	<tr><td>./ast.js</td>
 	<td>normalizePath</td></tr>
 	<tr><td>./ast.js</td>
 	<td>cleanPath</td></tr>
+	<tr><td>./ast.js</td>
+	<td>hasExtension</td></tr>
+	<tr><td>./ast.js</td>
+	<td>removeExtension</td></tr>
 	<tr><td>./commands/graph.js</td>
 	<td>cleanPath</td></tr>
+	<tr><td>./commands/graph.js</td>
+	<td>getUsedList</td></tr>
+	<tr><td>./commands/html.js</td>
+	<td>getUsedList</td></tr>
 	<tr><td>./dep-graph.js</td>
 	<td>getFilename</td></tr>
 	<tr><td>./dep-graph.js</td>
 	<td>getModuleArray</td></tr>
-</table><br>
-<h2 id=./utils/map-fn.js>./utils/map-fn.js</h2>
-<h3>Exported</h3>
-<table border=1>
-	<tr><td>-fn addToMapArray</td>
-	<td>FunctionDeclaration</td></tr>
-</table><br>
-<h3>Depends On</h3>
-<table border=1>
-</table><br>
-<h3>Used By</h3>
-<table border=1>
-	<tr><td>./ast.js</td>
-	<td>addToMapArray</td></tr>
 </table><br>
 <h2 id="node_modules">Node Modules</h2>
 <table border=1>

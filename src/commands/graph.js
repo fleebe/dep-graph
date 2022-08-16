@@ -1,5 +1,5 @@
 import path from "path";
-import { cleanPath } from "../utils/file-fn.js";
+import { cleanPath, getUsedList } from "../utils/file-fn.js";
 
 /**
  * Creates a graphviz .dot file of package dependencies called package.dot in the output directory. 
@@ -66,8 +66,8 @@ function createPackageNodes(moduleArray) {
 
   for (const imp of dirList) {
     ln = '"' + imp + '" [label="{' + imp + '|' + '\n';
-    for (var List of getFilesInDir(moduleArray, imp)) {
-      ln += '\t' + cleanPath(List.file.replace(imp, ".")) + '\\l\n';
+    for (const dirFile of getFilesInDir(moduleArray, imp)) {     
+      ln += '\t' + cleanPath(dirFile.file.replace(imp, ".")) + '\\l\n';
     }
     result += ln + '}"];\n\n';
   }
@@ -230,9 +230,12 @@ export function createRelationsGraph(dependencyList, moduleArray) {
      * usedBy string
      * 3rd section used by
      */
-    for (const dep of dependencyList
-      .filter(v => { return v.importSrc === mod.file })
-      .sort((a, b) => { return a.src.localeCompare(b.src) })) {
+
+    // file may have an extension but the importSrc does not
+    // the importSrc is still used by the file
+    const usedList = getUsedList(mod, dependencyList);
+
+    for (const dep of usedList) {
       if (newImp !== dep.src) {
         newImp = dep.src;
         usedLn += `\t\t${newImp}\\l\n`;
@@ -273,6 +276,7 @@ export function createRelationsGraph(dependencyList, moduleArray) {
   result += nodeModsLn + relLn + '}\n';
   return result;
 }
+
 
 function digraph() {
   let result = "digraph {\n";

@@ -12,6 +12,11 @@
   {
     "src": "./ast.js",
     "importSrc": "./utils/file-fn.js",
+    "import": "addToMapArray"
+  },
+  {
+    "src": "./ast.js",
+    "importSrc": "./utils/file-fn.js",
     "import": "normalizePath"
   },
   {
@@ -21,8 +26,13 @@
   },
   {
     "src": "./ast.js",
-    "importSrc": "./utils/map-fn.js",
-    "import": "addToMapArray"
+    "importSrc": "./utils/file-fn.js",
+    "import": "hasExtension"
+  },
+  {
+    "src": "./ast.js",
+    "importSrc": "./utils/file-fn.js",
+    "import": "removeExtension"
   },
   {
     "src": "./ast.js",
@@ -108,6 +118,16 @@
     "src": "./commands/graph.js",
     "importSrc": "./utils/file-fn.js",
     "import": "cleanPath"
+  },
+  {
+    "src": "./commands/graph.js",
+    "importSrc": "./utils/file-fn.js",
+    "import": "getUsedList"
+  },
+  {
+    "src": "./commands/html.js",
+    "importSrc": "./utils/file-fn.js",
+    "import": "getUsedList"
   },
   {
     "src": "./commands/json.js",

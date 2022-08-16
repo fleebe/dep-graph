@@ -3,9 +3,11 @@ node [shape=record];
 "./ast.js" [label="{ ./ast.js | 
 	 -fn processAST \l
 	 -fn getImportMap \l
-|		./utils/file-fn.js\l		normalizePath\r
+|		./utils/file-fn.js\l		addToMapArray\r
+		normalizePath\r
 		cleanPath\r
-		./utils/map-fn.js\l		addToMapArray\r
+		hasExtension\r
+		removeExtension\r
 		@babel/parser\l		parse\r
 		babel-walk\l		*walk\r
 		fs\l		readFileSync\r
@@ -34,12 +36,14 @@ node [shape=record];
 	 -fn createGraph \l
 	 -fn createRelationsGraph \l
 |		./utils/file-fn.js\l		cleanPath\r
+		getUsedList\r
 		path\l		*path\r
 }"];
 
 "./commands/html.js" [label="{ ./commands/html.js | 
 	 -fn createModuleHtml \l
-|}"];
+|		./utils/file-fn.js\l		getUsedList\r
+}"];
 
 "./commands/json.js" [label="{ ./commands/json.js | 
 	 -fn jsonOut \l
@@ -48,19 +52,19 @@ node [shape=record];
 }"];
 
 "./utils/file-fn.js" [label="{ ./utils/file-fn.js | 
+	 -vr hasExtension \l
+	 -vr removeExtension \l
 	 -vr getBaseDir \l
 	 -fn normalizePath \l
 	 -fn cleanPath \l
 	 -fn getFilename \l
 	 -fn getDirectoriesRecursive \l
+	 -fn addToMapArray \l
+	 -fn getUsedList \l
 	 -fn getModuleArray \l
 |		fs\l		*fs\r
 		path\l		*path\r
 }"];
-
-"./utils/map-fn.js" [label="{ ./utils/map-fn.js | 
-	 -fn addToMapArray \l
-|}"];
 
 "fs" [label="{fs|
 	readFileSync\l

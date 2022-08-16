@@ -46,6 +46,16 @@
   },
   {
     "name": "./utils/file-fn.js",
+    "exported": "-vr hasExtension",
+    "type": "VariableDeclaration"
+  },
+  {
+    "name": "./utils/file-fn.js",
+    "exported": "-vr removeExtension",
+    "type": "VariableDeclaration"
+  },
+  {
+    "name": "./utils/file-fn.js",
     "exported": "-vr getBaseDir",
     "type": "VariableDeclaration"
   },
@@ -71,12 +81,17 @@
   },
   {
     "name": "./utils/file-fn.js",
-    "exported": "-fn getModuleArray",
+    "exported": "-fn addToMapArray",
     "type": "FunctionDeclaration"
   },
   {
-    "name": "./utils/map-fn.js",
-    "exported": "-fn addToMapArray",
+    "name": "./utils/file-fn.js",
+    "exported": "-fn getUsedList",
+    "type": "FunctionDeclaration"
+  },
+  {
+    "name": "./utils/file-fn.js",
+    "exported": "-fn getModuleArray",
     "type": "FunctionDeclaration"
   }
 ]

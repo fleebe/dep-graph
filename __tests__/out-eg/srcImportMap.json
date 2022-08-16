@@ -7,13 +7,14 @@
     "parse"
   ],
   "./utils/file-fn.js": [
+    "addToMapArray",
     "normalizePath",
     "cleanPath",
+    "hasExtension",
+    "removeExtension",
     "getFilename",
-    "getModuleArray"
-  ],
-  "./utils/map-fn.js": [
-    "addToMapArray"
+    "getModuleArray",
+    "getUsedList"
   ],
   "url": [
     "fileURLToPath"

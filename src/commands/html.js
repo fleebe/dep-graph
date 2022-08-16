@@ -1,8 +1,8 @@
-
+import { getUsedList, cleanPath } from "../utils/file-fn.js";
 
 
 export function createModuleHtml(moduleArray, dependencyList, exportList) {
-  let result = "<html>\n<h1>Module List</h1>\n";
+  let result = "<html><body>\n<h1>Module List</h1>\n";
 
   const nodMods = nodeModuleList();
   result += "<table border=1>\n";
@@ -19,7 +19,7 @@ export function createModuleHtml(moduleArray, dependencyList, exportList) {
   moduleArray.forEach(mod => {
     result += "\t<tr>";
     result += "<td>" + mod.dir + "</td>";
-    result += `<td><a href="#${mod.file}">${mod.file}</a></td>`;
+    result += `<td><a href="#${mod.file}">${cleanPath(mod.file.replace(mod.dir, "."))}</a></td>`;
     result += "<td>" + mod.dependsOnCnt + "</td>";
     result += "<td>" + mod.usedByCnt + "</td>";
     result += "</tr>\n";
@@ -41,23 +41,26 @@ export function createModuleHtml(moduleArray, dependencyList, exportList) {
     result += `</table><br>\n`;
 
     // depends On  
+    const depsList = dependencyList
+      .filter(v => { return v.src === mod.file; })
+      .sort((a, b) => { return a.importSrc.localeCompare(b.importSrc) });
+
     result += "<h3>Depends On</h3>\n";
     result += "<table border=1>\n";
-    for (const dep of dependencyList
-      .filter(v => { return v.src === mod.file; })
-      .sort((a, b) => { return a.importSrc.localeCompare(b.importSrc) })) {
+    for (const dep of depsList) {
       result += `\t<tr><td>${dep.importSrc}</td>\n`;
       result += `\t<td>${dep.import}</td></tr>\n`;
     }
     result += `</table><br>\n`;
 
-    // used By
+    // file may have an extension but the importSrc does not
+    // the importSrc is still used by the file
+    const usedList = getUsedList(mod, dependencyList);
+
     result += "<h3>Used By</h3>\n";
     result += "<table border=1>\n";
-    for (const dep of dependencyList
-      .filter(v => { return v.importSrc === mod.file })
-      .sort((a, b) => { return a.src.localeCompare(b.src) })) {
-      result += `\t<tr><td>${dep.src}</td>\n`;
+    for (const dep of usedList) {
+      result += `\t<tr><td><a href="#${dep.src}">${dep.src}</a></td>\n`;
       result += `\t<td>${dep.import}</td></tr>\n`;
     }
     result += `</table><br>\n`;
@@ -74,7 +77,7 @@ export function createModuleHtml(moduleArray, dependencyList, exportList) {
     }
   result += `</table><br>\n`;
 
-  result += "</html>";
+  result += "</body></html>";
   return result;
 
   function nodeModuleList() {

@@ -2,6 +2,28 @@ import path from "path";
 import fs from "fs";
 
 /**
+ * gets the extension of the file
+ * @param {*} filename 
+ * @returns the extension
+ */
+function getExtension(filename) {
+  const i = filename.lastIndexOf('.');
+  return (i < 0) ? '' : filename.substring(i);
+}
+
+export const hasExtension = ((filename, arr) => {
+  const ext = getExtension(filename).toLowerCase();
+  return (arr.indexOf(ext) !== -1);
+});
+
+export const removeExtension = ((filename) => {
+  const ext = getExtension(filename);
+  if (ext === '') return filename;
+  return filename.slice(0, -ext.length);
+});
+
+
+/**
  * converts the directory passed into a standard value
  * @param {*} symbol a directory
  * @returns dir prefixed with ./
@@ -94,14 +116,69 @@ export function getDirectoriesRecursive(srcpath) {
 }
 
 /**
+ * checks if the given val is a key in the map
+ * @param {*} map 
+ * @param {*} val 
+ * @returns boolean
+ */
+const findInMap = (map, val) => {
+  for (let [key] of map) {
+    if (key === val) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Adds the arrVal to the map with the passed key 
+ * if the key exists then adds the arrVal to the array if it does not exist in it already.
+ * @param {*} map 
+ * @param {*} key 
+ * @param {*} arrVal primitive | array
+ * * @returns map with arrVal added to the array specified by the key
+ */
+export function addToMapArray(map, key, arrVal) {
+  if (!findInMap(map, key)) {
+    return map.set(key, [arrVal]);
+  } else {
+    let uniq = new Set(map.get(key));
+    if (arrVal instanceof Array) {
+      if (arrVal.length > 0) {
+        uniq.add(...arrVal);
+      }
+    } else {
+      uniq.add(arrVal);
+    }
+    return map.set(key, Array.from(uniq));
+  }
+}
+
+/**
+ * file may have an extension but the importSrc does not
+    the importSrc is still used by the file
+ * @param {*} mod the file
+ * @param {*} dependencyList 
+ * @returns a list of files that are used by the mod
+ */
+
+export function getUsedList(mod, dependencyList) {
+  const imp = removeExtension(mod.file);
+  // used By
+  const usedList = dependencyList
+    .filter(v => { return (v.importSrc === mod.file || v.importSrc === imp); })
+    .sort((a, b) => { return a.src.localeCompare(b.src); });
+  return usedList;
+}
+
+
+/**
  * Creates a map with key=directory(package) value=array of files(modules) in directory
  * @param {*} symbol the directory or file to create the dependency graphs from
  * @param {*} stat the stats of the symbol to determine if a file or directory was called. 
  * @returns 1. Map of directories with files
  *  2. the root directory that the list starts from
  */
-
-
 export function getModuleArray(symbol, stats) {
   let root = "";
   let arr = [];

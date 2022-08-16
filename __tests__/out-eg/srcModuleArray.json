@@ -2,7 +2,7 @@
   {
     "dir": "./",
     "file": "./ast.js",
-    "dependsOnCnt": 6,
+    "dependsOnCnt": 5,
     "usedByCnt": 1
   },
   {
@@ -20,7 +20,7 @@
   {
     "dir": "./commands",
     "file": "./commands/html.js",
-    "dependsOnCnt": 0,
+    "dependsOnCnt": 1,
     "usedByCnt": 1
   },
   {
@@ -33,12 +33,6 @@
     "dir": "./utils",
     "file": "./utils/file-fn.js",
     "dependsOnCnt": 2,
-    "usedByCnt": 3
-  },
-  {
-    "dir": "./utils",
-    "file": "./utils/map-fn.js",
-    "dependsOnCnt": 0,
-    "usedByCnt": 1
+    "usedByCnt": 4
   }
 ]

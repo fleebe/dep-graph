@@ -1,7 +1,6 @@
 import { readFileSync } from "fs";
 import { parse as babelParse } from "@babel/parser";
-import { normalizePath, cleanPath } from "./utils/file-fn.js";
-import { addToMapArray } from "./utils/map-fn.js";
+import { addToMapArray, normalizePath, cleanPath, hasExtension, removeExtension } from "./utils/file-fn.js";
 import { fileURLToPath } from 'url';
 import * as walk from 'babel-walk';
 
@@ -21,10 +20,10 @@ export function processAST(moduleArray, root) {
   root = "./" + root;
   let errors = [];
   const __filename = fileURLToPath(import.meta.url);
+
   moduleArray.forEach((mod) => {
     const f = mod.file.replace(".", root);
-    const ext = getExtension(f).toLowerCase();
-    if ([".js", ".jsx"].indexOf(ext) !== -1) {
+    if (hasExtension(f, [".js", ".jsx"])) {
       try {
         const result = readFileSync(f, 'utf-8');
         // parse file into ast handles js, jsx, and experimental exportDefaultFrom
@@ -204,43 +203,37 @@ function parseExports(ast, symbol) {
 }
 
 /**
- * Some importSrc are named with .js on the end and others are not. Convert .js to merge with the non js one if it exists
+ * Some importSrc are named with .js on the end and others are not. 
+ * Convert .js to merge with the non js one if it exists
  * @param {*} deps 
  * @returns deps changed to reference the non .js item
  */
 function normaliseDeps(deps) {
   // get the dependencies with importSrc with a .js on the end
   let fndImp = [];
-  // all the dependencies that end with .js
+  // all the dependencies that end with .js or jsx
   const jsDeps = deps
-    .filter(v => { return v.importSrc.endsWith(".js") === true; });
+    .filter(v => { return (v.importSrc.endsWith(".js") || v.importSrc.endsWith(".jsx")) });
+
   for (const dep of jsDeps) {
-    // remove the .js
-    const nonJs = dep.importSrc.slice(0, -3);
+    // remove the .js or .jsx extensions
+    const nonJs = removeExtension(dep.importSrc);
     // if already found change the source
     if (fndImp.indexOf(nonJs) !== -1) {
       dep.importSrc = nonJs;
     } else {
       // find a non .js dependency
       deps.find((o) => {
-        if (o.importSrc === nonJs) {
-          fndImp.push(o.importSrc);
+        if (o.importSrc === nonJs) { 
+          fndImp.push(nonJs);
           dep.importSrc = nonJs;
           return true;
         }
-      });
+      });    
     }
-
   }
+
   return deps;
 }
 
-/**
- * gets the extension of the file
- * @param {*} filename 
- * @returns the extension
- */
-function getExtension(filename) {
-  const i = filename.lastIndexOf('.');
-  return (i < 0) ? '' : filename.substring(i);
-}
+
