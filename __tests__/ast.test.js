@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import { getModuleMap } from "../src/utils/file-fn.js";
+import { getModuleMap } from "../src/utils.js";
 import { processAST} from "../src/ast.js"
 import fs from "fs";
 import path from "path";

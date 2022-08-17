@@ -1,8 +1,10 @@
 import { readFileSync } from "fs";
 import { parse as babelParse } from "@babel/parser";
-import { addToMapArray, normalizePath, cleanPath, hasExtension, removeExtension } from "./utils/file-fn.js";
+import { addToMapArray, normalizePath, cleanPath, hasExtension, getUsedByList,
+  removeExtension, validateImportFile } from "./utils.js";
 import { fileURLToPath } from 'url';
 import * as walk from 'babel-walk';
+import {EXT_LIST} from "./globals.js"
 
 /**
  * processes gets the ast for all the modules and creates the dependeciesList, exportList and importMap
@@ -11,44 +13,54 @@ import * as walk from 'babel-walk';
  * @returns 
  */
 export function processAST(moduleArray, root) {
-  root = cleanPath(root);
+  root = "./" + cleanPath(root);
 
   // list of dependencies between modules including the functions
   let dependencyList = [];
   // list of functions exported from modules/files
   let exportList = [];
-  root = "./" + root;
   let errors = [];
-  const __filename = fileURLToPath(import.meta.url);
+  const thisFile = fileURLToPath(import.meta.url);
 
   moduleArray.forEach((mod) => {
-    const f = mod.file.replace(".", root);
-    if (hasExtension(f, [".js", ".jsx"])) {
+    // convert relative path mod.file to absolute path
+    const srcFile = mod.file.replace(".", root);
+    if (hasExtension(srcFile, EXT_LIST)) {
       try {
-        const result = readFileSync(f, 'utf-8');
+        const result = readFileSync(srcFile, 'utf-8');
         // parse file into ast handles js, jsx, and experimental exportDefaultFrom
         const ast = babelParse(result, { plugins: ["jsx", "exportDefaultFrom"], sourceType: "module" });
-        const exp = parseExports(ast, mod.file);
-        const deps = parseImports(ast, mod.file);
+        const exps = parseExports(ast, mod.file);
+        const deps = parseImports(ast, mod.file, root);
+        mod.dependsOnCnt = deps.length;
+        mod.exportCnt = exps.length;
         //adds results of export and import parse to global lists
-        exportList.push(...exp);
+        exportList.push(...exps);
         dependencyList.push(...deps);
       } catch (err) {
         //         writeFileSync(output + ".ast", JSON.stringify(ast, null, 2), "utf8");
-        errors.push({ "file": f, "err": err, "msg": err.message, "src": __filename });
-        console.error(`file=${f}\nmodule=${mod.file}\n${err.message}`);
+        errors.push({ "file": srcFile, "err": err, "msg": err.message, "src": thisFile });
+        console.error(`file=${srcFile}\nmodule=${mod.file}\n${err.message}`);
         console.error(err);
       }
     } else {
       errors.push({
-        "file": f, "err": null, "msg": "Can only parse javascript files at the moment.", "src": __filename
+        "file": srcFile, "err": null, 
+        "msg": "Can only parse javascript files at the moment.", 
+        "src": thisFile
       });
-      console.log("Can only parse javascript files at the moment. file=", f);
+      console.log("Can only parse javascript files at the moment. file=", srcFile);
     }
   });
 
   // remove .js imports if a non .js import exists.
   normaliseDeps(dependencyList);
+
+  moduleArray.forEach((mod) => {
+    const usedList = getUsedByList(dependencyList, mod.file);
+    mod.usedByCnt = usedList.length;
+  });
+
   // map of imports key=module/file value=an array of functions.
   let importMap = getImportMap(dependencyList);
   return [dependencyList, exportList, importMap, errors];
@@ -65,10 +77,10 @@ export function getImportMap(dependencyList) {
 /**
  * Walks the ast to find imports
  * @param {*} ast 
- * @param {*} symbol 
+ * @param {*} srcFile 
  * @returns dependency list of imports
  */
-function parseImports(ast, symbol) {
+function parseImports(ast, srcFile, root) {
   let dependencies = [];
 
   const visitors = walk.recursive({
@@ -83,16 +95,17 @@ function parseImports(ast, symbol) {
   function importDeclaration(node) {
     for (var i = 0; i < node.specifiers.length; i++) {
       // prefix with a * if default import specifier
-      const fnName = node.specifiers[i].type === "ImportSpecifier" ? node.specifiers[i].imported.name : "*" + node.specifiers[i].local.name;
-      let dest = node.source.value;
-      let src = symbol;
-      if (dest.indexOf("..") !== -1) { // go up dirs in the importSrc
-        dest = normalizePath(dest, src);
-      }
+      const fnName = node.specifiers[i].type === "ImportSpecifier" 
+        ? node.specifiers[i].imported.name : node.specifiers[i].local.name;
+
+      const relSrcPath = normalizePath(node.source.value, srcFile);
+      const validSrc = validateImportFile(relSrcPath, root);
+
 
       dependencies.push({
-        src: src,
-        importSrc: dest,
+        src: srcFile,
+        importSrc: node.source.value,
+        relSrcPath: validSrc,
         import: fnName
       });
     }
@@ -142,37 +155,44 @@ function parseExports(ast, symbol) {
       const declarationList = node.declaration?.declarations;
       if (declarationList) {
         declarationList.map(e => {
-          addVal("-vr " + e.id.name);
+          // "-vr " +
+          addVal( e.id.name);
         });
       } else if (node.declaration) {
         const decl = node.declaration;
         switch (decl.type) {
           case "ClassDeclaration": {
-            addVal("-cl " + decl.id.name);
+            //"-cl " + 
+            addVal(decl.id.name);
             break;
           }
           case "CallExpression": {
+            // "-ce " + 
             if (decl.callee.name)
-              addVal("-ce " + decl.callee.name);
+              addVal(decl.callee.name);
             else
-              addVal("-ce " + decl.callee.callee.name);
+              addVal(decl.callee.callee.name);
             break;
           }
           case "FunctionDeclaration": {
-            addVal("-fn " + decl.id.name);
+            // "-fn " + 
+            addVal(decl.id.name);
             break;
           }
           case "VariableDeclaration": {
-            addVal("-vr " + decl.id.name);
+            // "-vr " + 
+            addVal(decl.id.name);
             break;
           }
           case "Identifier": {
-            addVal("-id " + decl.name);
+            //"-id " + 
+            addVal(decl.name);
             break;
           }
           case "ObjectExpression": {
             decl.properties.map(e => {
-              addVal("-pr " + e.key.name);
+              // "-pr " + 
+              addVal(e.key.name);
             });
             break;
           }
@@ -183,14 +203,16 @@ function parseExports(ast, symbol) {
                 res += e.name + ","
               })
               res = res.substring(0, res.length - 1) + ")";
-              addVal("-af " + res);
+              // "-af " + 
+              addVal(res);
             } else {
               addVal("???");
             }
             break;
           }
           case 'ConditionalExpression': {
-            addVal("-cd " + decl.test.name);
+            // "-cd " + 
+            addVal(decl.test.name);
             break;
           }
           default: {

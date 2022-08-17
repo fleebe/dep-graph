@@ -3,6 +3,7 @@ node [shape=record];
 "./" [label="{./|
 	ast.js\l
 	dep-graph.js\l
+	utils.js\l
 }"];
 
 "./commands" [label="{./commands|
@@ -11,12 +12,7 @@ node [shape=record];
 	json.js\l
 }"];
 
-"./utils" [label="{./utils|
-	file-fn.js\l
-}"];
-
-"./"->"./utils"
 "./"->"./"
 "./"->"./commands"
-"./commands"->"./utils"
+"./commands"->".."
 }

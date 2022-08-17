@@ -3,36 +3,42 @@
     "dir": "./",
     "file": "./ast.js",
     "dependsOnCnt": 5,
-    "usedByCnt": 1
+    "usedByCnt": 1,
+    "exportCnt": 2
   },
   {
     "dir": "./",
     "file": "./dep-graph.js",
     "dependsOnCnt": 9,
-    "usedByCnt": 0
+    "usedByCnt": 0,
+    "exportCnt": 1
+  },
+  {
+    "dir": "./",
+    "file": "./utils.js",
+    "dependsOnCnt": 2,
+    "usedByCnt": 2,
+    "exportCnt": 13
   },
   {
     "dir": "./commands",
     "file": "./commands/graph.js",
     "dependsOnCnt": 2,
-    "usedByCnt": 1
+    "usedByCnt": 1,
+    "exportCnt": 3
   },
   {
     "dir": "./commands",
     "file": "./commands/html.js",
     "dependsOnCnt": 1,
-    "usedByCnt": 1
+    "usedByCnt": 1,
+    "exportCnt": 1
   },
   {
     "dir": "./commands",
     "file": "./commands/json.js",
     "dependsOnCnt": 1,
-    "usedByCnt": 1
-  },
-  {
-    "dir": "./utils",
-    "file": "./utils/file-fn.js",
-    "dependsOnCnt": 2,
-    "usedByCnt": 4
+    "usedByCnt": 1,
+    "exportCnt": 2
   }
 ]

@@ -5,7 +5,7 @@ import { processAST } from './ast.js';
 import { createGraph, createRelationsGraph, createPackageGraph } from './commands/graph.js';
 import { createModuleHtml } from './commands/html.js';
 import { jsonOut, jsonIn } from './commands/json.js';
-import { getFilename, getModuleArray } from "./utils/file-fn.js";
+import { getFilename, getModuleArray } from "./utils.js";
 import { fileURLToPath } from 'url';
 
 // https://cheatcode.co/tutorials/how-to-build-a-command-line-interface-cli-using-node-js
@@ -65,27 +65,34 @@ export function runProgram() {
       let errors = [];
       const output = path.join(options.output, lastDir);
       // get the export list and dependency of each module/file
+      [dependencyList, exportList, importMap, errors] = processAST(moduleArray, srcDir, output);
+      let result = createModuleHtml(moduleArray, dependencyList, exportList);
+      fs.writeFileSync(output + "ModuleArray.html", result, "utf8"); 
+
       // only do this if the -j option is set otherwise read from the output directory
-      if (options.json) {
         // a list of modules or files  from dir in the form  .dir/file.js list recursively walks the start directory
-          [dependencyList, exportList, importMap, errors] = processAST(moduleArray, srcDir, output);
+      if (options.json) {
           if (errors.length > 0) {
             jsonOut(output, "Errors", errors);
           }
           jsonOut(output, "ExportList", exportList);
           jsonOut(output, "DependencyList", dependencyList);
           jsonOut(output, "ImportMap", importMap);
-      } else {
+        // moduleArray is updated in the createRelationsGraph
+          jsonOut(output, "ModuleArray", moduleArray);        
+     } else {
+/*        
         // read from output directory
         moduleArray = jsonIn(output + "ModuleArray.json");
         exportList = Array.from(jsonIn(output + "ExportList.json"));
         dependencyList = Array.from(jsonIn(output + "DependencyList.json"));
         importMap = jsonIn(output + "ImportMap.json");
+        */
       }
 
       // create the graph file for packages or directories for all the modules. -g option
       if (options.graph) {
-        let result = createPackageGraph(moduleArray, dependencyList);
+        result = createPackageGraph(moduleArray, dependencyList);
         fs.writeFileSync(output + "Package.dot", result, "utf8");
 
         result = createGraph(dependencyList, exportList, moduleArray, importMap);
@@ -93,13 +100,7 @@ export function runProgram() {
 
         result = createRelationsGraph(dependencyList, moduleArray);
         fs.writeFileSync(output + "Relations.dot", result, "utf8");
-
-        // moduleArray is updated in the createRelationsGraph
-        jsonOut(output, "ModuleArray", moduleArray);
-        result = createModuleHtml(moduleArray, dependencyList, exportList);
-        fs.writeFileSync(output + "ModuleArray.html", result, "utf8"); 
-      }
-
+       }
     })
   });
 

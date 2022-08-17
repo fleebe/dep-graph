@@ -1,0 +1,1 @@
+export const EXT_LIST = [".js", ".jsx"];

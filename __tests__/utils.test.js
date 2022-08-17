@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import { addToMapArray, getBaseDir, getModuleArray, hasExtension, removeExtension, } from "../src/utils/file-fn.js";
+import { normalizePath, addToMapArray, getBaseDir, getModuleArray, hasExtension, removeExtension, getUsedByList} from "../src/utils.js";
 import { getImportMap } from "../src/ast.js";
 import { jsonIn } from '../src/commands/json.js';
 import path from "path";
@@ -9,9 +9,8 @@ import fs from "fs";
 /**
  * node <path-to-jest> -i <you-test-file> -c <jest-config> -t "<test-block-name>"
  * node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --detectOpenHandles",
-* yarn test -i fn -t "file-fn" 
+* yarn test -i utils -t "file-fn" 
 */
-
 describe("file-fn", () => {
   it("getBaseDir", () => {
     expect(getBaseDir(".\\src\\")).toBe("src");
@@ -42,6 +41,64 @@ describe("file-fn", () => {
   });
 });
 
+// yarn test -i utils -t "list" 
+describe("list", () => {
+  /*
+  const modArray = [{
+    "dir": "./api",
+    "file": "./api/assignment.js",
+    "dependsOnCnt": 0,
+    "usedByCnt": 0
+  },
+    {
+      "dir": "./api",
+      "file": "./api/schema.js",
+      "dependsOnCnt": 16,
+      "usedByCnt": 1
+    }
+  ];
+
+  const depList = [
+    {
+      "src": "./server/api/assignment.js",
+      "importSrc": "./lib",
+      "import": "getOffsets"
+    },
+      {
+      "src": "./api/schema.js",
+      "importSrc": "./assignment",
+      "import": "schema"
+    }, 
+  ];
+*/
+  it("usedList-1", () => {
+    // importSrc, src
+    expect(normalizePath("./components/App", "./route.jsx")).toBe("./components/App");
+    expect(normalizePath("react-router", "./route.jsx")).toBe("react-router");
+    expect(normalizePath("./user", "./api/schema.js")).toBe("./api/user");
+    expect(normalizePath("./user.js", "./api/schema.js")).toBe("./api/user.js");
+    expect(normalizePath("./lib/utils", "./server/api/assignments.js")).toBe("./server/api/lib/utils");
+    expect(normalizePath("../../lib", "./server/api/assignments.js")).toBe("./lib");
+    expect(normalizePath("../models", "./server/api/assignments.js")).toBe("./server/models");
+  });
+// if no file models found then index for the directory otherwise it is a file
+
+/*    
+//    modArray.forEach((mod) => {
+      const usedList = getUsedByList(depList, "./api/assignment.js");      
+      expect(usedList.length).toBe(1);
+      const list1 = getDependsOn(depList, "./api/schema.js");      
+      expect(list1.length).toBe(1);
+//    });
+  });
+*/
+/*
+  it("usedList", (depFile) => {
+    const usedList = getUsedByList(depFile, "./api/assignment.js")
+    expect(usedList.length).toBe(1);
+  });
+*/
+});
 
 describe("moduleMap", () => {
   const __filename = fileURLToPath(import.meta.url);

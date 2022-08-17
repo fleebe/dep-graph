@@ -1,5 +1,6 @@
 import path from "path";
 import fs from "fs";
+import {EXT_LIST} from "./globals.js";
 
 /**
  * gets the extension of the file
@@ -39,22 +40,61 @@ export const getBaseDir = (symbol) => {
 
 /**
  * 
- * @param {*} dest a file name 
- * @param {*} src a file name
+ * @param {*} dest a file | directory name 
+ * @param {*} src a file | directory name
  * @returns a file name
  */
 export function normalizePath(dest, src) {
-  if (dest.indexOf("..") !== -1) { // up dirs in the importSrc
+  if (!dest.startsWith(".")) return dest; // node module as does not start with "."
+  let srcDir = path.dirname(src);
+  let relFile = "./" + path.normalize(path.join(srcDir, dest)).replaceAll("\\", "/");  
+ /*
+  if (res.indexOf("..") !== -1) { // up dirs in the importSrc
     //  const fname = getFilename(dest);
     const d = dest.split("/");
     const s = path.dirname(src).split("/");
     const count = (dest.split("..").length - 1); // count how many up dirs
-    let res = s.slice(0, -count).join("/") + "/" + d.slice(count).join("/"); // remove up dirs and rejoin to create a path
+    res = s.slice(0, -count).join("/") + "/" + d.slice(count).join("/"); // remove up dirs and rejoin to create a path
     if (res.startsWith("/")) res = "./" + res.substring(1, res.length);
-    return res;
   }
-  return dest;
+  */
+  return relFile;
 }
+
+/**
+ *
+  root passed so that relative files can be checked to see if the are real files
+  if endsWith permitted files check file exists
+  if not add each of the permitted suffixes and check if exists
+  if is a directory then use the index file in the directory with the permitted suffixes
+ * @param {*} relFile relative file path
+ * @param {*} root location of the directory being processed
+ * @returns 
+ */
+export function validateImportFile(relFile, root) {
+  let srcFile = relFile.replace(".", root);
+  // not a file already
+  if (!hasExtension(srcFile, EXT_LIST)) {
+    for (const ext of EXT_LIST) {
+      if (fs.existsSync(srcFile + ext)) {
+        srcFile = srcFile + ext;
+        break;
+      }
+    }
+    // then directory and src file is an index
+    if (!hasExtension(srcFile, EXT_LIST)) {
+      for (const ext of EXT_LIST) {
+        const indFile = path.join(srcFile, "index" + ext);
+        if (fs.existsSync(indFile)) {
+          srcFile = "./" + indFile.replaceAll("\\", "/");
+          break;
+        }
+      }
+    }
+  }
+  return srcFile.replace(root, ".");
+}
+
 
 /**
  * 
@@ -157,16 +197,17 @@ export function addToMapArray(map, key, arrVal) {
 /**
  * file may have an extension but the importSrc does not
     the importSrc is still used by the file
- * @param {*} mod the file
+ * @param {*} file the file
  * @param {*} dependencyList 
  * @returns a list of files that are used by the mod
  */
 
-export function getUsedList(mod, dependencyList) {
-  const imp = removeExtension(mod.file);
+export function getUsedByList(dependencyList, file) {
+//  const imp = removeExtension(file);
   // used By
   const usedList = dependencyList
-    .filter(v => { return (v.importSrc === mod.file || v.importSrc === imp); })
+    .filter(v => { return (v.relSrcPath === file || v.importSrc === file)})
+      //|| v.importSrc === imp); })
     .sort((a, b) => { return a.src.localeCompare(b.src); });
   return usedList;
 }
@@ -185,7 +226,8 @@ export function getModuleArray(symbol, stats) {
 
   if (stats.isFile()) {
     root = "./" + getBaseDir(path.dirname(symbol));
-    arr.push({dir: root, file: symbol.replace(root, "."), dependsOnCnt: 0, usedByCnt: 0});
+    arr.push({dir: root, file: symbol.replace(root, "."), 
+      dependsOnCnt: 0, usedByCnt: 0, exportCnt: 0});
   } else if (stats.isDirectory()) {
     // array of directories
     root = getBaseDir(symbol);
@@ -196,14 +238,40 @@ export function getModuleArray(symbol, stats) {
       });
 
     dirArr.forEach(e => {
-      const k = (e.startsWith(root + "/")) ? e.replace(root, ".") : e.replace(root, "./");
+      const dir = (e.startsWith(root + "/")) ? e.replace(root, ".") : e.replace(root, "./");
       // sets map to the key=file values are the functions returned by getFiles
-      const fileList = getFiles(e).map(f => {return f.replace(root, ".")});
-      fileList.forEach(f => arr.push({ dir: k, file: f, dependsOnCnt: 0, usedByCnt: 0 }));
+      const fileList = getFiles(e).map(f => {return f.replace(root, ".") });
+      fileList.forEach(file => {
+        if (hasExtension(file, EXT_LIST)) {
+          arr.push(
+            { dir: dir, file: file, dependsOnCnt: 0, usedByCnt: 0, exportCnt : 0});
+        }        
+      });
     });
   }
 
 
   return [root, arr];
+
+}
+
+export function getDependsOn(dependencyList, file) {
+  return dependencyList
+    .filter(v => { return v.src === file; })
+    .sort((a, b) => { return a.importSrc.localeCompare(b.importSrc); });
+}
+
+export function getExportedList(exportList, file) {
+return exportList
+  .filter(v => { return v.name === file })
+  .sort((a, b) => { return a.exported.localeCompare(b.exported) });
+}
+
+
+
+export function getNodeModuleList(dependencyList) {
+  return dependencyList
+    .filter(v => { return v.importSrc.startsWith(".") === false; })
+    .sort((a, b) => { return a.importSrc.localeCompare(b.importSrc) });
 
 }

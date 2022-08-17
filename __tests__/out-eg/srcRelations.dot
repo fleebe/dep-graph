@@ -4,7 +4,7 @@ node [shape=record];
 Depend On : 5\l
 Used By : 1\l
 |
-		./utils/file-fn.js\l
+		./utils.js\l
 		@babel/parser\l
 		babel-walk\l
 		fs\l
@@ -21,7 +21,7 @@ Used By : 0\l
 		./commands/graph.js\l
 		./commands/html.js\l
 		./commands/json.js\l
-		./utils/file-fn.js\l
+		./utils.js\l
 		commander\l
 		fs\l
 		path\l
@@ -29,11 +29,22 @@ Used By : 0\l
 |
 }"];
 
+"./utils.js" [label="{ ./utils.js\n
+Depend On : 2\l
+Used By : 2\l
+|
+		fs\l
+		path\l
+|
+		./ast.js\l
+		./dep-graph.js\l
+}"];
+
 "./commands/graph.js" [label="{ ./commands/graph.js\n
 Depend On : 2\l
 Used By : 1\l
 |
-		./utils/file-fn.js\l
+		../utils.js\l
 		path\l
 |
 		./dep-graph.js\l
@@ -43,7 +54,7 @@ Used By : 1\l
 Depend On : 1\l
 Used By : 1\l
 |
-		./utils/file-fn.js\l
+		../utils.js\l
 |
 		./dep-graph.js\l
 }"];
@@ -57,19 +68,6 @@ Used By : 1\l
 		./dep-graph.js\l
 }"];
 
-"./utils/file-fn.js" [label="{ ./utils/file-fn.js\n
-Depend On : 2\l
-Used By : 4\l
-|
-		fs\l
-		path\l
-|
-		./ast.js\l
-		./commands/graph.js\l
-		./commands/html.js\l
-		./dep-graph.js\l
-}"];
-
 "node-modules" [label="{node-modules\n | 
  		@babel/parser\l
 		babel-walk\l
@@ -78,12 +76,12 @@ Used By : 4\l
 		path\l
 		url\l
 }"];
-"./ast.js"->"./utils/file-fn.js"
+"./ast.js"->"./utils.js"
 "./dep-graph.js"->"./ast.js"
 "./dep-graph.js"->"./commands/graph.js"
 "./dep-graph.js"->"./commands/html.js"
 "./dep-graph.js"->"./commands/json.js"
-"./dep-graph.js"->"./utils/file-fn.js"
-"./commands/graph.js"->"./utils/file-fn.js"
-"./commands/html.js"->"./utils/file-fn.js"
+"./dep-graph.js"->"./utils.js"
+"./commands/graph.js"->"../utils.js"
+"./commands/html.js"->"../utils.js"
 }

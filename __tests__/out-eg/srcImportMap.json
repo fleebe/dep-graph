@@ -6,15 +6,14 @@
   "@babel/parser": [
     "parse"
   ],
-  "./utils/file-fn.js": [
+  "./utils.js": [
     "addToMapArray",
     "normalizePath",
     "cleanPath",
     "hasExtension",
     "removeExtension",
     "getFilename",
-    "getModuleArray",
-    "getUsedList"
+    "getModuleArray"
   ],
   "url": [
     "fileURLToPath"
@@ -42,5 +41,12 @@
   "./commands/json.js": [
     "jsonOut",
     "jsonIn"
+  ],
+  "../utils.js": [
+    "cleanPath",
+    "getUsedByList",
+    "getDependsOn",
+    "getNodeModuleList",
+    "getExportedList"
   ]
 }

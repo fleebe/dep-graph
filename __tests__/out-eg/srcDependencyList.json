@@ -2,146 +2,217 @@
   {
     "src": "./ast.js",
     "importSrc": "fs",
+    "relSrcPath": "fs",
     "import": "readFileSync"
   },
   {
     "src": "./ast.js",
     "importSrc": "@babel/parser",
+    "relSrcPath": "@babel/parser",
     "import": "parse"
   },
   {
     "src": "./ast.js",
-    "importSrc": "./utils/file-fn.js",
+    "importSrc": "./utils.js",
+    "relSrcPath": "./utils.js",
     "import": "addToMapArray"
   },
   {
     "src": "./ast.js",
-    "importSrc": "./utils/file-fn.js",
+    "importSrc": "./utils.js",
+    "relSrcPath": "./utils.js",
     "import": "normalizePath"
   },
   {
     "src": "./ast.js",
-    "importSrc": "./utils/file-fn.js",
+    "importSrc": "./utils.js",
+    "relSrcPath": "./utils.js",
     "import": "cleanPath"
   },
   {
     "src": "./ast.js",
-    "importSrc": "./utils/file-fn.js",
+    "importSrc": "./utils.js",
+    "relSrcPath": "./utils.js",
     "import": "hasExtension"
   },
   {
     "src": "./ast.js",
-    "importSrc": "./utils/file-fn.js",
+    "importSrc": "./utils.js",
+    "relSrcPath": "./utils.js",
     "import": "removeExtension"
   },
   {
     "src": "./ast.js",
     "importSrc": "url",
+    "relSrcPath": "url",
     "import": "fileURLToPath"
   },
   {
     "src": "./ast.js",
     "importSrc": "babel-walk",
+    "relSrcPath": "babel-walk",
     "import": "*walk"
   },
   {
     "src": "./dep-graph.js",
     "importSrc": "commander",
+    "relSrcPath": "commander",
     "import": "Command"
   },
   {
     "src": "./dep-graph.js",
     "importSrc": "fs",
+    "relSrcPath": "fs",
     "import": "*fs"
   },
   {
     "src": "./dep-graph.js",
     "importSrc": "path",
+    "relSrcPath": "path",
     "import": "*path"
   },
   {
     "src": "./dep-graph.js",
     "importSrc": "./ast.js",
+    "relSrcPath": "./ast.js",
     "import": "processAST"
   },
   {
     "src": "./dep-graph.js",
     "importSrc": "./commands/graph.js",
+    "relSrcPath": "./commands/graph.js",
     "import": "createGraph"
   },
   {
     "src": "./dep-graph.js",
     "importSrc": "./commands/graph.js",
+    "relSrcPath": "./commands/graph.js",
     "import": "createRelationsGraph"
   },
   {
     "src": "./dep-graph.js",
     "importSrc": "./commands/graph.js",
+    "relSrcPath": "./commands/graph.js",
     "import": "createPackageGraph"
   },
   {
     "src": "./dep-graph.js",
     "importSrc": "./commands/html.js",
+    "relSrcPath": "./commands/html.js",
     "import": "createModuleHtml"
   },
   {
     "src": "./dep-graph.js",
     "importSrc": "./commands/json.js",
+    "relSrcPath": "./commands/json.js",
     "import": "jsonOut"
   },
   {
     "src": "./dep-graph.js",
     "importSrc": "./commands/json.js",
+    "relSrcPath": "./commands/json.js",
     "import": "jsonIn"
   },
   {
     "src": "./dep-graph.js",
-    "importSrc": "./utils/file-fn.js",
+    "importSrc": "./utils.js",
+    "relSrcPath": "./utils.js",
     "import": "getFilename"
   },
   {
     "src": "./dep-graph.js",
-    "importSrc": "./utils/file-fn.js",
+    "importSrc": "./utils.js",
+    "relSrcPath": "./utils.js",
     "import": "getModuleArray"
   },
   {
     "src": "./dep-graph.js",
     "importSrc": "url",
+    "relSrcPath": "url",
     "import": "fileURLToPath"
+  },
+  {
+    "src": "./utils.js",
+    "importSrc": "path",
+    "relSrcPath": "path",
+    "import": "*path"
+  },
+  {
+    "src": "./utils.js",
+    "importSrc": "fs",
+    "relSrcPath": "fs",
+    "import": "*fs"
   },
   {
     "src": "./commands/graph.js",
     "importSrc": "path",
+    "relSrcPath": "path",
     "import": "*path"
   },
   {
     "src": "./commands/graph.js",
-    "importSrc": "./utils/file-fn.js",
+    "importSrc": "../utils.js",
+    "relSrcPath": "./utils.js",
     "import": "cleanPath"
   },
   {
     "src": "./commands/graph.js",
-    "importSrc": "./utils/file-fn.js",
-    "import": "getUsedList"
+    "importSrc": "../utils.js",
+    "relSrcPath": "./utils.js",
+    "import": "getUsedByList"
+  },
+  {
+    "src": "./commands/graph.js",
+    "importSrc": "../utils.js",
+    "relSrcPath": "./utils.js",
+    "import": "getDependsOn"
+  },
+  {
+    "src": "./commands/graph.js",
+    "importSrc": "../utils.js",
+    "relSrcPath": "./utils.js",
+    "import": "getNodeModuleList"
+  },
+  {
+    "src": "./commands/graph.js",
+    "importSrc": "../utils.js",
+    "relSrcPath": "./utils.js",
+    "import": "getExportedList"
   },
   {
     "src": "./commands/html.js",
-    "importSrc": "./utils/file-fn.js",
-    "import": "getUsedList"
+    "importSrc": "../utils.js",
+    "relSrcPath": "./utils.js",
+    "import": "getUsedByList"
+  },
+  {
+    "src": "./commands/html.js",
+    "importSrc": "../utils.js",
+    "relSrcPath": "./utils.js",
+    "import": "cleanPath"
+  },
+  {
+    "src": "./commands/html.js",
+    "importSrc": "../utils.js",
+    "relSrcPath": "./utils.js",
+    "import": "getDependsOn"
+  },
+  {
+    "src": "./commands/html.js",
+    "importSrc": "../utils.js",
+    "relSrcPath": "./utils.js",
+    "import": "getNodeModuleList"
+  },
+  {
+    "src": "./commands/html.js",
+    "importSrc": "../utils.js",
+    "relSrcPath": "./utils.js",
+    "import": "getExportedList"
   },
   {
     "src": "./commands/json.js",
     "importSrc": "fs",
-    "import": "*fs"
-  },
-  {
-    "src": "./utils/file-fn.js",
-    "importSrc": "path",
-    "import": "*path"
-  },
-  {
-    "src": "./utils/file-fn.js",
-    "importSrc": "fs",
+    "relSrcPath": "fs",
     "import": "*fs"
   }
 ]

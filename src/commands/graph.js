@@ -1,5 +1,5 @@
 import path from "path";
-import { cleanPath, getUsedList } from "../utils/file-fn.js";
+import { cleanPath, getUsedByList, getDependsOn, getNodeModuleList, getExportedList } from "../utils.js";
 
 /**
  * Creates a graphviz .dot file of package dependencies called package.dot in the output directory. 
@@ -102,7 +102,9 @@ export function createGraph(dependencyList, exportList, moduleArray, importMap) 
     * to only create the node once select the exportedList which has the same name as the module and 
     * loop through to add the the exported functions.
     */
-    for (const exported of exportList.filter(v => { return v.name === mod.file })) {
+    const exports = getExportedList(exportList, mod.file);
+    mod.exportCnt = exports.length;
+    for (const exported of exports) {
       ln += `\t ${exported.exported} \\l\n`;
     }
     ln += "|";
@@ -112,9 +114,8 @@ export function createGraph(dependencyList, exportList, moduleArray, importMap) 
      * adds the imported functions of the module to the graph
      * sorted to only add once
      */
-    for (const dep of dependencyList
-      .filter(v => { return v.src === mod.file })
-      .sort((a, b) => { return a.importSrc.localeCompare(b.importSrc) })) {
+    const depsOn = getDependsOn(dependencyList, mod.file);
+    for (const dep of depsOn) {
       if (newImp !== dep.importSrc) {
         ln += `\t\t${dep.importSrc}\\l`;
         newImp = dep.importSrc;
@@ -205,9 +206,8 @@ export function createRelationsGraph(dependencyList, moduleArray) {
      * sorted to make the addition unique.
      * 2nd section Depends on
      */
-    for (const dep of dependencyList
-      .filter(v => { return v.src === mod.file; })
-      .sort((a, b) => { return a.importSrc.localeCompare( b.importSrc) })) {
+    const depsOn = getDependsOn(dependencyList, mod.file);
+    for (const dep of depsOn) {
       if (newImp !== dep.importSrc) {
         newImp = dep.importSrc;
         // newImp is a node-module so add the List to the set of mods that depend on node-modules
@@ -217,7 +217,6 @@ export function createRelationsGraph(dependencyList, moduleArray) {
           relLn += '"' + dep.src + '"->"' + newImp + '"\n';
         }
         depLn += `\t\t${newImp}\\l\n`;
-        mod.dependsOnCnt += 1;
       }
     }
 
@@ -233,14 +232,12 @@ export function createRelationsGraph(dependencyList, moduleArray) {
 
     // file may have an extension but the importSrc does not
     // the importSrc is still used by the file
-    const usedList = getUsedList(mod, dependencyList);
-
+    const usedList = getUsedByList(dependencyList, mod.file);
     for (const dep of usedList) {
       if (newImp !== dep.src) {
         newImp = dep.src;
         usedLn += `\t\t${newImp}\\l\n`;
-        mod.usedByCnt += 1;
-      }
+        }
     }
 
     result += fileLn +
@@ -257,9 +254,7 @@ export function createRelationsGraph(dependencyList, moduleArray) {
   let nodeModsLn = `"node-modules" [label="{node-modules\\n | \n `;
   newImp = "";
 
-  let nodeMods = dependencyList
-    .filter(v => { return v.importSrc.startsWith(".") === false; })
-    .sort((a, b) => { return a.importSrc.localeCompare(b.importSrc) });
+  const nodeMods = getNodeModuleList(dependencyList);
   for (const dep of nodeMods) {
     if (newImp !== dep.importSrc) {
       newImp = dep.importSrc;
