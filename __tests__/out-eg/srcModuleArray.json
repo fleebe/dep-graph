@@ -2,9 +2,9 @@
   {
     "dir": "./",
     "file": "./ast.js",
-    "dependsOnCnt": 5,
+    "dependsOnCnt": 11,
     "usedByCnt": 1,
-    "exportCnt": 2
+    "exportCnt": 1
   },
   {
     "dir": "./",
@@ -15,22 +15,29 @@
   },
   {
     "dir": "./",
-    "file": "./utils.js",
-    "dependsOnCnt": 2,
+    "file": "./globals.js",
+    "dependsOnCnt": 0,
     "usedByCnt": 2,
-    "exportCnt": 13
+    "exportCnt": 1
+  },
+  {
+    "dir": "./",
+    "file": "./utils.js",
+    "dependsOnCnt": 3,
+    "usedByCnt": 18,
+    "exportCnt": 14
   },
   {
     "dir": "./commands",
     "file": "./commands/graph.js",
-    "dependsOnCnt": 2,
-    "usedByCnt": 1,
+    "dependsOnCnt": 6,
+    "usedByCnt": 0,
     "exportCnt": 3
   },
   {
     "dir": "./commands",
     "file": "./commands/html.js",
-    "dependsOnCnt": 1,
+    "dependsOnCnt": 5,
     "usedByCnt": 1,
     "exportCnt": 1
   },

@@ -1,30 +1,41 @@
 <html><body>
 <h1 id="mod_list">Module List</h1>
 <table border=1>
-	<tr><th><a href="#node_modules">Node Modules</a></th>
-	<th>Count</th><th>6</th></tr>
+	<tr><th>Type</th><th>Count</td></th></tr>
+	<tr><td><a href="#node_modules">Node Modules</a></td>	<td>6</td></tr>
+	<tr><td>Application Modules</td>	<td>7</td></tr>
+	<tr><td><a href="#unused">Unused Application Modules</a></td>	<td>2</td></tr>
 </table><br>
 <table border=1>
 	<tr><th>Directory</th><th>File</th><th>Depends On</th><th>Used By</th><th>Exported</th></tr>
-	<tr><td>./</td><td><a href="#./ast.js">ast.js</a></td><td>5</td><td>1</td><td>2</td></tr>
+	<tr><td>./</td><td><a href="#./ast.js">ast.js</a></td><td>11</td><td>1</td><td>1</td></tr>
 	<tr><td>./</td><td><a href="#./dep-graph.js">dep-graph.js</a></td><td>9</td><td>0</td><td>1</td></tr>
-	<tr><td>./</td><td><a href="#./utils.js">utils.js</a></td><td>2</td><td>2</td><td>13</td></tr>
-	<tr><td>./commands</td><td><a href="#./commands/graph.js">graph.js</a></td><td>2</td><td>1</td><td>3</td></tr>
-	<tr><td>./commands</td><td><a href="#./commands/html.js">html.js</a></td><td>1</td><td>1</td><td>1</td></tr>
+	<tr><td>./</td><td><a href="#./globals.js">globals.js</a></td><td>0</td><td>2</td><td>1</td></tr>
+	<tr><td>./</td><td><a href="#./utils.js">utils.js</a></td><td>3</td><td>18</td><td>14</td></tr>
+	<tr><td>./commands</td><td><a href="#./commands/graph.js">graph.js</a></td><td>6</td><td>0</td><td>3</td></tr>
+	<tr><td>./commands</td><td><a href="#./commands/html.js">html.js</a></td><td>5</td><td>1</td><td>1</td></tr>
 	<tr><td>./commands</td><td><a href="#./commands/json.js">json.js</a></td><td>1</td><td>1</td><td>2</td></tr>
+</table>
+<h2 id="unused">Unused Application Modules</h2><a href="#mod_list">(top)</a>
+<table border=1>
+	<tr><th>Directory</th><th>File</th><th>Depends On</th><th>Used By</th><th>Exported</th></tr>
+	<tr><td>./</td><td><a href="#./dep-graph.js">dep-graph.js</a></td><td>9</td><td>0</td><td>1</td></tr>
+	<tr><td>./commands</td><td><a href="#./commands/graph.js">graph.js</a></td><td>6</td><td>0</td><td>3</td></tr>
 </table>
 <h2 id=./ast.js>./ast.js</h2> <a href="#mod_list">(top)</a>
 <h3>Exported</h3>
 <table border=1>
-	<tr><td>-fn getImportMap</td>
-	<td>FunctionDeclaration</td></tr>
-	<tr><td>-fn processAST</td>
-	<td>FunctionDeclaration</td></tr>
+	<tr><th>Exported</th><th>Export Declaration</th><th>Parameters</th><th>Used Count</th></tr>
+	<tr><td>processAST</td>
+	<td>FunctionDeclaration</td>
+	<td>(moduleArray, root)</td>
+	<td>1</td></tr>
 </table><br>
 <h3>Depends On</h3>
 <table border=1>
-	<tr><td><a href="#./utils.js">./utils.js</a></td>
-	<td>addToMapArray</td></tr>
+	<tr><th>File or <br>Node Module</th><th>Import</th></tr>
+	<tr><td><a href="#./globals.js">./globals.js</a></td>
+	<td>EXT_LIST</td></tr>
 	<tr><td><a href="#./utils.js">./utils.js</a></td>
 	<td>normalizePath</td></tr>
 	<tr><td><a href="#./utils.js">./utils.js</a></td>
@@ -32,11 +43,15 @@
 	<tr><td><a href="#./utils.js">./utils.js</a></td>
 	<td>hasExtension</td></tr>
 	<tr><td><a href="#./utils.js">./utils.js</a></td>
+	<td>getUsedByList</td></tr>
+	<tr><td><a href="#./utils.js">./utils.js</a></td>
 	<td>removeExtension</td></tr>
+	<tr><td><a href="#./utils.js">./utils.js</a></td>
+	<td>validateImportFile</td></tr>
 	<tr><td>@babel/parser</td>
 	<td>parse</td></tr>
 	<tr><td>babel-walk</td>
-	<td>*walk</td></tr>
+	<td>undefined</td></tr>
 	<tr><td>fs</td>
 	<td>readFileSync</td></tr>
 	<tr><td>url</td>
@@ -44,31 +59,28 @@
 </table><br>
 <h3>Used By</h3>
 <table border=1>
+	<tr><th>File or <br>Node Module</th><th>Import</th></tr>
 	<tr><td><a href="#./dep-graph.js">./dep-graph.js</a></td>
 	<td>processAST</td></tr>
 </table><br>
 <h2 id=./dep-graph.js>./dep-graph.js</h2> <a href="#mod_list">(top)</a>
 <h3>Exported</h3>
 <table border=1>
-	<tr><td>-fn runProgram</td>
-	<td>FunctionDeclaration</td></tr>
+	<tr><th>Exported</th><th>Export Declaration</th><th>Parameters</th><th>Used Count</th></tr>
+	<tr><td>runProgram</td>
+	<td>FunctionDeclaration</td>
+	<td>()</td>
+	<td>0</td></tr>
 </table><br>
 <h3>Depends On</h3>
 <table border=1>
+	<tr><th>File or <br>Node Module</th><th>Import</th></tr>
 	<tr><td><a href="#./ast.js">./ast.js</a></td>
 	<td>processAST</td></tr>
-	<tr><td><a href="#./commands/graph.js">./commands/graph.js</a></td>
-	<td>createGraph</td></tr>
-	<tr><td><a href="#./commands/graph.js">./commands/graph.js</a></td>
-	<td>createRelationsGraph</td></tr>
-	<tr><td><a href="#./commands/graph.js">./commands/graph.js</a></td>
-	<td>createPackageGraph</td></tr>
 	<tr><td><a href="#./commands/html.js">./commands/html.js</a></td>
 	<td>createModuleHtml</td></tr>
 	<tr><td><a href="#./commands/json.js">./commands/json.js</a></td>
 	<td>jsonOut</td></tr>
-	<tr><td><a href="#./commands/json.js">./commands/json.js</a></td>
-	<td>jsonIn</td></tr>
 	<tr><td><a href="#./utils.js">./utils.js</a></td>
 	<td>getFilename</td></tr>
 	<tr><td><a href="#./utils.js">./utils.js</a></td>
@@ -76,56 +88,111 @@
 	<tr><td>commander</td>
 	<td>Command</td></tr>
 	<tr><td>fs</td>
-	<td>*fs</td></tr>
+	<td>fs</td></tr>
 	<tr><td>path</td>
-	<td>*path</td></tr>
+	<td>path</td></tr>
 	<tr><td>url</td>
 	<td>fileURLToPath</td></tr>
 </table><br>
 <h3>Used By</h3>
 <table border=1>
+	<tr><th>File or <br>Node Module</th><th>Import</th></tr>
+</table><br>
+<h2 id=./globals.js>./globals.js</h2> <a href="#mod_list">(top)</a>
+<h3>Exported</h3>
+<table border=1>
+	<tr><th>Exported</th><th>Export Declaration</th><th>Parameters</th><th>Used Count</th></tr>
+	<tr><td>EXT_LIST</td>
+	<td>VariableDeclaration</td>
+	<td></td>
+	<td>2</td></tr>
+</table><br>
+<h3>Depends On</h3>
+<table border=1>
+	<tr><th>File or <br>Node Module</th><th>Import</th></tr>
+</table><br>
+<h3>Used By</h3>
+<table border=1>
+	<tr><th>File or <br>Node Module</th><th>Import</th></tr>
+	<tr><td><a href="#./ast.js">./ast.js</a></td>
+	<td>EXT_LIST</td></tr>
+	<tr><td><a href="#./utils.js">./utils.js</a></td>
+	<td>EXT_LIST</td></tr>
 </table><br>
 <h2 id=./utils.js>./utils.js</h2> <a href="#mod_list">(top)</a>
 <h3>Exported</h3>
 <table border=1>
-	<tr><td>-fn addToMapArray</td>
-	<td>FunctionDeclaration</td></tr>
-	<tr><td>-fn cleanPath</td>
-	<td>FunctionDeclaration</td></tr>
-	<tr><td>-fn getDependsOn</td>
-	<td>FunctionDeclaration</td></tr>
-	<tr><td>-fn getDirectoriesRecursive</td>
-	<td>FunctionDeclaration</td></tr>
-	<tr><td>-fn getExportedList</td>
-	<td>FunctionDeclaration</td></tr>
-	<tr><td>-fn getFilename</td>
-	<td>FunctionDeclaration</td></tr>
-	<tr><td>-fn getModuleArray</td>
-	<td>FunctionDeclaration</td></tr>
-	<tr><td>-fn getNodeModuleList</td>
-	<td>FunctionDeclaration</td></tr>
-	<tr><td>-fn getUsedByList</td>
-	<td>FunctionDeclaration</td></tr>
-	<tr><td>-fn normalizePath</td>
-	<td>FunctionDeclaration</td></tr>
-	<tr><td>-vr getBaseDir</td>
-	<td>VariableDeclaration</td></tr>
-	<tr><td>-vr hasExtension</td>
-	<td>VariableDeclaration</td></tr>
-	<tr><td>-vr removeExtension</td>
-	<td>VariableDeclaration</td></tr>
+	<tr><th>Exported</th><th>Export Declaration</th><th>Parameters</th><th>Used Count</th></tr>
+	<tr><td>addToMapArray</td>
+	<td>FunctionDeclaration</td>
+	<td>(map, key, arrVal)</td>
+	<td>0</td></tr>
+	<tr><td>cleanPath</td>
+	<td>FunctionDeclaration</td>
+	<td>(root)</td>
+	<td>3</td></tr>
+	<tr><td>getBaseDir</td>
+	<td>VariableDeclaration</td>
+	<td></td>
+	<td>0</td></tr>
+	<tr><td>getDependsOn</td>
+	<td>FunctionDeclaration</td>
+	<td>(dependencyList, file)</td>
+	<td>2</td></tr>
+	<tr><td>getDirectoriesRecursive</td>
+	<td>FunctionDeclaration</td>
+	<td>(srcpath)</td>
+	<td>0</td></tr>
+	<tr><td>getExportedList</td>
+	<td>FunctionDeclaration</td>
+	<td>(exportList, file)</td>
+	<td>2</td></tr>
+	<tr><td>getFilename</td>
+	<td>FunctionDeclaration</td>
+	<td>(fullPath)</td>
+	<td>1</td></tr>
+	<tr><td>getModuleArray</td>
+	<td>FunctionDeclaration</td>
+	<td>(symbol, stats)</td>
+	<td>1</td></tr>
+	<tr><td>getNodeModuleList</td>
+	<td>FunctionDeclaration</td>
+	<td>(dependencyList)</td>
+	<td>2</td></tr>
+	<tr><td>getUsedByList</td>
+	<td>FunctionDeclaration</td>
+	<td>(dependencyList, file)</td>
+	<td>3</td></tr>
+	<tr><td>hasExtension</td>
+	<td>VariableDeclaration</td>
+	<td></td>
+	<td>1</td></tr>
+	<tr><td>normalizePath</td>
+	<td>FunctionDeclaration</td>
+	<td>(dest, src)</td>
+	<td>1</td></tr>
+	<tr><td>removeExtension</td>
+	<td>VariableDeclaration</td>
+	<td></td>
+	<td>1</td></tr>
+	<tr><td>validateImportFile</td>
+	<td>FunctionDeclaration</td>
+	<td>(relFile, root)</td>
+	<td>1</td></tr>
 </table><br>
 <h3>Depends On</h3>
 <table border=1>
+	<tr><th>File or <br>Node Module</th><th>Import</th></tr>
+	<tr><td><a href="#./globals.js">./globals.js</a></td>
+	<td>EXT_LIST</td></tr>
 	<tr><td>fs</td>
-	<td>*fs</td></tr>
+	<td>fs</td></tr>
 	<tr><td>path</td>
-	<td>*path</td></tr>
+	<td>path</td></tr>
 </table><br>
 <h3>Used By</h3>
 <table border=1>
-	<tr><td><a href="#./ast.js">./ast.js</a></td>
-	<td>addToMapArray</td></tr>
+	<tr><th>File or <br>Node Module</th><th>Import</th></tr>
 	<tr><td><a href="#./ast.js">./ast.js</a></td>
 	<td>normalizePath</td></tr>
 	<tr><td><a href="#./ast.js">./ast.js</a></td>
@@ -133,7 +200,31 @@
 	<tr><td><a href="#./ast.js">./ast.js</a></td>
 	<td>hasExtension</td></tr>
 	<tr><td><a href="#./ast.js">./ast.js</a></td>
+	<td>getUsedByList</td></tr>
+	<tr><td><a href="#./ast.js">./ast.js</a></td>
 	<td>removeExtension</td></tr>
+	<tr><td><a href="#./ast.js">./ast.js</a></td>
+	<td>validateImportFile</td></tr>
+	<tr><td><a href="#./commands/graph.js">./commands/graph.js</a></td>
+	<td>cleanPath</td></tr>
+	<tr><td><a href="#./commands/graph.js">./commands/graph.js</a></td>
+	<td>getUsedByList</td></tr>
+	<tr><td><a href="#./commands/graph.js">./commands/graph.js</a></td>
+	<td>getDependsOn</td></tr>
+	<tr><td><a href="#./commands/graph.js">./commands/graph.js</a></td>
+	<td>getNodeModuleList</td></tr>
+	<tr><td><a href="#./commands/graph.js">./commands/graph.js</a></td>
+	<td>getExportedList</td></tr>
+	<tr><td><a href="#./commands/html.js">./commands/html.js</a></td>
+	<td>getUsedByList</td></tr>
+	<tr><td><a href="#./commands/html.js">./commands/html.js</a></td>
+	<td>cleanPath</td></tr>
+	<tr><td><a href="#./commands/html.js">./commands/html.js</a></td>
+	<td>getDependsOn</td></tr>
+	<tr><td><a href="#./commands/html.js">./commands/html.js</a></td>
+	<td>getNodeModuleList</td></tr>
+	<tr><td><a href="#./commands/html.js">./commands/html.js</a></td>
+	<td>getExportedList</td></tr>
 	<tr><td><a href="#./dep-graph.js">./dep-graph.js</a></td>
 	<td>getFilename</td></tr>
 	<tr><td><a href="#./dep-graph.js">./dep-graph.js</a></td>
@@ -142,15 +233,23 @@
 <h2 id=./commands/graph.js>./commands/graph.js</h2> <a href="#mod_list">(top)</a>
 <h3>Exported</h3>
 <table border=1>
-	<tr><td>-fn createGraph</td>
-	<td>FunctionDeclaration</td></tr>
-	<tr><td>-fn createPackageGraph</td>
-	<td>FunctionDeclaration</td></tr>
-	<tr><td>-fn createRelationsGraph</td>
-	<td>FunctionDeclaration</td></tr>
+	<tr><th>Exported</th><th>Export Declaration</th><th>Parameters</th><th>Used Count</th></tr>
+	<tr><td>createGraph</td>
+	<td>FunctionDeclaration</td>
+	<td>(dependencyList, exportList, moduleArray, importMap)</td>
+	<td>0</td></tr>
+	<tr><td>createPackageGraph</td>
+	<td>FunctionDeclaration</td>
+	<td>(moduleArray, dependencyList)</td>
+	<td>0</td></tr>
+	<tr><td>createRelationsGraph</td>
+	<td>FunctionDeclaration</td>
+	<td>(dependencyList, moduleArray)</td>
+	<td>0</td></tr>
 </table><br>
 <h3>Depends On</h3>
 <table border=1>
+	<tr><th>File or <br>Node Module</th><th>Import</th></tr>
 	<tr><td><a href="#./utils.js">./utils.js</a></td>
 	<td>cleanPath</td></tr>
 	<tr><td><a href="#./utils.js">./utils.js</a></td>
@@ -162,25 +261,24 @@
 	<tr><td><a href="#./utils.js">./utils.js</a></td>
 	<td>getExportedList</td></tr>
 	<tr><td>path</td>
-	<td>*path</td></tr>
+	<td>path</td></tr>
 </table><br>
 <h3>Used By</h3>
 <table border=1>
-	<tr><td><a href="#./dep-graph.js">./dep-graph.js</a></td>
-	<td>createGraph</td></tr>
-	<tr><td><a href="#./dep-graph.js">./dep-graph.js</a></td>
-	<td>createRelationsGraph</td></tr>
-	<tr><td><a href="#./dep-graph.js">./dep-graph.js</a></td>
-	<td>createPackageGraph</td></tr>
+	<tr><th>File or <br>Node Module</th><th>Import</th></tr>
 </table><br>
 <h2 id=./commands/html.js>./commands/html.js</h2> <a href="#mod_list">(top)</a>
 <h3>Exported</h3>
 <table border=1>
-	<tr><td>-fn createModuleHtml</td>
-	<td>FunctionDeclaration</td></tr>
+	<tr><th>Exported</th><th>Export Declaration</th><th>Parameters</th><th>Used Count</th></tr>
+	<tr><td>createModuleHtml</td>
+	<td>FunctionDeclaration</td>
+	<td>(moduleArray, dependencyList, exportList)</td>
+	<td>1</td></tr>
 </table><br>
 <h3>Depends On</h3>
 <table border=1>
+	<tr><th>File or <br>Node Module</th><th>Import</th></tr>
 	<tr><td><a href="#./utils.js">./utils.js</a></td>
 	<td>getUsedByList</td></tr>
 	<tr><td><a href="#./utils.js">./utils.js</a></td>
@@ -194,41 +292,48 @@
 </table><br>
 <h3>Used By</h3>
 <table border=1>
+	<tr><th>File or <br>Node Module</th><th>Import</th></tr>
 	<tr><td><a href="#./dep-graph.js">./dep-graph.js</a></td>
 	<td>createModuleHtml</td></tr>
 </table><br>
 <h2 id=./commands/json.js>./commands/json.js</h2> <a href="#mod_list">(top)</a>
 <h3>Exported</h3>
 <table border=1>
-	<tr><td>-fn jsonIn</td>
-	<td>FunctionDeclaration</td></tr>
-	<tr><td>-fn jsonOut</td>
-	<td>FunctionDeclaration</td></tr>
+	<tr><th>Exported</th><th>Export Declaration</th><th>Parameters</th><th>Used Count</th></tr>
+	<tr><td>jsonIn</td>
+	<td>FunctionDeclaration</td>
+	<td>(file)</td>
+	<td>0</td></tr>
+	<tr><td>jsonOut</td>
+	<td>FunctionDeclaration</td>
+	<td>(output, title, obj)</td>
+	<td>1</td></tr>
 </table><br>
 <h3>Depends On</h3>
 <table border=1>
+	<tr><th>File or <br>Node Module</th><th>Import</th></tr>
 	<tr><td>fs</td>
-	<td>*fs</td></tr>
+	<td>fs</td></tr>
 </table><br>
 <h3>Used By</h3>
 <table border=1>
+	<tr><th>File or <br>Node Module</th><th>Import</th></tr>
 	<tr><td><a href="#./dep-graph.js">./dep-graph.js</a></td>
 	<td>jsonOut</td></tr>
-	<tr><td><a href="#./dep-graph.js">./dep-graph.js</a></td>
-	<td>jsonIn</td></tr>
 </table><br>
-<h2 id="node_modules">Node Modules</h2>
+<h2 id="node_modules">Node Modules</h2>  <a href="#mod_list">(top)</a>
 <table border=1>
+	<tr><th>File</th><th>Node Module</th></tr>
 	<tr><td>@babel/parser</td>
 	<td>parse</td></tr>
 	<tr><td>babel-walk</td>
-	<td>*walk</td></tr>
+	<td>undefined</td></tr>
 	<tr><td>commander</td>
 	<td>Command</td></tr>
 	<tr><td>fs</td>
-	<td>*fs</td></tr>
+	<td>fs</td></tr>
 	<tr><td>path</td>
-	<td>*path</td></tr>
+	<td>path</td></tr>
 	<tr><td>url</td>
 	<td>fileURLToPath</td></tr>
 </table><br>

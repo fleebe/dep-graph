@@ -1,112 +1,136 @@
 [
   {
     "name": "./ast.js",
-    "exported": "-fn processAST",
-    "type": "FunctionDeclaration"
-  },
-  {
-    "name": "./ast.js",
-    "exported": "-fn getImportMap",
-    "type": "FunctionDeclaration"
+    "exported": "processAST",
+    "type": "FunctionDeclaration",
+    "params": "(moduleArray, root)"
   },
   {
     "name": "./dep-graph.js",
-    "exported": "-fn runProgram",
-    "type": "FunctionDeclaration"
+    "exported": "runProgram",
+    "type": "FunctionDeclaration",
+    "params": "()"
   },
   {
-    "name": "./utils.js",
-    "exported": "-vr hasExtension",
+    "name": "./globals.js",
+    "exported": "EXT_LIST",
     "type": "VariableDeclaration"
   },
   {
     "name": "./utils.js",
-    "exported": "-vr removeExtension",
+    "exported": "hasExtension",
     "type": "VariableDeclaration"
   },
   {
     "name": "./utils.js",
-    "exported": "-vr getBaseDir",
+    "exported": "removeExtension",
     "type": "VariableDeclaration"
   },
   {
     "name": "./utils.js",
-    "exported": "-fn normalizePath",
-    "type": "FunctionDeclaration"
+    "exported": "getBaseDir",
+    "type": "VariableDeclaration"
   },
   {
     "name": "./utils.js",
-    "exported": "-fn cleanPath",
-    "type": "FunctionDeclaration"
+    "exported": "normalizePath",
+    "type": "FunctionDeclaration",
+    "params": "(dest, src)"
   },
   {
     "name": "./utils.js",
-    "exported": "-fn getFilename",
-    "type": "FunctionDeclaration"
+    "exported": "validateImportFile",
+    "type": "FunctionDeclaration",
+    "params": "(relFile, root)"
   },
   {
     "name": "./utils.js",
-    "exported": "-fn getDirectoriesRecursive",
-    "type": "FunctionDeclaration"
+    "exported": "cleanPath",
+    "type": "FunctionDeclaration",
+    "params": "(root)"
   },
   {
     "name": "./utils.js",
-    "exported": "-fn addToMapArray",
-    "type": "FunctionDeclaration"
+    "exported": "getFilename",
+    "type": "FunctionDeclaration",
+    "params": "(fullPath)"
   },
   {
     "name": "./utils.js",
-    "exported": "-fn getUsedByList",
-    "type": "FunctionDeclaration"
+    "exported": "getDirectoriesRecursive",
+    "type": "FunctionDeclaration",
+    "params": "(srcpath)"
   },
   {
     "name": "./utils.js",
-    "exported": "-fn getModuleArray",
-    "type": "FunctionDeclaration"
+    "exported": "addToMapArray",
+    "type": "FunctionDeclaration",
+    "params": "(map, key, arrVal)"
   },
   {
     "name": "./utils.js",
-    "exported": "-fn getDependsOn",
-    "type": "FunctionDeclaration"
+    "exported": "getUsedByList",
+    "type": "FunctionDeclaration",
+    "params": "(dependencyList, file)"
   },
   {
     "name": "./utils.js",
-    "exported": "-fn getExportedList",
-    "type": "FunctionDeclaration"
+    "exported": "getModuleArray",
+    "type": "FunctionDeclaration",
+    "params": "(symbol, stats)"
   },
   {
     "name": "./utils.js",
-    "exported": "-fn getNodeModuleList",
-    "type": "FunctionDeclaration"
+    "exported": "getDependsOn",
+    "type": "FunctionDeclaration",
+    "params": "(dependencyList, file)"
+  },
+  {
+    "name": "./utils.js",
+    "exported": "getExportedList",
+    "type": "FunctionDeclaration",
+    "params": "(exportList, file)"
+  },
+  {
+    "name": "./utils.js",
+    "exported": "getNodeModuleList",
+    "type": "FunctionDeclaration",
+    "params": "(dependencyList)"
   },
   {
     "name": "./commands/graph.js",
-    "exported": "-fn createPackageGraph",
-    "type": "FunctionDeclaration"
+    "exported": "createPackageGraph",
+    "type": "FunctionDeclaration",
+    "params": "(moduleArray, dependencyList)"
   },
   {
     "name": "./commands/graph.js",
-    "exported": "-fn createGraph",
-    "type": "FunctionDeclaration"
+    "exported": "createGraph",
+    "type": "FunctionDeclaration",
+    "params": "(dependencyList, exportList, moduleArray, importMap)"
   },
   {
     "name": "./commands/graph.js",
-    "exported": "-fn createRelationsGraph",
-    "type": "FunctionDeclaration"
+    "exported": "createRelationsGraph",
+    "type": "FunctionDeclaration",
+    "params": "(dependencyList, moduleArray)"
   },
   {
     "name": "./commands/html.js",
-    "exported": "-fn createModuleHtml",
-    "type": "FunctionDeclaration"
+    "exported": "createModuleHtml",
+    "type": "FunctionDeclaration",
+    "params": "(moduleArray, dependencyList, exportList)"
   },
   {
     "name": "./commands/json.js",
-    "exported": "-fn jsonOut",
-    "type": "FunctionDeclaration"
+    "exported": "jsonOut",
+    "type": "FunctionDeclaration",
+    "params": "(output, title, obj)"
   },
   {
     "name": "./commands/json.js",
-    "exported": "-fn jsonIn",
-    "type": "FunctionDeclaration"
+    "exported": "jsonIn",
+    "type": "FunctionDeclaration",
+    "params": "(file)"
   }
 ]

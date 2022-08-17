@@ -15,12 +15,6 @@
     "src": "./ast.js",
     "importSrc": "./utils.js",
     "relSrcPath": "./utils.js",
-    "import": "addToMapArray"
-  },
-  {
-    "src": "./ast.js",
-    "importSrc": "./utils.js",
-    "relSrcPath": "./utils.js",
     "import": "normalizePath"
   },
   {
@@ -39,7 +33,19 @@
     "src": "./ast.js",
     "importSrc": "./utils.js",
     "relSrcPath": "./utils.js",
+    "import": "getUsedByList"
+  },
+  {
+    "src": "./ast.js",
+    "importSrc": "./utils.js",
+    "relSrcPath": "./utils.js",
     "import": "removeExtension"
+  },
+  {
+    "src": "./ast.js",
+    "importSrc": "./utils.js",
+    "relSrcPath": "./utils.js",
+    "import": "validateImportFile"
   },
   {
     "src": "./ast.js",
@@ -50,8 +56,13 @@
   {
     "src": "./ast.js",
     "importSrc": "babel-walk",
-    "relSrcPath": "babel-walk",
-    "import": "*walk"
+    "relSrcPath": "babel-walk"
+  },
+  {
+    "src": "./ast.js",
+    "importSrc": "./globals.js",
+    "relSrcPath": "./globals.js",
+    "import": "EXT_LIST"
   },
   {
     "src": "./dep-graph.js",
@@ -63,37 +74,19 @@
     "src": "./dep-graph.js",
     "importSrc": "fs",
     "relSrcPath": "fs",
-    "import": "*fs"
+    "import": "fs"
   },
   {
     "src": "./dep-graph.js",
     "importSrc": "path",
     "relSrcPath": "path",
-    "import": "*path"
+    "import": "path"
   },
   {
     "src": "./dep-graph.js",
     "importSrc": "./ast.js",
     "relSrcPath": "./ast.js",
     "import": "processAST"
-  },
-  {
-    "src": "./dep-graph.js",
-    "importSrc": "./commands/graph.js",
-    "relSrcPath": "./commands/graph.js",
-    "import": "createGraph"
-  },
-  {
-    "src": "./dep-graph.js",
-    "importSrc": "./commands/graph.js",
-    "relSrcPath": "./commands/graph.js",
-    "import": "createRelationsGraph"
-  },
-  {
-    "src": "./dep-graph.js",
-    "importSrc": "./commands/graph.js",
-    "relSrcPath": "./commands/graph.js",
-    "import": "createPackageGraph"
   },
   {
     "src": "./dep-graph.js",
@@ -106,12 +99,6 @@
     "importSrc": "./commands/json.js",
     "relSrcPath": "./commands/json.js",
     "import": "jsonOut"
-  },
-  {
-    "src": "./dep-graph.js",
-    "importSrc": "./commands/json.js",
-    "relSrcPath": "./commands/json.js",
-    "import": "jsonIn"
   },
   {
     "src": "./dep-graph.js",
@@ -135,19 +122,25 @@
     "src": "./utils.js",
     "importSrc": "path",
     "relSrcPath": "path",
-    "import": "*path"
+    "import": "path"
   },
   {
     "src": "./utils.js",
     "importSrc": "fs",
     "relSrcPath": "fs",
-    "import": "*fs"
+    "import": "fs"
+  },
+  {
+    "src": "./utils.js",
+    "importSrc": "./globals.js",
+    "relSrcPath": "./globals.js",
+    "import": "EXT_LIST"
   },
   {
     "src": "./commands/graph.js",
     "importSrc": "path",
     "relSrcPath": "path",
-    "import": "*path"
+    "import": "path"
   },
   {
     "src": "./commands/graph.js",
@@ -213,6 +206,6 @@
     "src": "./commands/json.js",
     "importSrc": "fs",
     "relSrcPath": "fs",
-    "import": "*fs"
+    "import": "fs"
   }
 ]

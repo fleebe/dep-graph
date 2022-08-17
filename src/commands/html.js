@@ -3,10 +3,11 @@ import { getUsedByList, cleanPath, getDependsOn, getNodeModuleList, getExportedL
 
 export function createModuleHtml(moduleArray, dependencyList, exportList) {
   let result = "<html><body>\n";
+  const tblStyle = "<table border=1>\n";
   result += `<h1 id="mod_list">Module List</h1>\n`;
 
   const nodMods = nodeModuleList();
-  result += "<table border=1>\n";
+  result += tblStyle;
   result += `\t<tr><th>Type</th>`;
   result += `<th>Count</td></th></tr>\n`;
   result += `\t<tr><td><a href="#node_modules">Node Modules</a></td>`;
@@ -18,7 +19,7 @@ export function createModuleHtml(moduleArray, dependencyList, exportList) {
   result += "</table><br>\n";
 
   // summary
-  result += "<table border=1>\n";
+  result += tblStyle;
   result += "\t<tr><th>Directory</th>";
   result += "<th>File</th>";
   result += "<th>Depends On</th>";
@@ -37,7 +38,7 @@ export function createModuleHtml(moduleArray, dependencyList, exportList) {
 
 // unused
   result += `<h2 id="unused">Unused Application Modules</h2><a href="#mod_list">(top)</a>\n`;
-  result += "<table border=1>\n";
+  result += tblStyle;
   result += "\t<tr><th>Directory</th>";
   result += "<th>File</th>";
   result += "<th>Depends On</th>";
@@ -62,12 +63,17 @@ export function createModuleHtml(moduleArray, dependencyList, exportList) {
 
     // Exported
     result += "<h3>Exported</h3>\n";
-    result += "<table border=1>\n";
+    result += tblStyle;
+    result += "\t<tr><th>Exported</th>";
+    result += "<th>Export Declaration</th>";
+    result += "<th>Parameters</th>";
+    result += "<th>Used Count</th></tr>\n";
     const exports = getExportedList(exportList, mod.file);
     const usedList = getUsedByList(dependencyList, mod.file);
     for (const exported of exports) {
       result += `\t<tr><td>${exported.exported}</td>\n`;
       result += `\t<td>${exported.type}</td>\n`;
+      result += `\t<td>${exported.params || ""}</td>\n`;
       const usedExp = usedList.filter(u => { return (u.import === exported.exported) });
       const listLen = usedExp.length
       result +=`\t<td>${listLen}</td></tr>\n`;
@@ -76,7 +82,9 @@ export function createModuleHtml(moduleArray, dependencyList, exportList) {
 
     // depends On  
     result += "<h3>Depends On</h3>\n";
-    result += "<table border=1>\n";
+    result += tblStyle;
+    result += "\t<tr><th>File or <br>Node Module</th>";
+    result += "<th>Import</th></tr>\n";
     const depsList = getDependsOn(dependencyList, mod.file);
     for (const dep of depsList) {
       if (dep.relSrcPath.startsWith(".")) { 
@@ -90,7 +98,9 @@ export function createModuleHtml(moduleArray, dependencyList, exportList) {
 
     //used by
     result += "<h3>Used By</h3>\n";
-    result += "<table border=1>\n";
+    result += tblStyle;
+    result += "\t<tr><th>File or <br>Node Module</th>";
+    result += "<th>Import</th></tr>\n";
     for (const dep of usedList) {
       result += `\t<tr><td><a href="#${dep.src}">${dep.src}</a></td>\n`;
       result += `\t<td>${dep.import}</td></tr>\n`;
@@ -101,7 +111,9 @@ export function createModuleHtml(moduleArray, dependencyList, exportList) {
 
   // node modules
   result += `<h2 id="node_modules">Node Modules</h2>  <a href="#mod_list">(top)</a>\n`;
-  result += "<table border=1>\n";
+  result += tblStyle;
+  result += "\t<tr><th>File</th>";
+  result += "<th>Node Module</th></tr>\n";
   for (const dep of nodMods) {
     result += `\t<tr><td>${dep.importSrc}</td>\n`;
     result += `\t<td>${dep.import}</td></tr>\n`;

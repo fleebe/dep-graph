@@ -39,10 +39,10 @@ export const getBaseDir = (symbol) => {
 }
 
 /**
- * 
- * @param {*} dest a file | directory name 
- * @param {*} src a file | directory name
- * @returns a file name
+ * finds the relative path of the import in relation to the file the import is in.
+ * @param {*} dest the import file
+ * @param {*} src the file that the import is in
+ * @returns the import file with its relative path to the src
  */
 export function normalizePath(dest, src) {
   if (!dest.startsWith(".")) return dest; // node module as does not start with "."

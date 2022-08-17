@@ -1,10 +1,12 @@
 import { readFileSync } from "fs";
 import { parse as babelParse } from "@babel/parser";
-import { addToMapArray, normalizePath, cleanPath, hasExtension, getUsedByList,
-  removeExtension, validateImportFile } from "./utils.js";
+import {
+  normalizePath, cleanPath, hasExtension, getUsedByList,
+  removeExtension, validateImportFile
+} from "./utils.js";
 import { fileURLToPath } from 'url';
 import * as walk from 'babel-walk';
-import {EXT_LIST} from "./globals.js"
+import { EXT_LIST } from "./globals.js"
 
 /**
  * processes gets the ast for all the modules and creates the dependeciesList, exportList and importMap
@@ -30,7 +32,7 @@ export function processAST(moduleArray, root) {
         const result = readFileSync(srcFile, 'utf-8');
         // parse file into ast handles js, jsx, and experimental exportDefaultFrom
         const ast = babelParse(result, { plugins: ["jsx", "exportDefaultFrom"], sourceType: "module" });
-        const exps = parseExports(ast, mod.file);
+        const exps = parseExports(ast, mod.file, root);
         const deps = parseImports(ast, mod.file, root);
         mod.dependsOnCnt = deps.length;
         mod.exportCnt = exps.length;
@@ -45,8 +47,8 @@ export function processAST(moduleArray, root) {
       }
     } else {
       errors.push({
-        "file": srcFile, "err": null, 
-        "msg": "Can only parse javascript files at the moment.", 
+        "file": srcFile, "err": null,
+        "msg": "Can only parse javascript files at the moment.",
         "src": thisFile
       });
       console.log("Can only parse javascript files at the moment. file=", srcFile);
@@ -61,23 +63,14 @@ export function processAST(moduleArray, root) {
     mod.usedByCnt = usedList.length;
   });
 
-  // map of imports key=module/file value=an array of functions.
-  let importMap = getImportMap(dependencyList);
-  return [dependencyList, exportList, importMap, errors];
-}
-
-export function getImportMap(dependencyList) {
-  let importMap = new Map();
-  for (let dep of dependencyList) {
-    addToMapArray(importMap, dep.importSrc, dep.import);
-  }
-  return importMap;
+  return [dependencyList, exportList, errors];
 }
 
 /**
  * Walks the ast to find imports
  * @param {*} ast 
  * @param {*} srcFile 
+ * @param {*} root allows the validation in the file system of the imported file.
  * @returns dependency list of imports
  */
 function parseImports(ast, srcFile, root) {
@@ -85,22 +78,28 @@ function parseImports(ast, srcFile, root) {
 
   const visitors = walk.recursive({
     ImportDeclaration(node) {
-      importDeclaration(node);
+      moduleDeclaration(node, srcFile, root);
     }
   });
   visitors(ast);
-  return dependencies;
+  
+  function moduleDeclaration(node, srcFile, root) {
+    for (const sp of node.specifiers) {
+      let fnName;
+      switch (sp.type) {
+        case "ImportSpecifier": {
+          fnName = sp.imported.name;
+          break;
+        }
+        case "ImportDefaultSpecifier": {
+          fnName = sp.local.name
+          break;
+        }
+        default:
+      }
 
-
-  function importDeclaration(node) {
-    for (var i = 0; i < node.specifiers.length; i++) {
-      // prefix with a * if default import specifier
-      const fnName = node.specifiers[i].type === "ImportSpecifier" 
-        ? node.specifiers[i].imported.name : node.specifiers[i].local.name;
-
-      const relSrcPath = normalizePath(node.source.value, srcFile);
-      const validSrc = validateImportFile(relSrcPath, root);
-
+      const relImportSrcFile = normalizePath(node.source.value, srcFile);
+      const validSrc = validateImportFile(relImportSrcFile, root);
 
       dependencies.push({
         src: srcFile,
@@ -110,15 +109,21 @@ function parseImports(ast, srcFile, root) {
       });
     }
   }
+
+  return dependencies;
+ 
 }
+
+
 
 /**
  * walks the ast to find exported declarations and creates an exportList
+ * https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export
  * @param {*} ast 
- * @param {*} symbol 
+ * @param {*} srcFile 
  * @returns exportList 
  */
-function parseExports(ast, symbol) {
+function parseExports(ast, srcFile, root) {
   let exportList = [];
   const visitors = walk.recursive({
     ExportNamedDeclaration(node) {
@@ -134,21 +139,24 @@ function parseExports(ast, symbol) {
   return exportList;
 
   function exportDeclaration(node) {
-
-    const addVal = (exp) => {
+    const addVal = (exp, params) => {
       exportList.push({
-        name: symbol,
+        name: srcFile,
         exported: exp,
-        type: node.declaration.type
+        type: node.declaration.type,
+        params: params
       });
     };
 
     if (node.source) {
       node.specifiers.map(e => {
+        const relSrcFile = normalizePath(node.source.value, srcFile);
+        const validSrc = validateImportFile(relSrcFile, root);
+
         exportList.push({
-          name: symbol,
+          name: srcFile,
           exported: e.exported.name,
-          type: "File"
+          type: validSrc
         });
       });
     } else if (node.declaration) {
@@ -156,68 +164,109 @@ function parseExports(ast, symbol) {
       if (declarationList) {
         declarationList.map(e => {
           // "-vr " +
-          addVal( e.id.name);
+          addVal(e.id.name);
         });
       } else if (node.declaration) {
-        const decl = node.declaration;
-        switch (decl.type) {
-          case "ClassDeclaration": {
-            //"-cl " + 
-            addVal(decl.id.name);
-            break;
-          }
-          case "CallExpression": {
-            // "-ce " + 
-            if (decl.callee.name)
-              addVal(decl.callee.name);
-            else
-              addVal(decl.callee.callee.name);
-            break;
-          }
-          case "FunctionDeclaration": {
-            // "-fn " + 
-            addVal(decl.id.name);
-            break;
-          }
-          case "VariableDeclaration": {
-            // "-vr " + 
-            addVal(decl.id.name);
-            break;
-          }
-          case "Identifier": {
-            //"-id " + 
-            addVal(decl.name);
-            break;
-          }
-          case "ObjectExpression": {
-            decl.properties.map(e => {
-              // "-pr " + 
-              addVal(e.key.name);
-            });
-            break;
-          }
-          case 'ArrowFunctionExpression': {
-            if (decl.params) {
-              let res = "(";
-              decl.params.map(e => {
-                res += e.name + ","
-              })
-              res = res.substring(0, res.length - 1) + ")";
-              // "-af " + 
-              addVal(res);
-            } else {
-              addVal("???");
+        declNode(node.declaration);
+      }
+    } else if (node.specifiers) {
+      for (const sp of node.specifiers) {
+        exportList.push({
+          name: srcFile,
+          exported: sp.exported.name,
+          type: sp.type
+        });
+      }
+    }
+
+    function declNode(decl) {
+      switch (decl.type) {
+        case "ClassDeclaration": {
+          //"-cl " + 
+          addVal(decl.id.name);
+          break;
+        }
+        case "CallExpression": {
+          // "-ce " + 
+          if (decl.callee.name)
+            addVal(decl.callee.name);
+
+          else
+            addVal(decl.callee.callee.name);
+          break;
+        }
+        case "FunctionDeclaration": {
+          // "-fn " + 
+          if (decl.params) {
+            let params = [];
+            for (const param of decl.params) {
+              switch (param.type) {
+                case "Identifier": {
+                  params.push(param.name);
+                  break;
+                }
+                case "AssignmentPattern": {
+                  (param.left.type === "Identifier") ?
+                    params.push(param.left.name) :
+                    params.push(" : " + param.type);
+                  break;
+                }
+                case "ObjectPattern": {
+                  let props = [];
+                  for (const prop of param.properties) {
+                    props.push(prop.key.name);
+                  }
+                  params.push("{" + props.join(", ") + "}");
+                  break;
+                }
+                default: params.push(" : " + param.type);
+              }
             }
-            break;
+            params = "(" + params.join(", ") + ")";
+            addVal(decl.id.name, params);
+          } else {
+            addVal(decl.id.name);
           }
-          case 'ConditionalExpression': {
-            // "-cd " + 
-            addVal(decl.test.name);
-            break;
+
+          break;
+        }
+        case "VariableDeclaration": {
+          // "-vr " + 
+          addVal(decl.id.name);
+          break;
+        }
+        case "Identifier": {
+          //"-id " + 
+          addVal(decl.name);
+          break;
+        }
+        case "ObjectExpression": {
+          decl.properties.map(e => {
+            // "-pr " + 
+            addVal(e.key.name);
+          });
+          break;
+        }
+        case 'ArrowFunctionExpression': {
+          if (decl.params) {
+            let res = [];
+            decl.params.map(e => {
+              res.push(e.name);
+            });
+            // "-af " + 
+            addVal("(" + res.join(", ") + ")");
+          } else {
+            addVal("???");
           }
-          default: {
-            throw new Error(`TODO: Export parse failed\n ${JSON.stringify(node, null, 2)}`);
-          }
+          break;
+        }
+        case 'ConditionalExpression': {
+          // "-cd " + 
+          addVal(decl.test.name);
+          break;
+        }
+        default: {
+          throw new Error(`TODO: Export parse failed\n ${JSON.stringify(node, null, 2)}`);
         }
       }
     }
@@ -246,12 +295,12 @@ function normaliseDeps(deps) {
     } else {
       // find a non .js dependency
       deps.find((o) => {
-        if (o.importSrc === nonJs) { 
+        if (o.importSrc === nonJs) {
           fndImp.push(nonJs);
           dep.importSrc = nonJs;
           return true;
         }
-      });    
+      });
     }
   }
 

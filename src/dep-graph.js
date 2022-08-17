@@ -2,9 +2,9 @@ import { Command } from 'commander';
 import fs from "fs";
 import path from "path";
 import { processAST } from './ast.js';
-import { createGraph, createRelationsGraph, createPackageGraph } from './commands/graph.js';
+// import { createGraph, createRelationsGraph, createPackageGraph } from './commands/graph.js';
 import { createModuleHtml } from './commands/html.js';
-import { jsonOut, jsonIn } from './commands/json.js';
+import { jsonOut } from './commands/json.js';
 import { getFilename, getModuleArray } from "./utils.js";
 import { fileURLToPath } from 'url';
 
@@ -61,11 +61,11 @@ export function runProgram() {
       let dependencyList = [];
       // list of functions exported from modules/files
       let exportList = [];
-      let importMap = new Map();
+     // let importMap = new Map();
       let errors = [];
       const output = path.join(options.output, lastDir);
       // get the export list and dependency of each module/file
-      [dependencyList, exportList, importMap, errors] = processAST(moduleArray, srcDir, output);
+      [dependencyList, exportList, errors] = processAST(moduleArray, srcDir, output);
       let result = createModuleHtml(moduleArray, dependencyList, exportList);
       fs.writeFileSync(output + "ModuleArray.html", result, "utf8"); 
 
@@ -77,7 +77,7 @@ export function runProgram() {
           }
           jsonOut(output, "ExportList", exportList);
           jsonOut(output, "DependencyList", dependencyList);
-          jsonOut(output, "ImportMap", importMap);
+      //    jsonOut(output, "ImportMap", importMap);
         // moduleArray is updated in the createRelationsGraph
           jsonOut(output, "ModuleArray", moduleArray);        
      } else {
@@ -91,6 +91,7 @@ export function runProgram() {
       }
 
       // create the graph file for packages or directories for all the modules. -g option
+      /*
       if (options.graph) {
         result = createPackageGraph(moduleArray, dependencyList);
         fs.writeFileSync(output + "Package.dot", result, "utf8");
@@ -101,6 +102,7 @@ export function runProgram() {
         result = createRelationsGraph(dependencyList, moduleArray);
         fs.writeFileSync(output + "Relations.dot", result, "utf8");
        }
+       */
     })
   });
 
