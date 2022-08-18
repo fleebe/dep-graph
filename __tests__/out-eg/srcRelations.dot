@@ -1,10 +1,14 @@
 digraph {
+label="./src";
+labelloc="t";
 node [shape=record];
 "./ast.js" [label="{ ./ast.js\n
-Depend On : 5\l
+Depend On : 9\l
 Used By : 1\l
 |
-		./utils.js\l
+		./file-utils.js\l
+		./globals.js\l
+		./list-utils.js\l
 		@babel/parser\l
 		babel-walk\l
 		fs\l
@@ -14,14 +18,14 @@ Used By : 1\l
 }"];
 
 "./dep-graph.js" [label="{ ./dep-graph.js\n
-Depend On : 9\l
+Depend On : 13\l
 Used By : 0\l
 |
 		./ast.js\l
 		./commands/graph.js\l
 		./commands/html.js\l
 		./commands/json.js\l
-		./utils.js\l
+		./file-utils.js\l
 		commander\l
 		fs\l
 		path\l
@@ -29,32 +33,56 @@ Used By : 0\l
 |
 }"];
 
-"./utils.js" [label="{ ./utils.js\n
-Depend On : 2\l
-Used By : 2\l
+"./file-utils.js" [label="{ ./file-utils.js\n
+Depend On : 3\l
+Used By : 8\l
 |
+		./globals.js\l
 		fs\l
 		path\l
 |
 		./ast.js\l
+		./commands/graph.js\l
+		./commands/html.js\l
 		./dep-graph.js\l
 }"];
 
-"./commands/graph.js" [label="{ ./commands/graph.js\n
-Depend On : 2\l
-Used By : 1\l
+"./globals.js" [label="{ ./globals.js\n
+Depend On : 0\l
+Used By : 2\l
 |
-		../utils.js\l
+|
+		./ast.js\l
+		./file-utils.js\l
+}"];
+
+"./list-utils.js" [label="{ ./list-utils.js\n
+Depend On : 0\l
+Used By : 9\l
+|
+|
+		./ast.js\l
+		./commands/graph.js\l
+		./commands/html.js\l
+}"];
+
+"./commands/graph.js" [label="{ ./commands/graph.js\n
+Depend On : 6\l
+Used By : 3\l
+|
+		../file-utils.js\l
+		../list-utils.js\l
 		path\l
 |
 		./dep-graph.js\l
 }"];
 
 "./commands/html.js" [label="{ ./commands/html.js\n
-Depend On : 1\l
+Depend On : 5\l
 Used By : 1\l
 |
-		../utils.js\l
+		../file-utils.js\l
+		../list-utils.js\l
 |
 		./dep-graph.js\l
 }"];
@@ -76,12 +104,17 @@ Used By : 1\l
 		path\l
 		url\l
 }"];
-"./ast.js"->"./utils.js"
+"./ast.js"->"./file-utils.js"
+"./ast.js"->"./globals.js"
+"./ast.js"->"./list-utils.js"
 "./dep-graph.js"->"./ast.js"
 "./dep-graph.js"->"./commands/graph.js"
 "./dep-graph.js"->"./commands/html.js"
 "./dep-graph.js"->"./commands/json.js"
-"./dep-graph.js"->"./utils.js"
-"./commands/graph.js"->"../utils.js"
-"./commands/html.js"->"../utils.js"
+"./dep-graph.js"->"./file-utils.js"
+"./file-utils.js"->"./globals.js"
+"./commands/graph.js"->"../file-utils.js"
+"./commands/graph.js"->"../list-utils.js"
+"./commands/html.js"->"../file-utils.js"
+"./commands/html.js"->"../list-utils.js"
 }

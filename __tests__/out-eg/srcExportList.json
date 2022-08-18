@@ -12,87 +12,70 @@
     "params": "()"
   },
   {
-    "name": "./globals.js",
-    "exported": "EXT_LIST",
-    "type": "VariableDeclaration"
-  },
-  {
-    "name": "./utils.js",
+    "name": "./file-utils.js",
     "exported": "hasExtension",
     "type": "VariableDeclaration"
   },
   {
-    "name": "./utils.js",
+    "name": "./file-utils.js",
     "exported": "removeExtension",
     "type": "VariableDeclaration"
   },
   {
-    "name": "./utils.js",
-    "exported": "getBaseDir",
-    "type": "VariableDeclaration"
-  },
-  {
-    "name": "./utils.js",
+    "name": "./file-utils.js",
     "exported": "normalizePath",
     "type": "FunctionDeclaration",
-    "params": "(dest, src)"
+    "params": "(dest, src, root)"
   },
   {
-    "name": "./utils.js",
-    "exported": "validateImportFile",
-    "type": "FunctionDeclaration",
-    "params": "(relFile, root)"
-  },
-  {
-    "name": "./utils.js",
+    "name": "./file-utils.js",
     "exported": "cleanPath",
     "type": "FunctionDeclaration",
     "params": "(root)"
   },
   {
-    "name": "./utils.js",
+    "name": "./file-utils.js",
     "exported": "getFilename",
     "type": "FunctionDeclaration",
     "params": "(fullPath)"
   },
   {
-    "name": "./utils.js",
-    "exported": "getDirectoriesRecursive",
-    "type": "FunctionDeclaration",
-    "params": "(srcpath)"
-  },
-  {
-    "name": "./utils.js",
-    "exported": "addToMapArray",
-    "type": "FunctionDeclaration",
-    "params": "(map, key, arrVal)"
-  },
-  {
-    "name": "./utils.js",
-    "exported": "getUsedByList",
-    "type": "FunctionDeclaration",
-    "params": "(dependencyList, file)"
-  },
-  {
-    "name": "./utils.js",
+    "name": "./file-utils.js",
     "exported": "getModuleArray",
     "type": "FunctionDeclaration",
     "params": "(symbol, stats)"
   },
   {
-    "name": "./utils.js",
+    "name": "./globals.js",
+    "exported": "EXT_LIST",
+    "type": "VariableDeclaration"
+  },
+  {
+    "name": "./list-utils.js",
+    "exported": "addToMapArray",
+    "type": "FunctionDeclaration",
+    "params": "(map, key, arrVal)"
+  },
+  {
+    "name": "./list-utils.js",
+    "exported": "getUsedByList",
+    "type": "FunctionDeclaration",
+    "params": "(dependencyList, file)"
+  },
+  {
+    "name": "./list-utils.js",
     "exported": "getDependsOn",
     "type": "FunctionDeclaration",
     "params": "(dependencyList, file)"
   },
   {
-    "name": "./utils.js",
+    "name": "./list-utils.js",
     "exported": "getExportedList",
     "type": "FunctionDeclaration",
     "params": "(exportList, file)"
   },
   {
-    "name": "./utils.js",
+    "name": "./list-utils.js",
     "exported": "getNodeModuleList",
     "type": "FunctionDeclaration",
     "params": "(dependencyList)"
@@ -101,19 +84,19 @@
     "name": "./commands/graph.js",
     "exported": "createPackageGraph",
     "type": "FunctionDeclaration",
-    "params": "(moduleArray, dependencyList)"
+    "params": "(moduleArray, dependencyList, srcDir)"
   },
   {
     "name": "./commands/graph.js",
     "exported": "createGraph",
     "type": "FunctionDeclaration",
-    "params": "(dependencyList, exportList, moduleArray, importMap)"
+    "params": "(dependencyList, exportList, moduleArray, importMap, srcDir)"
   },
   {
     "name": "./commands/graph.js",
     "exported": "createRelationsGraph",
     "type": "FunctionDeclaration",
-    "params": "(dependencyList, moduleArray)"
+    "params": "(dependencyList, moduleArray, srcDir)"
   },
   {
     "name": "./commands/html.js",

@@ -1,5 +1,6 @@
 import path from "path";
-import { cleanPath, getUsedByList, getDependsOn, getNodeModuleList, getExportedList } from "../utils.js";
+import { cleanPath } from "../file-utils.js";
+import { getUsedByList, getDependsOn, getNodeModuleList, getExportedList } from "../list-utils.js";
 
 /**
  * Creates a graphviz .dot file of package dependencies called package.dot in the output directory. 
@@ -7,8 +8,8 @@ import { cleanPath, getUsedByList, getDependsOn, getNodeModuleList, getExportedL
  * @param {*} dependencyList array dependencies src is the file it was found and importSrc 
  *  is where the imported function comes from. so the src depends on the importSrc
  */
-export function createPackageGraph(moduleArray, dependencyList) {
-  let result = digraph();
+export function createPackageGraph(moduleArray, dependencyList, srcDir) {
+  let result = digraph(srcDir);
 
   // add packages to the graph
   result += createPackageNodes(moduleArray);
@@ -16,7 +17,7 @@ export function createPackageGraph(moduleArray, dependencyList) {
   let depArr = [];
   for (const dep of dependencyList) {
     let src = path.dirname(dep.src);
-    let dest = path.dirname(dep.importSrc);
+    let dest = path.dirname(dep.relSrcPath);
     (src === ".") ? src = "./" : src;
     (dest === ".") ? dest = "./" : dest;
     // node_module dependency mostly do not have a path so not mapped in the package
@@ -88,8 +89,8 @@ function createPackageNodes(moduleArray) {
 * @param {*} importMap map of imports key=module/file value=an array of functions.
 * @return string for the dependencies.dot file
  */
-export function createGraph(dependencyList, exportList, moduleArray, importMap) {
-  let result = digraph();
+export function createGraph(dependencyList, exportList, moduleArray, importMap, srcDir) {
+  let result = digraph(srcDir);
   let ln;
   let modList = [];
 
@@ -186,8 +187,8 @@ function createNodes(importMap, modList) {
 * [ { "src": "./cmd-test.js", "importSrc": "commander","import": "Command"} ]
 * @return the string that is written to the Relations.dot file.
  */
-export function createRelationsGraph(dependencyList, moduleArray) {
-  let result = digraph();
+export function createRelationsGraph(dependencyList, moduleArray, srcDir) {
+  let result = digraph(srcDir);
   let modSet = new Set();
   let relLn = "";
   let newImp = "";
@@ -273,8 +274,10 @@ export function createRelationsGraph(dependencyList, moduleArray) {
 }
 
 
-function digraph() {
+function digraph(srcDir) {
   let result = "digraph {\n";
+  result += `label="${srcDir}";\n`;
+  result += `labelloc="t";\n`;
   result += "node [shape=record];\n";
   return result;
 }

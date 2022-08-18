@@ -2,16 +2,23 @@
   {
     "dir": "./",
     "file": "./ast.js",
-    "dependsOnCnt": 11,
+    "dependsOnCnt": 9,
     "usedByCnt": 1,
     "exportCnt": 1
   },
   {
     "dir": "./",
     "file": "./dep-graph.js",
-    "dependsOnCnt": 9,
+    "dependsOnCnt": 13,
     "usedByCnt": 0,
     "exportCnt": 1
+  },
+  {
+    "dir": "./",
+    "file": "./file-utils.js",
+    "dependsOnCnt": 3,
+    "usedByCnt": 8,
+    "exportCnt": 6
   },
   {
     "dir": "./",
@@ -22,16 +29,16 @@
   },
   {
     "dir": "./",
-    "file": "./utils.js",
-    "dependsOnCnt": 3,
-    "usedByCnt": 18,
-    "exportCnt": 14
+    "file": "./list-utils.js",
+    "dependsOnCnt": 0,
+    "usedByCnt": 9,
+    "exportCnt": 5
   },
   {
     "dir": "./commands",
     "file": "./commands/graph.js",
     "dependsOnCnt": 6,
-    "usedByCnt": 0,
+    "usedByCnt": 3,
     "exportCnt": 3
   },
   {

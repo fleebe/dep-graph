@@ -29,7 +29,7 @@ export const removeExtension = ((filename) => {
  * @param {*} symbol a directory
  * @returns dir prefixed with ./
  */
-export const getBaseDir = (symbol) => {
+const getBaseDir = (symbol) => {
   if (symbol.indexOf("..") !== -1)
     throw new Error("Cannot handle .. in the path name");
   symbol = symbol.replaceAll("\\", '/').replace(".", '').trim();
@@ -42,12 +42,16 @@ export const getBaseDir = (symbol) => {
  * finds the relative path of the import in relation to the file the import is in.
  * @param {*} dest the import file
  * @param {*} src the file that the import is in
- * @returns the import file with its relative path to the src
+ * @param {*} root location of the directory being processed
+* @returns the import file with its relative path to the src
  */
-export function normalizePath(dest, src) {
+export function normalizePath(dest, src, root) {
   if (!dest.startsWith(".")) return dest; // node module as does not start with "."
   let srcDir = path.dirname(src);
+  if (srcDir === ".") return dest;  // current dir so no need to replace
   let relFile = "./" + path.normalize(path.join(srcDir, dest)).replaceAll("\\", "/");  
+  const validSrc = validateImportFile(relFile, root);
+
  /*
   if (res.indexOf("..") !== -1) { // up dirs in the importSrc
     //  const fname = getFilename(dest);
@@ -58,7 +62,7 @@ export function normalizePath(dest, src) {
     if (res.startsWith("/")) res = "./" + res.substring(1, res.length);
   }
   */
-  return relFile;
+  return validSrc;
 }
 
 /**
@@ -71,7 +75,7 @@ export function normalizePath(dest, src) {
  * @param {*} root location of the directory being processed
  * @returns 
  */
-export function validateImportFile(relFile, root) {
+function validateImportFile(relFile, root) {
   let srcFile = relFile.replace(".", root);
   // not a file already
   if (!hasExtension(srcFile, EXT_LIST)) {
@@ -151,67 +155,9 @@ function getFiles(srcpath) {
     .map(f => f.replaceAll('\\', "/"));
 }
 
-export function getDirectoriesRecursive(srcpath) {
+function getDirectoriesRecursive(srcpath) {
   return [srcpath, ...flatten(getDirectories(srcpath).map(getDirectoriesRecursive))];
 }
-
-/**
- * checks if the given val is a key in the map
- * @param {*} map 
- * @param {*} val 
- * @returns boolean
- */
-const findInMap = (map, val) => {
-  for (let [key] of map) {
-    if (key === val) {
-      return true;
-    }
-  }
-  return false;
-}
-
-/**
- * Adds the arrVal to the map with the passed key 
- * if the key exists then adds the arrVal to the array if it does not exist in it already.
- * @param {*} map 
- * @param {*} key 
- * @param {*} arrVal primitive | array
- * * @returns map with arrVal added to the array specified by the key
- */
-export function addToMapArray(map, key, arrVal) {
-  if (!findInMap(map, key)) {
-    return map.set(key, [arrVal]);
-  } else {
-    let uniq = new Set(map.get(key));
-    if (arrVal instanceof Array) {
-      if (arrVal.length > 0) {
-        uniq.add(...arrVal);
-      }
-    } else {
-      uniq.add(arrVal);
-    }
-    return map.set(key, Array.from(uniq));
-  }
-}
-
-/**
- * file may have an extension but the importSrc does not
-    the importSrc is still used by the file
- * @param {*} file the file
- * @param {*} dependencyList 
- * @returns a list of files that are used by the mod
- */
-
-export function getUsedByList(dependencyList, file) {
-//  const imp = removeExtension(file);
-  // used By
-  const usedList = dependencyList
-    .filter(v => { return (v.relSrcPath === file || v.importSrc === file)})
-      //|| v.importSrc === imp); })
-    .sort((a, b) => { return a.src.localeCompare(b.src); });
-  return usedList;
-}
-
 
 /**
  * Creates a map with key=directory(package) value=array of files(modules) in directory
@@ -226,8 +172,10 @@ export function getModuleArray(symbol, stats) {
 
   if (stats.isFile()) {
     root = "./" + getBaseDir(path.dirname(symbol));
-    arr.push({dir: root, file: symbol.replace(root, "."), 
-      dependsOnCnt: 0, usedByCnt: 0, exportCnt: 0});
+    arr.push({
+      dir: root, file: symbol.replace(root, "."),
+      dependsOnCnt: 0, usedByCnt: 0, exportCnt: 0
+    });
   } else if (stats.isDirectory()) {
     // array of directories
     root = getBaseDir(symbol);
@@ -240,12 +188,12 @@ export function getModuleArray(symbol, stats) {
     dirArr.forEach(e => {
       const dir = (e.startsWith(root + "/")) ? e.replace(root, ".") : e.replace(root, "./");
       // sets map to the key=file values are the functions returned by getFiles
-      const fileList = getFiles(e).map(f => {return f.replace(root, ".") });
+      const fileList = getFiles(e).map(f => { return f.replace(root, ".") });
       fileList.forEach(file => {
         if (hasExtension(file, EXT_LIST)) {
           arr.push(
-            { dir: dir, file: file, dependsOnCnt: 0, usedByCnt: 0, exportCnt : 0});
-        }        
+            { dir: dir, file: file, dependsOnCnt: 0, usedByCnt: 0, exportCnt: 0 });
+        }
       });
     });
   }
@@ -255,23 +203,4 @@ export function getModuleArray(symbol, stats) {
 
 }
 
-export function getDependsOn(dependencyList, file) {
-  return dependencyList
-    .filter(v => { return v.src === file; })
-    .sort((a, b) => { return a.importSrc.localeCompare(b.importSrc); });
-}
 
-export function getExportedList(exportList, file) {
-return exportList
-  .filter(v => { return v.name === file })
-  .sort((a, b) => { return a.exported.localeCompare(b.exported) });
-}
-
-
-
-export function getNodeModuleList(dependencyList) {
-  return dependencyList
-    .filter(v => { return v.importSrc.startsWith(".") === false; })
-    .sort((a, b) => { return a.importSrc.localeCompare(b.importSrc) });
-
-}

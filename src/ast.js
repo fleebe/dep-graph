@@ -1,9 +1,8 @@
 import { readFileSync } from "fs";
 import { parse as babelParse } from "@babel/parser";
-import {
-  normalizePath, cleanPath, hasExtension, getUsedByList,
-  removeExtension, validateImportFile
-} from "./utils.js";
+import { normalizePath, hasExtension, 
+  removeExtension } from "./file-utils.js";
+import { getUsedByList } from "./list-utils.js";
 import { fileURLToPath } from 'url';
 import * as walk from 'babel-walk';
 import { EXT_LIST } from "./globals.js"
@@ -15,8 +14,6 @@ import { EXT_LIST } from "./globals.js"
  * @returns 
  */
 export function processAST(moduleArray, root) {
-  root = "./" + cleanPath(root);
-
   // list of dependencies between modules including the functions
   let dependencyList = [];
   // list of functions exported from modules/files
@@ -33,10 +30,19 @@ export function processAST(moduleArray, root) {
         // parse file into ast handles js, jsx, and experimental exportDefaultFrom
         const ast = babelParse(result, { plugins: ["jsx", "exportDefaultFrom"], sourceType: "module" });
         const exps = parseExports(ast, mod.file, root);
-        const deps = parseImports(ast, mod.file, root);
+        let deps = parseImports(ast, mod.file, root);
+
+        // add exported source files as a dependency
+        // know exported source as type starts with ./directory
+        for (const ex of exps.filter(ex => ex.type.startsWith("."))) {
+          deps.push ({src: ex.name, importSrc: ex.type, relSrcPath: ex.type, import: ex.exported});
+        }
+
         mod.dependsOnCnt = deps.length;
         mod.exportCnt = exps.length;
         //adds results of export and import parse to global lists
+
+
         exportList.push(...exps);
         dependencyList.push(...deps);
       } catch (err) {
@@ -98,13 +104,12 @@ function parseImports(ast, srcFile, root) {
         default:
       }
 
-      const relImportSrcFile = normalizePath(node.source.value, srcFile);
-      const validSrc = validateImportFile(relImportSrcFile, root);
-
+      const relImportSrcFile = normalizePath(node.source.value, srcFile, root);
+ 
       dependencies.push({
         src: srcFile,
         importSrc: node.source.value,
-        relSrcPath: validSrc,
+        relSrcPath: relImportSrcFile,
         import: fnName
       });
     }
@@ -150,13 +155,12 @@ function parseExports(ast, srcFile, root) {
 
     if (node.source) {
       node.specifiers.map(e => {
-        const relSrcFile = normalizePath(node.source.value, srcFile);
-        const validSrc = validateImportFile(relSrcFile, root);
+        const relSrcFile = normalizePath(node.source.value, srcFile, root);
 
         exportList.push({
           name: srcFile,
           exported: e.exported.name,
-          type: validSrc
+          type: relSrcFile
         });
       });
     } else if (node.declaration) {

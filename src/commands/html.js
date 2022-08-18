@@ -1,4 +1,5 @@
-import { getUsedByList, cleanPath, getDependsOn, getNodeModuleList, getExportedList } from "../utils.js";
+import { cleanPath } from "../file-utils.js";
+import { getUsedByList, getDependsOn, getNodeModuleList, getExportedList } from "../list-utils.js";
 
 
 export function createModuleHtml(moduleArray, dependencyList, exportList) {

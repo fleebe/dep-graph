@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import { normalizePath, addToMapArray, getBaseDir, getModuleArray, hasExtension, removeExtension, getUsedByList} from "../src/utils.js";
+import { normalizePath, addToMapArray, getBaseDir, getModuleArray, hasExtension, removeExtension, getUsedByList} from "../src/file-utils.js";
 import { getImportMap } from "../src/ast.js";
 import { jsonIn } from '../src/commands/json.js';
 import path from "path";

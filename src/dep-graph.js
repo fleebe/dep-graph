@@ -2,10 +2,10 @@ import { Command } from 'commander';
 import fs from "fs";
 import path from "path";
 import { processAST } from './ast.js';
-// import { createGraph, createRelationsGraph, createPackageGraph } from './commands/graph.js';
+import { createGraph, createRelationsGraph, createPackageGraph } from './commands/graph.js';
 import { createModuleHtml } from './commands/html.js';
 import { jsonOut } from './commands/json.js';
-import { getFilename, getModuleArray } from "./utils.js";
+import { getFilename, getModuleArray, cleanPath } from "./file-utils.js";
 import { fileURLToPath } from 'url';
 
 // https://cheatcode.co/tutorials/how-to-build-a-command-line-interface-cli-using-node-js
@@ -32,7 +32,7 @@ export function runProgram() {
   program.name("dep-graph")
     .version(getVersion())
     .description(`A cli to generate documentation for dependencies of a javascript file | directory.`)
-    .option("-g --graph", "produce package and dependencies .dot files that graphviz can use to generate a graph of the dependencies to output directory.")
+//    .option("-g --graph", "produce package and dependencies .dot files that graphviz can use to generate a graph of the dependencies to output directory.")
     .option("-j --json", "produce .json object files of the dependencies to output directory.")
     .option("-o --output <dir>", "directory that the outputs are sent to.", "./out")
     .argument("<file | directory>");
@@ -48,7 +48,7 @@ export function runProgram() {
 
       // a list of modules or files  from dir in the form  .dir/file.js list recursively walks the start directory
       let [srcDir, moduleArray] = getModuleArray(symbol, stat);
-
+      srcDir = "./" + cleanPath(srcDir);
       // prefix for the output files
       let lastDir;
       if (stat.isDirectory()) {
@@ -68,6 +68,10 @@ export function runProgram() {
       [dependencyList, exportList, errors] = processAST(moduleArray, srcDir, output);
       let result = createModuleHtml(moduleArray, dependencyList, exportList);
       fs.writeFileSync(output + "ModuleArray.html", result, "utf8"); 
+      result = createPackageGraph(moduleArray, dependencyList, srcDir);
+      fs.writeFileSync(output + "Package.dot", result, "utf8");
+      result = createRelationsGraph(dependencyList, moduleArray, srcDir);
+      fs.writeFileSync(output + "Relations.dot", result, "utf8");
 
       // only do this if the -j option is set otherwise read from the output directory
         // a list of modules or files  from dir in the form  .dir/file.js list recursively walks the start directory
@@ -93,15 +97,11 @@ export function runProgram() {
       // create the graph file for packages or directories for all the modules. -g option
       /*
       if (options.graph) {
-        result = createPackageGraph(moduleArray, dependencyList);
-        fs.writeFileSync(output + "Package.dot", result, "utf8");
-
+ 
         result = createGraph(dependencyList, exportList, moduleArray, importMap);
         fs.writeFileSync(output + "Dependencies.dot", result, "utf8");
 
-        result = createRelationsGraph(dependencyList, moduleArray);
-        fs.writeFileSync(output + "Relations.dot", result, "utf8");
-       }
+      }
        */
     })
   });
