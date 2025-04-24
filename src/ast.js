@@ -7,11 +7,12 @@ import { fileURLToPath } from 'url';
 import * as walk from 'babel-walk';
 import { EXT_LIST } from "./globals.js"
 
+
 /**
  * processes gets the ast for all the modules and creates the dependeciesList, exportList and importMap
  * @param {*} moduleMap Map of packages with modules key=./directory, values=array[./directory/filename]
  * @param {*} root the root directory where the modules root is passed without the ./ 
- * @returns 
+ * @param {*} outputDir optional directory for output
  */
 export function processAST(moduleArray, root) {
   // list of dependencies between modules including the functions
@@ -24,46 +25,59 @@ export function processAST(moduleArray, root) {
   moduleArray.forEach((mod) => {
     // convert relative path mod.file to absolute path
     const srcFile = mod.file.replace(".", root);
-    if (hasExtension(srcFile, EXT_LIST)) {
-      try {
-        const result = readFileSync(srcFile, 'utf-8');
-        // parse file into ast handles js, jsx, and experimental exportDefaultFrom
-        const ast = babelParse(result, { plugins: ["jsx", "exportDefaultFrom"], sourceType: "module" });
-        const exps = parseExports(ast, mod.file, root);
-        let deps = parseImports(ast, mod.file, root);
-
-        // add exported source files as a dependency
-        // know exported source as type starts with ./directory
-        for (const ex of exps.filter(ex => ex.type.startsWith("."))) {
-          deps.push ({src: ex.name, importSrc: ex.type, relSrcPath: ex.type, import: ex.exported});
-        }
-
-        mod.dependsOnCnt = deps.length;
-        mod.exportCnt = exps.length;
-        //adds results of export and import parse to global lists
-
-
-        exportList.push(...exps);
-        dependencyList.push(...deps);
-      } catch (err) {
-        //         writeFileSync(output + ".ast", JSON.stringify(ast, null, 2), "utf8");
-        errors.push({ "file": srcFile, "err": err, "msg": err.message, "src": thisFile });
-        console.error(`file=${srcFile}\nmodule=${mod.file}\n${err.message}`);
-        console.error(err);
-      }
-    } else {
+    if (!hasExtension(srcFile, EXT_LIST)) {
       errors.push({
-        "file": srcFile, "err": null,
-        "msg": "Can only parse javascript files at the moment.",
+        "file": srcFile, 
+        "err": null,
+        "msg": `File type not supported. Only ${EXT_LIST.join(', ')} files can be parsed.`,
         "src": thisFile
       });
-      console.log("Can only parse javascript files at the moment. file=", srcFile);
+      console.log(`Unsupported file type: ${srcFile}. Only ${EXT_LIST.join(', ')} files are supported.`);
+      return;
+    }
+    
+    try {
+      const result = readFileSync(srcFile, 'utf-8');
+      // parse file into ast handles js, jsx, and experimental exportDefaultFrom
+      const ast = babelParse(result, { 
+        plugins: ["jsx", "exportDefaultFrom", "typescript"], 
+        sourceType: "module"
+      });
+      
+      const exps = parseExports(ast, mod.file, root);
+      let deps = parseImports(ast, mod.file, root);
+
+      // add exported source files as a dependency
+      // know exported source as type starts with ./directory
+      for (const ex of exps.filter(ex => ex.type.startsWith("."))) {
+        deps.push({
+          src: ex.name, 
+          importSrc: ex.type, 
+          relSrcPath: ex.type, 
+          import: ex.exported
+        });
+      }
+
+      mod.dependsOnCnt = deps.length;
+      mod.exportCnt = exps.length;
+      
+      exportList.push(...exps);
+      dependencyList.push(...deps);
+    } catch (err) {
+      errors.push({ 
+        "file": srcFile, 
+        "err": err, 
+        "msg": err.message, 
+        "src": thisFile 
+      });
+      console.error(`Error parsing file ${srcFile} (module: ${mod.file}):\n${err.message}`);
     }
   });
 
-  // remove .js imports if a non .js import exists.
-  normaliseDeps(dependencyList);
+  // normalize dependencies by removing duplicate extensions
+  dependencyList = normaliseDeps(dependencyList);
 
+  // Update usage counts
   moduleArray.forEach((mod) => {
     const usedList = getUsedByList(dependencyList, mod.file);
     mod.usedByCnt = usedList.length;
@@ -73,11 +87,19 @@ export function processAST(moduleArray, root) {
 }
 
 /**
- * Walks the ast to find imports
- * @param {*} ast 
- * @param {*} srcFile 
- * @param {*} root allows the validation in the file system of the imported file.
- * @returns dependency list of imports
+ * Analyzes an AST to extract import statements and build a dependency list
+ * 
+ * This function walks through the AST and identifies ImportDeclaration nodes,
+ * extracting information about what modules are being imported and how they're referenced.
+ * 
+ * @param {Object} ast - The Abstract Syntax Tree of the JavaScript file
+ * @param {string} srcFile - The source file path being analyzed
+ * @param {string} root - The root directory path for resolving relative imports
+ * @returns {Array<Object>} - Array of dependency objects with the following properties:
+ *   - src: The source file that contains the import
+ *   - importSrc: The raw import path as written in the code
+ *   - relSrcPath: The normalized path relative to the project root
+ *   - import: The name of the imported function/variable
  */
 function parseImports(ast, srcFile, root) {
   let dependencies = [];
@@ -102,6 +124,8 @@ function parseImports(ast, srcFile, root) {
           break;
         }
         default:
+          // Skip handling for other import types like namespace imports
+          continue;
       }
 
       const relImportSrcFile = normalizePath(node.source.value, srcFile, root);
@@ -116,10 +140,7 @@ function parseImports(ast, srcFile, root) {
   }
 
   return dependencies;
- 
 }
-
-
 
 /**
  * walks the ast to find exported declarations and creates an exportList
@@ -183,6 +204,11 @@ function parseExports(ast, srcFile, root) {
       }
     }
 
+    /**
+     *
+     *
+     * @param {*} decl
+     */
     function declNode(decl) {
       switch (decl.type) {
         case "ClassDeclaration": {
@@ -278,36 +304,36 @@ function parseExports(ast, srcFile, root) {
 }
 
 /**
- * Some importSrc are named with .js on the end and others are not. 
- * Convert .js to merge with the non js one if it exists
- * @param {*} deps 
- * @returns deps changed to reference the non .js item
+ * Normalizes dependencies by standardizing import paths with or without extensions
+ * 
+ * JavaScript imports can be referenced with or without .js/.jsx extensions.
+ * This function ensures consistent references by converting imports with extensions
+ * to match their extension-less counterparts when both exist.
+ * 
+ * @param {Array<Object>} deps - Array of dependency objects
+ * @returns {Array<Object>} - Normalized dependency array
  */
 function normaliseDeps(deps) {
-  // get the dependencies with importSrc with a .js on the end
-  let fndImp = [];
-  // all the dependencies that end with .js or jsx
-  const jsDeps = deps
-    .filter(v => { return (v.importSrc.endsWith(".js") || v.importSrc.endsWith(".jsx")) });
-
-  for (const dep of jsDeps) {
-    // remove the .js or .jsx extensions
-    const nonJs = removeExtension(dep.importSrc);
-    // if already found change the source
-    if (fndImp.indexOf(nonJs) !== -1) {
-      dep.importSrc = nonJs;
-    } else {
-      // find a non .js dependency
-      deps.find((o) => {
-        if (o.importSrc === nonJs) {
-          fndImp.push(nonJs);
-          dep.importSrc = nonJs;
-          return true;
-        }
-      });
+  // Track non-js import paths we've already found
+  const nonJsImportPaths = new Set();
+  
+  // First pass: collect all non-js import paths
+  deps.forEach(dep => {
+    if (!dep.importSrc.endsWith('.js') && !dep.importSrc.endsWith('.jsx')) {
+      nonJsImportPaths.add(dep.importSrc);
     }
-  }
-
+  });
+  
+  // Second pass: normalize js imports to match non-js imports when available
+  deps.forEach(dep => {
+    if (dep.importSrc.endsWith('.js') || dep.importSrc.endsWith('.jsx')) {
+      const nonJsPath = removeExtension(dep.importSrc);
+      if (nonJsImportPaths.has(nonJsPath)) {
+        dep.importSrc = nonJsPath;
+      }
+    }
+  });
+  
   return deps;
 }
 

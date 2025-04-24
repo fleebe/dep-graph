@@ -27,16 +27,52 @@ export const removeExtension = ((filename) => {
 /**
  * converts the directory passed into a standard value
  * @param {*} symbol a directory
- * @returns dir prefixed with ./
+ * @returns directory prefixed with ./
  */
 const getBaseDir = (symbol) => {
-  if (symbol.indexOf("..") !== -1)
-    throw new Error("Cannot handle .. in the path name");
-  symbol = symbol.replaceAll("\\", '/').replace(".", '').trim();
+  if (symbol.indexOf("..") !== -1) {
+    symbol = resolveRelativePath(symbol, process.cwd());
+    // get the absolute path of the current working directory
+    console.log(symbol);
+    //console.log(fs.realpathSync('./'));
+//    console.log(process.cwd());    
+//    console.log(path.parse(symbol));
+//    console.log(path.resolve(symbol));  
+//    throw new Error("Cannot handle .. in the path name");
+  } else {
+  // make into standard path and remove leading .
+    symbol = symbol.replaceAll("\\", '/').replace(".", '').trim();
+  }
+  // remove leading and trailing '/'
   (symbol.startsWith("/")) ? symbol = symbol.slice(1) : symbol;
   (symbol.endsWith("/")) ? symbol = symbol.slice(0, symbol.length - 1) : symbol;
   return symbol;
 }
+
+function resolveRelativePath(targetPath, currentDir) {
+  // Split paths into segments
+  const targetSegments = targetPath.replaceAll("\\", '/').split('/').filter(s => s !== '');
+  const currentSegments = currentDir.replace(/\\/g, '/').split('/').filter(s => s !== '');
+
+  // Handle "../" in target path
+  let resultSegments = [...currentSegments];
+  for (const segment of targetSegments) {
+    if (segment === '..') {
+      resultSegments.pop();
+    } else {
+      resultSegments.push(segment);
+    }
+  }
+
+  // Remove drive letter if present (e.g., "C:")
+//  if (resultSegments[0] && resultSegments[0].includes(':')) {
+//    resultSegments = resultSegments.slice(1);
+//  }
+  return resultSegments.join('/')
+  // Construct final path
+  // return './' + resultSegments.join('/');
+}
+
 
 /**
  * finds the relative path of the import in relation to the file the import is in.
@@ -73,7 +109,7 @@ export function normalizePath(dest, src, root) {
   if is a directory then use the index file in the directory with the permitted suffixes
  * @param {*} relFile relative file path
  * @param {*} root location of the directory being processed
- * @returns 
+ * 
  */
 function validateImportFile(relFile, root) {
   let srcFile = relFile.replace(".", root);
@@ -178,7 +214,7 @@ export function getModuleArray(symbol, stats) {
     });
   } else if (stats.isDirectory()) {
     // array of directories
-    root = getBaseDir(symbol);
+    root = "./" + getBaseDir(symbol);
 
     const dirArr = getDirectoriesRecursive(root)
       .map(e => {

@@ -3,281 +3,313 @@ import { cleanPath } from "../file-utils.js";
 import { getUsedByList, getDependsOn, getNodeModuleList, getExportedList } from "../list-utils.js";
 
 /**
- * Creates a graphviz .dot file of package dependencies called package.dot in the output directory. 
- * @param {*} moduleArray array of objects {dir, file, dependsOnCnt, usedByCnt}
- * @param {*} dependencyList array dependencies src is the file it was found and importSrc 
- *  is where the imported function comes from. so the src depends on the importSrc
+ * Creates a graphviz .dot file of package dependencies
+ * 
+ * @param {Array} moduleArray - Array of module objects with metadata {dir, file, dependsOnCnt, usedByCnt}
+ * @param {Array} dependencyList - Array of dependencies where src depends on importSrc
+ * @param {string} [srcDir=""] - Source directory for labeling the graph
+ * @returns {string} - DOT file content as string
  */
-export function createPackageGraph(moduleArray, dependencyList, srcDir) {
+export function createPackageGraph(moduleArray, dependencyList, srcDir = "") {
   let result = digraph(srcDir);
 
-  // add packages to the graph
+  // Add packages to the graph
   result += createPackageNodes(moduleArray);
-  // create the depedencies for the packageMap
+
+  // Create the dependencies for the package map
+  result += createPackageDependencies(dependencyList);
+
+  result += '}\n';
+  return result;
+}
+
+/**
+ * Creates package dependency relationships for the graph
+ * 
+ * @param {Array} dependencyList - List of dependencies
+ * @returns {string} - DOT syntax for package dependencies
+ */
+function createPackageDependencies(dependencyList) {
   let depArr = [];
+  let result = "";
+
   for (const dep of dependencyList) {
     let src = path.dirname(dep.src);
     let dest = path.dirname(dep.relSrcPath);
-    (src === ".") ? src = "./" : src;
-    (dest === ".") ? dest = "./" : dest;
-    // node_module dependency mostly do not have a path so not mapped in the package
+
+    // Normalize empty paths to "./"
+    src = (src === ".") ? "./" : src;
+    dest = (dest === ".") ? "./" : dest;
+
+    // Skip node_module dependencies which typically don't have paths
     if (dep.importSrc.indexOf("/") === -1) {
       continue;
     }
-    // all package dependencies start with a . so skip if does not start with .
+
+    // All package dependencies start with a ".", skip others
     if (!dep.importSrc.startsWith(".")) {
       continue;
     }
-    // relationship between the src and dest packages
-    //   let ln = '"' + dep.src + '"->"' + dep.importSrc + '"\n';
-    let ln = '"' + src + '"->"' + dest + '"\n';
 
-    // add dependency to graph and array if it does not already exist
+    // Create relationship between src and dest packages
+    let ln = `"${src}"->"${dest}"\n`;
+
+    // Add dependency to graph and array if it doesn't already exist
     if (depArr.indexOf(ln) === -1) {
       depArr.push(ln);
       result += ln;
     }
   }
-  result += '}\n';
-  return result;
 
+  return result;
 }
 
-
 /**
+ * Creates nodes for packages in the graph
  * 
- * @param {*} moduleArray 
- * @returns 
+ * @param {Array} moduleArray - Array of module objects
+ * @returns {string} - DOT syntax for package nodes
  */
 function createPackageNodes(moduleArray) {
-  let ln = "";
   let result = "";
 
-  const getUniqueSetDir = (arr) => {
-    return new Set(arr.map(a => a.dir));
-  }
+  // Get unique set of directories
+  const dirList = new Set(moduleArray.map(a => a.dir));
 
-  // uniques set of directories
-  const dirList = getUniqueSetDir(moduleArray);
+  // For each directory, create a node with its files
+  for (const directory of dirList) {
+    let nodeContent = `"${directory}" [label="{${directory}|\n`;
 
-  // the files in the directory
-  const getFilesInDir = (arr, dir) => {
-    return arr.filter(a => dir === a.dir);
-  }
-
-  for (const imp of dirList) {
-    ln = '"' + imp + '" [label="{' + imp + '|' + '\n';
-    for (const dirFile of getFilesInDir(moduleArray, imp)) {     
-      ln += '\t' + cleanPath(dirFile.file.replace(imp, ".")) + '\\l\n';
+    // Add each file in the directory to the node
+    const filesInDir = moduleArray.filter(a => directory === a.dir);
+    for (const dirFile of filesInDir) {
+      nodeContent += `\t${cleanPath(dirFile.file.replace(directory, "."))}\n`;
     }
-    result += ln + '}"];\n\n';
+
+    result += nodeContent + '}"];\n\n';
   }
+
   return result;
 }
 
 /**
- *  create the graph file for packages or directories for all the modules.
- *  create the graph file
- *  write  to the output dir
- * @param {*} moduleArray list of files to graph
-* @param {*} exportList list of files and exported functions
-* [ { "name": "./ast.js", "exported": "processAST", "type": "FunctionDeclaration" } ]
- * @param {*} dependencyList list of imports and functions for the file. 
- * array dependencies src is the file it was found and importSrc 
- *  is where the imported function comes from. so the src depends on the importSrc
-* [ { "src": "./cmd-test.js", "importSrc": "commander","import": "Command"} ]
-* @param {*} importMap map of imports key=module/file value=an array of functions.
-* @return string for the dependencies.dot file
+ * Creates a graph file for modules, showing exports and imports
+ * 
+ * @param {Array} dependencyList - List of imports and their sources
+ * @param {Array} exportList - List of files and exported functions
+ * @param {Array} moduleArray - List of files to graph
+ * @param {Map} importMap - Map of imports (key=module/file, value=array of functions)
+ * @param {string} [srcDir=""] - Source directory for graph label
+ * @returns {string} - DOT file content for dependencies graph
  */
-export function createGraph(dependencyList, exportList, moduleArray, importMap, srcDir) {
+export function createGraph(dependencyList, exportList, moduleArray, importMap, srcDir = "") {
   let result = digraph(srcDir);
-  let ln;
   let modList = [];
 
+  // Create nodes for each module
   moduleArray.forEach((mod) => {
     modList.push(mod.file);
-
-    ln = `"${mod.file}" [label="{ ${mod.file} | \n`;
-    /**
-    * exported functions
-    * to only create the node once select the exportedList which has the same name as the module and 
-    * loop through to add the the exported functions.
-    */
-    const exports = getExportedList(exportList, mod.file);
-    mod.exportCnt = exports.length;
-    for (const exported of exports) {
-      ln += `\t ${exported.exported} \\l\n`;
-    }
-    ln += "|";
-
-    let newImp = "";
-    /**
-     * adds the imported functions of the module to the graph
-     * sorted to only add once
-     */
-    const depsOn = getDependsOn(dependencyList, mod.file);
-    for (const dep of depsOn) {
-      if (newImp !== dep.importSrc) {
-        ln += `\t\t${dep.importSrc}\\l`;
-        newImp = dep.importSrc;
-      }
-      ln += `\t\t${dep.import}\\r\n`;
-    }
-
-    result += `${ln}}"];\n\n`;
+    result += createModuleNode(mod, exportList, dependencyList);
   });
 
-  // add import modules to the graph if not already added from the moduleMap
+  // Add import modules not already in the module list
   result += createNodes(importMap, modList);
 
-
-  /** create the dependencies between the nodes. Multiple dependencies exist for each function.
-   * if dependency already exists then do not create again.
-   */
-  /*
-  let depArr = [];
-  for (const dep of dependencyList) {
-    ln = '"' + dep.src + '"->"' + dep.importSrc + '"\n';
-    // add dependency to the array
-    if (depArr.indexOf(ln) === -1) {
-      depArr.push(ln);
-      result += ln;
-    }
-  }
-*/
+  // Add graph footer
   result += '}\n';
   return result;
 }
 
 /**
- * nodes that are in the importMap can have mulitple imported functions. 
- * Some will also exist in the moduleLMap. So only need to create  the imported nodes as
- *  module nodes have already been created from the exported functions.
- * this excludes those that are in the List
-* loop through to add the the imported functions.
+ * Creates a node for a single module
  * 
- * @param {*} importMap 
- * @param {*} modList 
- * @returns 
+ * @param {Object} mod - Module object
+ * @param {Array} exportList - List of exported functions
+ * @param {Array} dependencyList - List of dependencies
+ * @returns {string} - DOT syntax for module node
+ */
+function createModuleNode(mod, exportList, dependencyList) {
+  let nodeContent = `"${mod.file}" [label="{ ${mod.file} | \n`;
+
+  // Add exported functions
+  const exports = getExportedList(exportList, mod.file);
+  mod.exportCnt = exports.length;
+
+  for (const exported of exports) {
+    nodeContent += `\t ${exported.exported} \\l\n`;
+  }
+
+  nodeContent += "|";
+
+  // Add imported functions
+  let prevImportSrc = "";
+  const depsOn = getDependsOn(dependencyList, mod.file);
+
+  for (const dep of depsOn) {
+    if (prevImportSrc !== dep.importSrc) {
+      nodeContent += `\t\t${dep.importSrc}\\l`;
+      prevImportSrc = dep.importSrc;
+    }
+    nodeContent += `\t\t${dep.import}\\r\n`;
+  }
+
+  return `${nodeContent}}"];\n\n`;
+}
+
+/**
+ * Creates nodes for imports that aren't already represented in module nodes
+ * 
+ * @param {Map} importMap - Map of imports
+ * @param {Array} modList - List of modules already added to the graph
+ * @returns {string} - DOT syntax for import nodes
  */
 function createNodes(importMap, modList) {
-  let ln = "";
   let result = "";
+
   for (const imp of importMap.keys()) {
+    // Skip if this import is already in the module list
     if (modList.indexOf(imp) === -1) {
-      ln = '"' + imp + '" [label="{' + imp + '|' + '\n';
+      let nodeContent = `"${imp}" [label="{${imp}|\n`;
+
+      // Add each imported function
       for (const fn of importMap.get(imp)) {
-        ln += '\t' + fn + '\\l\n';
+        nodeContent += `\t${fn}\\l\n`;
       }
-      result += ln + '}"];\n\n';
+
+      result += nodeContent + '}"];\n\n';
     }
   }
+
   return result;
 }
 
 /**
- *  create the graph file for all the modules and what they depend on and where they are used.
- * the first section contains the name of the module 
- * a count of the modules that that it depends 
- * a count of the modules that it uses
- * @param {*} moduleArray list of files to graph
- * @param {*} dependencyList list of imports and functions for the file. 
- * array dependencies src is the file it was found and importSrc 
- *  is where the imported function comes from. so the src depends on the importSrc
-* [ { "src": "./cmd-test.js", "importSrc": "commander","import": "Command"} ]
-* @return the string that is written to the Relations.dot file.
+ * Creates a graph showing module relationships (depends on/used by)
+ * 
+ * @param {Array} dependencyList - List of dependencies
+ * @param {Array} moduleArray - List of modules to graph
+ * @param {string} [srcDir=""] - Source directory for graph label
+ * @returns {string} - DOT file content for relations graph
  */
-export function createRelationsGraph(dependencyList, moduleArray, srcDir) {
+export function createRelationsGraph(dependencyList, moduleArray, srcDir = "") {
   let result = digraph(srcDir);
-  let modSet = new Set();
-  let relLn = "";
-  let newImp = "";
+  let nodeModuleDependents = new Set();
 
+  // Process each module
   moduleArray.forEach((mod) => {
-
-    // modules that it depends on (2nd section)
-    let fileLn = `"${mod.file}" [label="{ ${mod.file}\\n\n`;
-
-    let depLn = "|\n";
-    newImp = "";
-    /**
-     * adds the imported modules to the graph and counts the number added
-     * DependsOn if the List is the src
-     *  if it does not start with a . then it is a node_module
-     * sorted to make the addition unique.
-     * 2nd section Depends on
-     */
-    const depsOn = getDependsOn(dependencyList, mod.file);
-    for (const dep of depsOn) {
-      if (newImp !== dep.importSrc) {
-        newImp = dep.importSrc;
-        // newImp is a node-module so add the List to the set of mods that depend on node-modules
-        if (newImp.startsWith(".") === false) {
-          modSet.add(mod.file);
-        } else {
-          relLn += '"' + dep.src + '"->"' + newImp + '"\n';
-        }
-        depLn += `\t\t${newImp}\\l\n`;
-      }
-    }
-
-
-    let usedLn = "|\n";
-    newImp = "";
-    /**
-     * used by if the List is a importSrc
-     * sorted to make it unique
-     * usedBy string
-     * 3rd section used by
-     */
-
-    // file may have an extension but the importSrc does not
-    // the importSrc is still used by the file
-    const usedList = getUsedByList(dependencyList, mod.file);
-    for (const dep of usedList) {
-      if (newImp !== dep.src) {
-        newImp = dep.src;
-        usedLn += `\t\t${newImp}\\l\n`;
-        }
-    }
-
-    result += fileLn +
-      "Depend On : " + mod.dependsOnCnt + `\\l\n` +
-      "Used By : " + mod.usedByCnt + `\\l\n` +
-      depLn + usedLn +
-      `}"];\n\n`;
-
+    result += createModuleRelationNode(mod, dependencyList, nodeModuleDependents);
   });
 
-  /**
-   * add the node_modules
-   */
-  let nodeModsLn = `"node-modules" [label="{node-modules\\n | \n `;
-  newImp = "";
+  // Add node_modules section
+  result += createNodeModulesSection(dependencyList, nodeModuleDependents);
 
-  const nodeMods = getNodeModuleList(dependencyList);
-  for (const dep of nodeMods) {
-    if (newImp !== dep.importSrc) {
-      newImp = dep.importSrc;
-      nodeModsLn += `\t\t${newImp}\\l\n`;
-    }
-  }
-  nodeModsLn += `}"];\n`;
-  /*
-  // Do not add the node_module link as most all will link to it.
-    for (const item of modSet) {
-      relLn += '"' + item + '"->"node-modules"\n';
-    }
-  */
-  result += nodeModsLn + relLn + '}\n';
+  result += '}\n';
   return result;
 }
 
+/**
+ * Creates a node showing a module's relationships
+ * 
+ * @param {Object} mod - Module object
+ * @param {Array} dependencyList - List of dependencies
+ * @param {Set} nodeModuleDependents - Set to collect modules depending on node_modules
+ * @param {string} relationships - String to collect relationship definitions
+ * @returns {string} - DOT syntax for module relation node
+ */
+function createModuleRelationNode(mod, dependencyList, nodeModuleDependents) {
+  // Node header with module name
+  let nodeContent = `"${mod.file}" [label="{ ${mod.file}\\n\n`;
 
-function digraph(srcDir) {
+  // First section: dependency counts
+  nodeContent += `Depend On : ${mod.dependsOnCnt}\\l\n`;
+  nodeContent += `Used By : ${mod.usedByCnt}\\l\n`;
+
+  // Second section: modules this depends on
+  let dependsOnSection = "|\n";
+  let prevDependency = "";
+  let result = "";
+
+  const depsOn = getDependsOn(dependencyList, mod.file);
+  for (const dep of depsOn) {
+    if (prevDependency !== dep.importSrc) {
+      prevDependency = dep.importSrc;
+
+      // Handle node_module vs local module dependencies
+      if (!prevDependency.startsWith(".")) {
+        // This is a node_module dependency
+        nodeModuleDependents.add(mod.file);
+      } else {
+        // This is a local module dependency
+        result += `"${dep.src}"->"${prevDependency}"\n`;
+      }
+
+      dependsOnSection += `\t\t${prevDependency}\\l\n`;
+    }
+  }
+  // Third section: modules that use this module
+  let usedBySection = "|\n";
+  prevDependency = "";
+
+  const usedList = getUsedByList(dependencyList, mod.file);
+  for (const dep of usedList) {
+    if (prevDependency !== dep.src) {
+      prevDependency = dep.src;
+      usedBySection += `\t\t${prevDependency}\\l\n`;
+    }
+  }
+
+  // Complete the node
+  return nodeContent + dependsOnSection + usedBySection + `}"];\n\n` + result;
+}
+
+/**
+ * Creates the node_modules section of the graph
+ * 
+ * @param {Array} dependencyList - List of dependencies
+ * @param {Set} nodeModuleDependents - Set of modules depending on node_modules
+ * @returns {string} - DOT syntax for node_modules section and relationships
+ */
+function createNodeModulesSection(dependencyList) {
+  // Create node_modules node
+  let nodeContent = `"node-modules" [label="{node-modules\\n | \n `;
+  let prevModule = "";
+
+  // Add each unique node module
+  const nodeMods = getNodeModuleList(dependencyList);
+  for (const dep of nodeMods) {
+    if (prevModule !== dep.importSrc) {
+      prevModule = dep.importSrc;
+      nodeContent += `\t\t${prevModule}\\l\n`;
+    }
+  }
+  nodeContent += `}"];\n`;
+
+  // Optionally add connections from modules to node-modules
+  let relationships = "";
+  /*
+  // Currently disabled as it would create too many links
+  for (const module of nodeModuleDependents) {
+    relationships += `"${module}"->"node-modules"\n`;
+  }
+  */
+
+  return nodeContent + relationships;
+}
+
+/**
+ * Creates the standard header for a graphviz digraph
+ * 
+ * @param {string} [srcDir=""] - Source directory to use as graph title
+ * @returns {string} - Formatted digraph header
+ */
+function digraph(srcDir = "") {
   let result = "digraph {\n";
-  result += `label="${srcDir}";\n`;
-  result += `labelloc="t";\n`;
+
+  if (srcDir) {
+    result += `label="${srcDir}";\n`;
+    result += `labelloc="t";\n`;
+  }
+
   result += "node [shape=record];\n";
   return result;
 }

@@ -1,1 +1,1 @@
-export const EXT_LIST = [".js", ".jsx"];
+export const EXT_LIST = [".js", ".jsx", "tsx", "ts"];

@@ -9,7 +9,8 @@
   },
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --detectOpenHandles",
-    "build": "node . -j -o ./__tests__/out-eg ./src"
+    "build": "node . -j -o ./__tests__/out-eg ./src",
+    "dev" : "node ./src/dep-graph.js -o ./out/bfree -g -j ../nodejs/bfree/pages"
   },
   "keywords": [
     "Dependency",
@@ -26,7 +27,8 @@
   "dependencies": {
     "@babel/parser": "^7.18.11",
     "babel-walk": "^3.0.0",
-    "commander": "^9.4.0"
+    "commander": "^9.4.0",
+    "typescript": "^5.7.2"
   },
   "devDependencies": {
     "eslint": "^8.20.0",
