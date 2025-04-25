@@ -4,9 +4,10 @@ import path from "path";
 import { processAST } from './ast.js';
 import { createGraph, createRelationsGraph, createPackageGraph } from './commands/graph.js';
 import { createModuleHtml } from './commands/html.js';
-import { jsonOut } from './commands/json.js';
-import { getFilename, getModuleArray, cleanPath } from "./file-utils.js";
+import { jsonOut, jsonIn } from './commands/json.js';
+import { getFilename, getModuleArray, cleanPath } from "./utils/file-utils.js";
 import { fileURLToPath } from 'url';
+import { spawn } from 'child_process';
 
 /**
  * https://cheatcode.co/tutorials/how-to-build-a-command-line-interface-cli-using-node-js
@@ -41,7 +42,10 @@ function setupProgram() {
     .version(getVersion())
     .description(`A CLI to generate documentation for dependencies of a JavaScript file or directory.`)
     .option("-j --json", "produce .json object files of the dependencies to output directory.")
-    .option("-o --output <dir>", "directory that the outputs are sent to.", "./out")
+    .option("-g --graph", "produce package and dependencies .dot files that graphviz can use to generate a graph of the dependencies to output directory.")
+    .option("-o --output <dir>", "directory that the outputs are sent to.", "./docs")
+    .option("-d --jsdoc", "generate JSDoc documentation in the output directory.")
+    .option("--jsdoc-config <file>", "path to JSDoc configuration file.", "./jsdoc.json")
     .argument("<file | directory>", "JavaScript file or directory to analyze");
 
   return program;
@@ -97,10 +101,25 @@ function processFileOrDirectory(symbol, options) {
       // Handle JSON outputs if requested
       if (options.json) {
         generateJsonOutput(output, moduleArray, dependencyList, exportList, errors);
-      }  else {
-        // Generate graph if JSON output is not requested
-        const graph = createGraph(dependencyList, moduleArray, srcDir);
-        safeWriteFile(path.join(output, "graph.svg"), graph, "utf8");
+      }
+
+      // create the graph file for packages or directories for all the modules. -g option
+      if (options.graph) {
+ //       const moduleArray = jsonIn(output + "ModuleArray.json");
+ //       const exportList = Array.from(jsonIn(output + "ExportList.json"));
+ //       const dependencyList = Array.from(jsonIn(output + "DependencyList.json"));
+        const importMap = jsonIn(output + "ImportMap.json");
+        const pkgGraph = createPackageGraph(moduleArray, dependencyList);
+        safeWriteFile(path.join(output, "Package.dot", pkgGraph, "utf8"));
+        const depGraph = createGraph(dependencyList, exportList, moduleArray, importMap);
+        safeWriteFile(path.join(output, "Dependencies.dot", depGraph, "utf8"));
+        const relGraph = createRelationsGraph(dependencyList, moduleArray);
+        safeWriteFile(path.join(output, "Relations.dot", relGraph, "utf8"));
+      }
+      
+      // Run JSDoc if requested
+      if (options.jsdoc) {
+        generateJSDoc(symbol, output, options.jsdocConfig);
       }
     } catch (error) {
       console.error(`Error processing ${symbol}: ${error.message}`);
@@ -109,7 +128,56 @@ function processFileOrDirectory(symbol, options) {
 }
 
 /**
+ * Generate JSDoc documentation for the provided source
+ * 
+ * @param {string} source - Source file or directory to document
+ * @param {string} outputDir - Directory to output JSDoc documentation
+ * @param {string} configFile - Path to JSDoc configuration file (optional)
+ */
+function generateJSDoc(source, outputDir, configFile) {
+  const jsdocOutput = path.join(outputDir, 'jsdoc');
+  fs.mkdirSync(jsdocOutput, { recursive: true });
+  
+  console.log(`Generating JSDoc documentation in ${jsdocOutput}...`);
+  
+  // Build JSDoc command arguments
+  const args = [
+    '--destination', jsdocOutput, 
+    source
+  ];
+  
+  // Use config file if provided
+  if (configFile) {
+    if (!fs.existsSync(configFile)) {
+      console.error(`JSDoc config file not found: ${configFile}`);
+      return;
+    }
+    args.unshift('--configure', configFile);
+  }
+  
+  // Run JSDoc command
+  const jsdocProcess = spawn('jsdoc', args, { stdio: 'inherit' });
+  
+  jsdocProcess.on('error', (err) => {
+    if (err.code === 'ENOENT') {
+      console.error(`Error: JSDoc command not found. Please ensure JSDoc is installed globally (npm install -g jsdoc) or as a dependency in your project.`);
+    } else {
+      console.error(`Error running JSDoc: ${err.message}`);
+    }
+  });
+
+  jsdocProcess.on('close', (code) => {
+    if (code === 0) {
+      console.log(`JSDoc documentation successfully generated in ${jsdocOutput}`);
+    } else {
+      console.error(`JSDoc process exited with code ${code}`);
+    }
+  });
+}
+
+/**
  * Generate standard output files (HTML and DOT)
+ * ModuleArray.html, Package.dot, Relations.dot
  */
 function generateOutputFiles(output, moduleArray, dependencyList, exportList) {
   let result = createModuleHtml(moduleArray, dependencyList, exportList);
@@ -124,6 +192,7 @@ function generateOutputFiles(output, moduleArray, dependencyList, exportList) {
 
 /**
  * Generate JSON output files if requested
+ * ExportList.json, DependencyList.json, ModuleArray.json 
  */
 function generateJsonOutput(output, moduleArray, dependencyList, exportList, errors) {
   if (errors.length > 0) {

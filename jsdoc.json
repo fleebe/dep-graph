@@ -21,7 +21,7 @@
   }, 
   "opt" : {
     "recurse" : true,
-    "destination" : "./jsdoc",
+    "destination" : "./docs/jsdoc",
     "encoding" : "utf8",
     "verbose" : true,
     "package" : "package.json"

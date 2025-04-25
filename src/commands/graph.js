@@ -1,6 +1,10 @@
 import path from "path";
-import { cleanPath } from "../file-utils.js";
-import { getUsedByList, getDependsOn, getNodeModuleList, getExportedList } from "../list-utils.js";
+import { cleanPath } from "../utils/file-utils.js";
+import { getUsedByList, getDependsOn, getNodeModuleList, getExportedList } from "../utils/list-utils.js";
+
+/**
+ * Graph command module providing various graph generation functions
+ */
 
 /**
  * Creates a graphviz .dot file of package dependencies
@@ -313,4 +317,13 @@ function digraph(srcDir = "") {
   result += "node [shape=record];\n";
   return result;
 }
+
+/**
+ * Module exports
+ */
+export default {
+  createPackageGraph,
+  createGraph,
+  createRelationsGraph
+};
 

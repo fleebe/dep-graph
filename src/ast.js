@@ -1,12 +1,15 @@
 import { readFileSync } from "fs";
-import { parse as babelParse } from "@babel/parser";
+// Remove Babel parser import
+// import { parse as babelParse } from "@babel/parser";
 import { normalizePath, hasExtension, 
-  removeExtension } from "./file-utils.js";
-import { getUsedByList } from "./list-utils.js";
+  removeExtension } from "./utils/file-utils.js";
+import { getUsedByList } from "./utils/list-utils.js";
 import { fileURLToPath } from 'url';
-import * as walk from 'babel-walk';
+// Replace babel-walk with estraverse
+// import * as walk from 'babel-walk';
+import { parse as tsParser } from '@typescript-eslint/parser';
+import estraverse from 'estraverse';
 import { EXT_LIST } from "./globals.js"
-
 
 /**
  * processes gets the ast for all the modules and creates the dependeciesList, exportList and importMap
@@ -38,10 +41,14 @@ export function processAST(moduleArray, root) {
     
     try {
       const result = readFileSync(srcFile, 'utf-8');
-      // parse file into ast handles js, jsx, and experimental exportDefaultFrom
-      const ast = babelParse(result, { 
-        plugins: ["jsx", "exportDefaultFrom", "typescript"], 
-        sourceType: "module"
+      // parse file using TypeScript parser instead of Babel
+      const ast = tsParser(result, {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        ecmaFeatures: {
+          jsx: true
+        },
+        filePath: srcFile
       });
       
       const exps = parseExports(ast, mod.file, root);
@@ -89,10 +96,10 @@ export function processAST(moduleArray, root) {
 /**
  * Analyzes an AST to extract import statements and build a dependency list
  * 
- * This function walks through the AST and identifies ImportDeclaration nodes,
+ * This function traverses the AST and identifies ImportDeclaration nodes,
  * extracting information about what modules are being imported and how they're referenced.
  * 
- * @param {Object} ast - The Abstract Syntax Tree of the JavaScript file
+ * @param {Object} ast - The Abstract Syntax Tree of the JavaScript/TypeScript file
  * @param {string} srcFile - The source file path being analyzed
  * @param {string} root - The root directory path for resolving relative imports
  * @returns {Array<Object>} - Array of dependency objects with the following properties:
@@ -104,12 +111,13 @@ export function processAST(moduleArray, root) {
 function parseImports(ast, srcFile, root) {
   let dependencies = [];
 
-  const visitors = walk.recursive({
-    ImportDeclaration(node) {
-      moduleDeclaration(node, srcFile, root);
+  estraverse.traverse(ast, {
+    enter: function(node) {
+      if (node.type === 'ImportDeclaration') {
+        moduleDeclaration(node, srcFile, root);
+      }
     }
   });
-  visitors(ast);
   
   function moduleDeclaration(node, srcFile, root) {
     for (const sp of node.specifiers) {
@@ -143,7 +151,7 @@ function parseImports(ast, srcFile, root) {
 }
 
 /**
- * walks the ast to find exported declarations and creates an exportList
+ * Traverses the ast to find exported declarations and creates an exportList
  * https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export
  * @param {*} ast 
  * @param {*} srcFile 
@@ -151,17 +159,15 @@ function parseImports(ast, srcFile, root) {
  */
 function parseExports(ast, srcFile, root) {
   let exportList = [];
-  const visitors = walk.recursive({
-    ExportNamedDeclaration(node) {
-      exportDeclaration(node);
-    },
-
-    ExportDefaultDeclaration(node) {
-      exportDeclaration(node);
-    },
+  
+  estraverse.traverse(ast, {
+    enter: function(node) {
+      if (node.type === 'ExportNamedDeclaration' || node.type === 'ExportDefaultDeclaration') {
+        exportDeclaration(node);
+      }
+    }
   });
 
-  visitors(ast);
   return exportList;
 
   function exportDeclaration(node) {
@@ -169,7 +175,7 @@ function parseExports(ast, srcFile, root) {
       exportList.push({
         name: srcFile,
         exported: exp,
-        type: node.declaration.type,
+        type: node.declaration?.type || 'Unknown',
         params: params
       });
     };
@@ -205,8 +211,7 @@ function parseExports(ast, srcFile, root) {
     }
 
     /**
-     *
-     *
+     * Processes a declaration node
      * @param {*} decl
      */
     function declNode(decl) {
@@ -220,7 +225,6 @@ function parseExports(ast, srcFile, root) {
           // "-ce " + 
           if (decl.callee.name)
             addVal(decl.callee.name);
-
           else
             addVal(decl.callee.callee.name);
           break;
@@ -295,8 +299,24 @@ function parseExports(ast, srcFile, root) {
           addVal(decl.test.name);
           break;
         }
+        case 'TSTypeAliasDeclaration': {
+          // Handle TypeScript type aliases
+          addVal(decl.id.name);
+          break;
+        }
+        case 'TSInterfaceDeclaration': {
+          // Handle TypeScript interfaces
+          addVal(decl.id.name);
+          break;
+        }
+        case 'TSEnumDeclaration': {
+          // Handle TypeScript enums
+          addVal(decl.id.name);
+          break;
+        }
         default: {
-          throw new Error(`TODO: Export parse failed\n ${JSON.stringify(node, null, 2)}`);
+          console.warn(`Export parse encounter unknown type: ${decl.type}`);
+          addVal(`Unknown-${decl.type}`);
         }
       }
     }
@@ -306,7 +326,7 @@ function parseExports(ast, srcFile, root) {
 /**
  * Normalizes dependencies by standardizing import paths with or without extensions
  * 
- * JavaScript imports can be referenced with or without .js/.jsx extensions.
+ * JavaScript/TypeScript imports can be referenced with or without extensions.
  * This function ensures consistent references by converting imports with extensions
  * to match their extension-less counterparts when both exist.
  * 
@@ -319,14 +339,16 @@ function normaliseDeps(deps) {
   
   // First pass: collect all non-js import paths
   deps.forEach(dep => {
-    if (!dep.importSrc.endsWith('.js') && !dep.importSrc.endsWith('.jsx')) {
+    if (!dep.importSrc.endsWith('.js') && !dep.importSrc.endsWith('.jsx') &&
+        !dep.importSrc.endsWith('.ts') && !dep.importSrc.endsWith('.tsx')) {
       nonJsImportPaths.add(dep.importSrc);
     }
   });
   
-  // Second pass: normalize js imports to match non-js imports when available
+  // Second pass: normalize js/ts imports to match non-js/ts imports when available
   deps.forEach(dep => {
-    if (dep.importSrc.endsWith('.js') || dep.importSrc.endsWith('.jsx')) {
+    if (dep.importSrc.endsWith('.js') || dep.importSrc.endsWith('.jsx') ||
+        dep.importSrc.endsWith('.ts') || dep.importSrc.endsWith('.tsx')) {
       const nonJsPath = removeExtension(dep.importSrc);
       if (nonJsImportPaths.has(nonJsPath)) {
         dep.importSrc = nonJsPath;

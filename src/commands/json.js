@@ -2,6 +2,11 @@ import fs from "fs";
 import path from "path";
 
 /**
+ * JSON Command Module
+ * Provides functionality to save and load JSON data structures
+ */
+
+/**
  * Saves data structures to JSON files
  * Maps are automatically converted to objects since they can't be directly stringified
  * 
@@ -92,3 +97,11 @@ function objToStrMap(obj) {
   }
   return strMap;
 }
+
+/**
+ * Module exports
+ */
+export default {
+  jsonOut,
+  jsonIn
+};

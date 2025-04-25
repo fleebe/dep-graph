@@ -1,5 +1,10 @@
-import { cleanPath } from "../file-utils.js";
-import { getUsedByList, getDependsOn, getNodeModuleList, getExportedList } from "../list-utils.js";
+import { cleanPath } from "../utils/file-utils.js";
+import { getUsedByList, getDependsOn, getNodeModuleList, getExportedList } from "../utils/list-utils.js";
+
+/**
+ * HTML Command Module
+ * Provides functionality to generate HTML reports of module dependencies
+ */
 
 /**
  * Creates an HTML report of module dependencies and relationships
@@ -37,7 +42,7 @@ export function createModuleHtml(moduleArray, dependencyList, exportList) {
  */
 function generateSummarySection(moduleArray, dependencyList) {
   let result = "";
-  const tblStyle = "<table border=1>\n";
+  const tblStyle = "<table border=1 cellpadding=5>\n";
   result += `<h1 id="mod_list">Module List</h1>\n`;
 
   // Get unique node modules
@@ -74,7 +79,7 @@ function generateSummarySection(moduleArray, dependencyList) {
  * @returns {string} - HTML table of modules
  */
 function generateModuleSummaryTable(moduleArray) {
-  let result = "<table border=1>\n";
+  let result = "<table border=1 cellpadding=5>\n";
   result += "\t<tr><th>Directory</th>";
   result += "<th>File</th>";
   result += "<th>Depends On</th>";
@@ -103,7 +108,7 @@ function generateModuleSummaryTable(moduleArray) {
  */
 function generateUnusedModulesTable(unusedModules) {
   let result = `<h2 id="unused">Unused Application Modules</h2><a href="#mod_list">(top)</a>\n`;
-  result += "<table border=1>\n";
+  result += "<table border=1 cellpadding=5>\n";
   result += "\t<tr><th>Directory</th>";
   result += "<th>File</th>";
   result += "<th>Depends On</th>";
@@ -161,7 +166,7 @@ function generateModuleDetails(moduleArray, dependencyList, exportList) {
  */
 function generateExportsTable(exports, usedList) {
   let result = "<h3>Exported</h3>\n";
-  result += "<table border=1>\n";
+  result += "<table border=1 cellpadding=5>\n";
   result += "\t<tr><th>Exported</th>";
   result += "<th>Export Declaration</th>";
   result += "<th>Parameters</th>";
@@ -189,7 +194,7 @@ function generateExportsTable(exports, usedList) {
  */
 function generateDependsOnTable(depsList) {
   let result = "<h3>Depends On</h3>\n";
-  result += "<table border=1>\n";
+  result += "<table border=1 cellpadding=5>\n";
   result += "\t<tr><th>File or <br>Node Module</th>";
   result += "<th>Import</th></tr>\n";
   
@@ -216,7 +221,7 @@ function generateDependsOnTable(depsList) {
  */
 function generateUsedByTable(usedList) {
   let result = "<h3>Used By</h3>\n";
-  result += "<table border=1>\n";
+  result += "<table border=1 cellpadding=5>\n";
   result += "\t<tr><th>File or <br>Node Module</th>";
   result += "<th>Import</th></tr>\n";
   
@@ -237,7 +242,7 @@ function generateUsedByTable(usedList) {
  */
 function generateNodeModulesSection(dependencyList) {
   let result = `<h2 id="node_modules">Node Modules</h2>  <a href="#mod_list">(top)</a>\n`;
-  result += "<table border=1>\n";
+  result += "<table border=1 cellpadding=5>\n";
   result += "\t<tr><th>File</th>";
   result += "<th>Node Module</th></tr>\n";
   
@@ -265,4 +270,11 @@ function getUniqueNodeModules(dependencyList) {
   ).values()];
   return uniqueObjArray;
 }
+
+/**
+ * Module exports
+ */
+export default {
+  createModuleHtml
+};
 

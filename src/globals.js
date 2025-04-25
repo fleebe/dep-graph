@@ -1,1 +1,2 @@
-export const EXT_LIST = [".js", ".jsx", "tsx", "ts"];
+// In globals.js
+export const EXT_LIST = ['.js', '.jsx', '.ts', '.tsx'];

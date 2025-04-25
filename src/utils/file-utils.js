@@ -1,6 +1,11 @@
 import path from "path";
 import fs from "fs";
-import {EXT_LIST} from "./globals.js";
+import {EXT_LIST} from "../globals.js";
+
+/**
+ * File Utilities Module
+ * Provides file system operations and path normalization functions
+ */
 
 /**
  * gets the extension of the file
@@ -238,5 +243,17 @@ export function getModuleArray(symbol, stats) {
   return [root, arr];
 
 }
+
+/**
+ * Module exports
+ */
+export default {
+  hasExtension,
+  removeExtension,
+  normalizePath,
+  cleanPath,
+  getFilename,
+  getModuleArray
+};
 
 

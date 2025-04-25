@@ -1,0 +1,10 @@
+{
+  "entryPoints": [
+    "./src/**/*.ts*",
+    "./src/commands/*.ts*",
+  ],
+  "exclude": [
+    "node_modules",
+  ],
+  "out": "out/typedocs"
+}

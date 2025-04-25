@@ -1,6 +1,6 @@
 /**
- * Utility functions for managing and filtering module dependencies
- * @module list-utils
+ * List Utilities Module
+ * Provides utility functions for managing and filtering module dependencies
  */
 
 /**
@@ -90,4 +90,15 @@ export function getNodeModuleList(dependencyList) {
     .filter(v => !v.importSrc.startsWith("."))
     .sort((a, b) => a.importSrc.localeCompare(b.importSrc));
 }
+
+/**
+ * Module exports
+ */
+export default {
+  addToMapArray,
+  getUsedByList,
+  getDependsOn,
+  getExportedList,
+  getNodeModuleList
+};
 
