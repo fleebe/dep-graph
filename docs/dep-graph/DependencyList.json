@@ -1,0 +1,92 @@
+[
+  {
+    "src": "./dep-graph.js",
+    "importSrc": "commander",
+    "relSrcPath": "commander",
+    "import": "Command"
+  },
+  {
+    "src": "./dep-graph.js",
+    "importSrc": "fs",
+    "relSrcPath": "fs",
+    "import": "fs"
+  },
+  {
+    "src": "./dep-graph.js",
+    "importSrc": "path",
+    "relSrcPath": "path",
+    "import": "path"
+  },
+  {
+    "src": "./dep-graph.js",
+    "importSrc": "./ast.js",
+    "relSrcPath": "./ast.js",
+    "import": "processAST"
+  },
+  {
+    "src": "./dep-graph.js",
+    "importSrc": "./commands/graph.js",
+    "relSrcPath": "./commands/graph.js",
+    "import": "createGraph"
+  },
+  {
+    "src": "./dep-graph.js",
+    "importSrc": "./commands/graph.js",
+    "relSrcPath": "./commands/graph.js",
+    "import": "createRelationsGraph"
+  },
+  {
+    "src": "./dep-graph.js",
+    "importSrc": "./commands/graph.js",
+    "relSrcPath": "./commands/graph.js",
+    "import": "createPackageGraph"
+  },
+  {
+    "src": "./dep-graph.js",
+    "importSrc": "./commands/html.js",
+    "relSrcPath": "./commands/html.js",
+    "import": "createModuleHtml"
+  },
+  {
+    "src": "./dep-graph.js",
+    "importSrc": "./commands/json.js",
+    "relSrcPath": "./commands/json.js",
+    "import": "jsonOut"
+  },
+  {
+    "src": "./dep-graph.js",
+    "importSrc": "./commands/json.js",
+    "relSrcPath": "./commands/json.js",
+    "import": "jsonIn"
+  },
+  {
+    "src": "./dep-graph.js",
+    "importSrc": "./utils/file-utils.js",
+    "relSrcPath": "./utils/file-utils.js",
+    "import": "getFilename"
+  },
+  {
+    "src": "./dep-graph.js",
+    "importSrc": "./utils/file-utils.js",
+    "relSrcPath": "./utils/file-utils.js",
+    "import": "getModuleArray"
+  },
+  {
+    "src": "./dep-graph.js",
+    "importSrc": "./utils/file-utils.js",
+    "relSrcPath": "./utils/file-utils.js",
+    "import": "cleanPath"
+  },
+  {
+    "src": "./dep-graph.js",
+    "importSrc": "url",
+    "relSrcPath": "url",
+    "import": "fileURLToPath"
+  },
+  {
+    "src": "./dep-graph.js",
+    "importSrc": "child_process",
+    "relSrcPath": "child_process",
+    "import": "spawn"
+  }
+]

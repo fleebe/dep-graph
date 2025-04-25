@@ -1,0 +1,79 @@
+<html><body>
+<h1 id="mod_list">Module List</h1>
+<table border=1 cellpadding=5>
+	<tr><th>Type</th><th>Count</td></th></tr>
+	<tr><td><a href="#node_modules">Node Modules</a></td>	<td>5</td></tr>
+	<tr><td>Application Modules</td>	<td>1</td></tr>
+	<tr><td><a href="#unused">Unused Application Modules</a></td>	<td>1</td></tr>
+</table><br>
+<table border=1 cellpadding=5>
+	<tr><th>Directory</th><th>File</th><th>Depends On</th><th>Used By</th><th>Exported</th></tr>
+	<tr><td>./src</td><td><a href="#./dep-graph.js">dep-graph.js</a></td><td>15</td><td>0</td><td>1</td></tr>
+</table>
+<h2 id="unused">Unused Application Modules</h2><a href="#mod_list">(top)</a>
+<table border=1 cellpadding=5>
+	<tr><th>Directory</th><th>File</th><th>Depends On</th><th>Used By</th><th>Exported</th></tr>
+	<tr><td>./src</td><td><a href="#./dep-graph.js">dep-graph.js</a></td><td>15</td><td>0</td><td>1</td></tr>
+</table>
+<h2 id=./dep-graph.js>./dep-graph.js</h2> <a href="#mod_list">(top)</a>
+<h3>Exported</h3>
+<table border=1 cellpadding=5>
+	<tr><th>Exported</th><th>Export Declaration</th><th>Parameters</th><th>Used Count</th></tr>
+	<tr><td>runProgram</td>
+	<td>FunctionDeclaration</td>
+	<td>()</td>
+	<td>0</td></tr>
+</table><br>
+<h3>Depends On</h3>
+<table border=1 cellpadding=5>
+	<tr><th>File or <br>Node Module</th><th>Import</th></tr>
+	<tr><td><a href="#./ast.js">./ast.js</a></td>
+	<td>processAST</td></tr>
+	<tr><td><a href="#./commands/graph.js">./commands/graph.js</a></td>
+	<td>createGraph</td></tr>
+	<tr><td><a href="#./commands/graph.js">./commands/graph.js</a></td>
+	<td>createRelationsGraph</td></tr>
+	<tr><td><a href="#./commands/graph.js">./commands/graph.js</a></td>
+	<td>createPackageGraph</td></tr>
+	<tr><td><a href="#./commands/html.js">./commands/html.js</a></td>
+	<td>createModuleHtml</td></tr>
+	<tr><td><a href="#./commands/json.js">./commands/json.js</a></td>
+	<td>jsonOut</td></tr>
+	<tr><td><a href="#./commands/json.js">./commands/json.js</a></td>
+	<td>jsonIn</td></tr>
+	<tr><td><a href="#./utils/file-utils.js">./utils/file-utils.js</a></td>
+	<td>getFilename</td></tr>
+	<tr><td><a href="#./utils/file-utils.js">./utils/file-utils.js</a></td>
+	<td>getModuleArray</td></tr>
+	<tr><td><a href="#./utils/file-utils.js">./utils/file-utils.js</a></td>
+	<td>cleanPath</td></tr>
+	<tr><td>child_process</td>
+	<td>spawn</td></tr>
+	<tr><td>commander</td>
+	<td>Command</td></tr>
+	<tr><td>fs</td>
+	<td>fs</td></tr>
+	<tr><td>path</td>
+	<td>path</td></tr>
+	<tr><td>url</td>
+	<td>fileURLToPath</td></tr>
+</table><br>
+<h3>Used By</h3>
+<table border=1 cellpadding=5>
+	<tr><th>File or <br>Node Module</th><th>Import</th></tr>
+</table><br>
+<h2 id="node_modules">Node Modules</h2>  <a href="#mod_list">(top)</a>
+<table border=1 cellpadding=5>
+	<tr><th>File</th><th>Node Module</th></tr>
+	<tr><td>child_process</td>
+	<td>spawn</td></tr>
+	<tr><td>commander</td>
+	<td>Command</td></tr>
+	<tr><td>fs</td>
+	<td>fs</td></tr>
+	<tr><td>path</td>
+	<td>path</td></tr>
+	<tr><td>url</td>
+	<td>fileURLToPath</td></tr>
+</table><br>
+</body></html>

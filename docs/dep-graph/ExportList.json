@@ -1,0 +1,8 @@
+[
+  {
+    "name": "./dep-graph.js",
+    "exported": "runProgram",
+    "type": "FunctionDeclaration",
+    "params": "()"
+  }
+]

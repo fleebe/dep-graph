@@ -1,0 +1,32 @@
+digraph {
+node [shape=record];
+"./dep-graph.js" [label="{ ./dep-graph.js\n
+Depend On : 15\l
+Used By : 0\l
+|
+		./ast.js\l
+		./commands/graph.js\l
+		./commands/html.js\l
+		./commands/json.js\l
+		./utils/file-utils.js\l
+		child_process\l
+		commander\l
+		fs\l
+		path\l
+		url\l
+|
+}"];
+
+"./dep-graph.js"->"./ast.js"
+"./dep-graph.js"->"./commands/graph.js"
+"./dep-graph.js"->"./commands/html.js"
+"./dep-graph.js"->"./commands/json.js"
+"./dep-graph.js"->"./utils/file-utils.js"
+"node-modules" [label="{node-modules\n | 
+ 		child_process\l
+		commander\l
+		fs\l
+		path\l
+		url\l
+}"];
+}

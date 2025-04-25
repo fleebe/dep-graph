@@ -1,0 +1,9 @@
+[
+  {
+    "dir": "./src",
+    "file": "./dep-graph.js",
+    "dependsOnCnt": 15,
+    "usedByCnt": 0,
+    "exportCnt": 1
+  }
+]

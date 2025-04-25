@@ -1,0 +1,10 @@
+digraph {
+node [shape=record];
+"./src" [label="{./src|
+	dep-graph.js
+}"];
+
+"./"->"./"
+"./"->"./commands"
+"./"->"./utils"
+}

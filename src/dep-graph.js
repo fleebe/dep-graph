@@ -4,7 +4,7 @@ import path from "path";
 import { processAST } from './ast.js';
 import { createGraph, createRelationsGraph, createPackageGraph } from './commands/graph.js';
 import { createModuleHtml } from './commands/html.js';
-import { jsonOut } from './commands/json.js';
+import { jsonOut, jsonIn } from './commands/json.js';
 import { getFilename, getModuleArray, cleanPath } from "./file-utils.js";
 import { fileURLToPath } from 'url';
 
@@ -81,28 +81,26 @@ export function runProgram() {
           }
           jsonOut(output, "ExportList", exportList);
           jsonOut(output, "DependencyList", dependencyList);
-      //    jsonOut(output, "ImportMap", importMap);
         // moduleArray is updated in the createRelationsGraph
           jsonOut(output, "ModuleArray", moduleArray);        
      } else {
-/*        
+        
         // read from output directory
         moduleArray = jsonIn(output + "ModuleArray.json");
         exportList = Array.from(jsonIn(output + "ExportList.json"));
         dependencyList = Array.from(jsonIn(output + "DependencyList.json"));
-        importMap = jsonIn(output + "ImportMap.json");
-        */
+        const importMap = jsonIn(output + "ImportMap.json");     
+        // create the graph file for packages or directories for all the modules. -g option
+
+        if (options.graph) {
+          result = createGraph(dependencyList, exportList, moduleArray, importMap);
+          fs.writeFileSync(output + "Dependencies.dot", result, "utf8");
+
+        }      
       }
 
-      // create the graph file for packages or directories for all the modules. -g option
-      /*
-      if (options.graph) {
- 
-        result = createGraph(dependencyList, exportList, moduleArray, importMap);
-        fs.writeFileSync(output + "Dependencies.dot", result, "utf8");
 
-      }
-       */
+       
     })
   });
 
