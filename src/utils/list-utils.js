@@ -19,7 +19,7 @@ export function addToMapArray(map, key, arrVal) {
     return map.set(key, [arrVal]);
   } else {
     const uniqueValues = new Set(map.get(key));
-    
+
     if (Array.isArray(arrVal)) {
       // Add each item individually to avoid spread operator limitations
       if (arrVal.length > 0) {
@@ -28,7 +28,7 @@ export function addToMapArray(map, key, arrVal) {
     } else {
       uniqueValues.add(arrVal);
     }
-    
+
     return map.set(key, Array.from(uniqueValues));
   }
 }
@@ -73,7 +73,14 @@ export function getDependsOn(dependencyList, file) {
 export function getExportedList(exportList, file) {
   return exportList
     .filter(v => v.name === file)
-    .sort((a, b) => a.exported.localeCompare(b.exported));
+    .sort((a, b) => {
+      if (a && b && a.exported && b.exported) {
+        return a.exported.localeCompare(b.exported);
+      } else {
+        console.error(`Invalid export object: ${file} : ${JSON.stringify(a || b)}`);
+        return 0 // equal
+      }
+     });
 }
 
 /**

@@ -34,7 +34,8 @@ export const removeExtension = ((filename) => {
  * @param {*} symbol a directory
  * @returns directory prefixed with ./
  */
-const getBaseDir = (symbol) => {
+/*
+function getBaseDir(symbol) {
   if (symbol.indexOf("..") !== -1) {
     symbol = resolveRelativePath(symbol, process.cwd());
     // get the absolute path of the current working directory
@@ -53,7 +54,8 @@ const getBaseDir = (symbol) => {
   (symbol.endsWith("/")) ? symbol = symbol.slice(0, symbol.length - 1) : symbol;
   return symbol;
 }
-
+*/
+/*
 function resolveRelativePath(targetPath, currentDir) {
   // Split paths into segments
   const targetSegments = targetPath.replaceAll("\\", '/').split('/').filter(s => s !== '');
@@ -77,7 +79,7 @@ function resolveRelativePath(targetPath, currentDir) {
   // Construct final path
   // return './' + resultSegments.join('/');
 }
-
+*/
 
 /**
  * finds the relative path of the import in relation to the file the import is in.
@@ -208,39 +210,32 @@ function getDirectoriesRecursive(srcpath) {
  *  2. the root directory that the list starts from
  */
 export function getModuleArray(symbol, stats) {
-  let root = "";
   let arr = [];
+  const root = path.dirname(symbol).replaceAll("\\", "/");
 
   if (stats.isFile()) {
-    root = "./" + getBaseDir(path.dirname(symbol));
     arr.push({
-      dir: root, file: symbol.replace(root, "."),
+      dir: root, file: symbol,
       dependsOnCnt: 0, usedByCnt: 0, exportCnt: 0
     });
   } else if (stats.isDirectory()) {
     // array of directories
-    root = "./" + getBaseDir(symbol);
-
-    const dirArr = getDirectoriesRecursive(root)
-      .map(e => {
-        return e.replaceAll('\\', "/");
-      });
+    const dirArr = getDirectoriesRecursive(symbol)
 
     dirArr.forEach(e => {
-      const dir = (e.startsWith(root + "/")) ? e.replace(root, ".") : e.replace(root, "./");
-      // sets map to the key=file values are the functions returned by getFiles
-      const fileList = getFiles(e).map(f => { return f.replace(root, ".") });
+       // sets map to the key=file values are the functions returned by getFiles
+      const fileList = getFiles(e);
       fileList.forEach(file => {
         if (hasExtension(file, EXT_LIST)) {
           arr.push(
-            { dir: dir, file: file, dependsOnCnt: 0, usedByCnt: 0, exportCnt: 0 });
+            { dir: root, file: file, dependsOnCnt: 0, usedByCnt: 0, exportCnt: 0 });
         }
       });
     });
   }
 
 
-  return [root, arr];
+  return [arr];
 
 }
 

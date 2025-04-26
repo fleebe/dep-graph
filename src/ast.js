@@ -1,46 +1,30 @@
 import { readFileSync } from "fs";
 // Remove Babel parser import
 // import { parse as babelParse } from "@babel/parser";
-import { normalizePath, hasExtension, 
+import {
   removeExtension } from "./utils/file-utils.js";
 import { getUsedByList } from "./utils/list-utils.js";
-import { fileURLToPath } from 'url';
 // Replace babel-walk with estraverse
 // import * as walk from 'babel-walk';
 import { parse as tsParser } from '@typescript-eslint/parser';
 import estraverse from 'estraverse';
-import { EXT_LIST } from "./globals.js"
+import path from "path";
 
 /**
  * processes gets the ast for all the modules and creates the dependeciesList, exportList and importMap
- * @param {*} moduleMap Map of packages with modules key=./directory, values=array[./directory/filename]
- * @param {*} root the root directory where the modules root is passed without the ./ 
- * @param {*} outputDir optional directory for output
+ * @param {*} moduleMap Map of packages with modules key=directory, values=array[filename]
  */
-export function processAST(moduleArray, root) {
+export function processAST(moduleMap) {
   // list of dependencies between modules including the functions
   let dependencyList = [];
   // list of functions exported from modules/files
   let exportList = [];
   let errors = [];
-  const thisFile = fileURLToPath(import.meta.url);
+  let usedList = [];
 
-  moduleArray.forEach((mod) => {
-    // convert relative path mod.file to absolute path
-    const srcFile = mod.file.replace(".", root);
-    if (!hasExtension(srcFile, EXT_LIST)) {
-      errors.push({
-        "file": srcFile, 
-        "err": null,
-        "msg": `File type not supported. Only ${EXT_LIST.join(', ')} files can be parsed.`,
-        "src": thisFile
-      });
-      console.log(`Unsupported file type: ${srcFile}. Only ${EXT_LIST.join(', ')} files are supported.`);
-      return;
-    }
-    
+  moduleMap.forEach((mod) => {
     try {
-      const result = readFileSync(srcFile, 'utf-8');
+      const result = readFileSync(mod.file, 'utf-8');
       // parse file using TypeScript parser instead of Babel
       const ast = tsParser(result, {
         ecmaVersion: 'latest',
@@ -48,11 +32,11 @@ export function processAST(moduleArray, root) {
         ecmaFeatures: {
           jsx: true
         },
-        filePath: srcFile
+        filePath: mod.file
       });
       
-      const exps = parseExports(ast, mod.file, root);
-      let deps = parseImports(ast, mod.file, root);
+      const exps = parseExports(ast, mod.file);
+      let deps = parseImports(ast, mod.file);
 
       // add exported source files as a dependency
       // know exported source as type starts with ./directory
@@ -72,12 +56,11 @@ export function processAST(moduleArray, root) {
       dependencyList.push(...deps);
     } catch (err) {
       errors.push({ 
-        "file": srcFile, 
+        "file": mod.file, 
         "err": err, 
-        "msg": err.message, 
-        "src": thisFile 
+        "msg": err.message
       });
-      console.error(`Error parsing file ${srcFile} (module: ${mod.file}):\n${err.message}`);
+      console.error(`Error parsing file ${mod.file} :\n${err.message}`);
     }
   });
 
@@ -85,12 +68,12 @@ export function processAST(moduleArray, root) {
   dependencyList = normaliseDeps(dependencyList);
 
   // Update usage counts
-  moduleArray.forEach((mod) => {
-    const usedList = getUsedByList(dependencyList, mod.file);
+  moduleMap.forEach((mod) => {
+    usedList = getUsedByList(dependencyList, mod.file);
     mod.usedByCnt = usedList.length;
   });
 
-  return [dependencyList, exportList, errors];
+  return [dependencyList, exportList, usedList, errors];
 }
 
 /**
@@ -101,25 +84,24 @@ export function processAST(moduleArray, root) {
  * 
  * @param {Object} ast - The Abstract Syntax Tree of the JavaScript/TypeScript file
  * @param {string} srcFile - The source file path being analyzed
- * @param {string} root - The root directory path for resolving relative imports
  * @returns {Array<Object>} - Array of dependency objects with the following properties:
  *   - src: The source file that contains the import
  *   - importSrc: The raw import path as written in the code
  *   - relSrcPath: The normalized path relative to the project root
  *   - import: The name of the imported function/variable
  */
-function parseImports(ast, srcFile, root) {
+function parseImports(ast, srcFile) {
   let dependencies = [];
 
   estraverse.traverse(ast, {
     enter: function(node) {
       if (node.type === 'ImportDeclaration') {
-        moduleDeclaration(node, srcFile, root);
+        moduleDeclaration(node, srcFile);
       }
     }
   });
   
-  function moduleDeclaration(node, srcFile, root) {
+  function moduleDeclaration(node, srcFile) {
     for (const sp of node.specifiers) {
       let fnName;
       switch (sp.type) {
@@ -135,13 +117,10 @@ function parseImports(ast, srcFile, root) {
           // Skip handling for other import types like namespace imports
           continue;
       }
-
-      const relImportSrcFile = normalizePath(node.source.value, srcFile, root);
- 
-      dependencies.push({
+     dependencies.push({
         src: srcFile,
         importSrc: node.source.value,
-        relSrcPath: relImportSrcFile,
+        relSrcPath: getAbsolutePath(srcFile, node.source.value),
         import: fnName
       });
     }
@@ -151,13 +130,35 @@ function parseImports(ast, srcFile, root) {
 }
 
 /**
+ * Gets the absolute path for a relative import
+ * 
+ * @param {string} currentFilePath - Absolute path of the current file
+ * @param {string} relativePath - Relative import path
+ * @returns {string} Absolute path of the import
+ */
+function getAbsolutePath(currentFilePath, relativePath) {
+  // Get the directory of the current file
+  const currentDir = path.dirname(currentFilePath);
+
+  // Resolve the relative path against the current directory
+  const absolutePath = path.resolve(currentDir, relativePath).replaceAll("\\", "/");
+
+  //console.log('Current file:', currentFilePath);
+  //console.log('Relative import:', relativePath);
+  //console.log('Resolved to:', absolutePath);
+
+  return absolutePath;
+}
+
+
+/**
  * Traverses the ast to find exported declarations and creates an exportList
  * https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export
  * @param {*} ast 
  * @param {*} srcFile 
  * @returns exportList 
  */
-function parseExports(ast, srcFile, root) {
+function parseExports(ast, srcFile) {
   let exportList = [];
   
   estraverse.traverse(ast, {
@@ -182,12 +183,11 @@ function parseExports(ast, srcFile, root) {
 
     if (node.source) {
       node.specifiers.map(e => {
-        const relSrcFile = normalizePath(node.source.value, srcFile, root);
 
         exportList.push({
           name: srcFile,
           exported: e.exported.name,
-          type: relSrcFile
+          type: getAbsolutePath(srcFile, node.source.value)
         });
       });
     } else if (node.declaration) {

@@ -139,7 +139,7 @@ function generateUnusedModulesTable(unusedModules) {
  */
 function generateModuleDetails(moduleArray, dependencyList, exportList) {
   let result = "";
-  
+  try {
   moduleArray.forEach(mod => {
     result += `<h2 id=${mod.file}>${mod.file}</h2> <a href="#mod_list">(top)</a>\n`;
 
@@ -153,6 +153,10 @@ function generateModuleDetails(moduleArray, dependencyList, exportList) {
     result += generateDependsOnTable(depsList);
     result += generateUsedByTable(usedList);
   });
+} catch (error) {
+    console.error(`Error generating module details: ${error}`);
+  }
+  // Add a link to the node modules section
   
   return result;
 }

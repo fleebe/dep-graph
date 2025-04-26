@@ -38,8 +38,8 @@ function createPackageDependencies(dependencyList) {
   let result = "";
 
   for (const dep of dependencyList) {
-    let src = path.dirname(dep.src);
-    let dest = path.dirname(dep.relSrcPath);
+    let src = cleanPath(path.dirname(dep.src));
+    let dest = cleanPath(path.dirname(dep.relSrcPath));
 
     // Normalize empty paths to "./"
     src = (src === ".") ? "./" : src;
@@ -87,7 +87,7 @@ function createPackageNodes(moduleArray) {
     // Add each file in the directory to the node
     const filesInDir = moduleArray.filter(a => directory === a.dir);
     for (const dirFile of filesInDir) {
-      nodeContent += `\t${cleanPath(dirFile.file.replace(directory, "."))}\n`;
+      nodeContent += `\t${dirFile.file.replace(directory, ".")}\\l\n`;
     }
 
     result += nodeContent + '}"];\n\n';
