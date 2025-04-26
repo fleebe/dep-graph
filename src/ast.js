@@ -14,7 +14,7 @@ import path from "path";
  * processes gets the ast for all the modules and creates the dependeciesList, exportList and importMap
  * @param {*} moduleMap Map of packages with modules key=directory, values=array[filename]
  */
-export function processAST(moduleMap) {
+export function processAST(moduleMap, symbol) {
   // list of dependencies between modules including the functions
   let dependencyList = [];
   // list of functions exported from modules/files
@@ -22,17 +22,18 @@ export function processAST(moduleMap) {
   let errors = [];
   let usedList = [];
 
+
   moduleMap.forEach((mod) => {
     try {
-      const result = readFileSync(mod.file, 'utf-8');
-      // parse file using TypeScript parser instead of Babel
+      const fileloc = path.join(symbol, mod.dir, mod.file);
+      const result = readFileSync(fileloc, 'utf-8');
       const ast = tsParser(result, {
         ecmaVersion: 'latest',
         sourceType: 'module',
         ecmaFeatures: {
           jsx: true
         },
-        filePath: mod.file
+        filePath: fileloc
       });
       
       const exps = parseExports(ast, mod.file);
@@ -69,7 +70,7 @@ export function processAST(moduleMap) {
 
   // Update usage counts
   moduleMap.forEach((mod) => {
-    usedList = getUsedByList(dependencyList, mod.file);
+    usedList = getUsedByList(dependencyList, mod);
     mod.usedByCnt = usedList.length;
   });
 
@@ -120,7 +121,7 @@ function parseImports(ast, srcFile) {
      dependencies.push({
         src: srcFile,
         importSrc: node.source.value,
-        relSrcPath: getAbsolutePath(srcFile, node.source.value),
+        relSrcPath: node.source.value,
         import: fnName
       });
     }

@@ -203,6 +203,38 @@ function getDirectoriesRecursive(srcpath) {
 }
 
 /**
+ * Extracts the directory beyond the symbol path and the filename from a file path
+ * @param {string} file - The complete file path
+ * @param {string} symbol - The base path to compare against
+ * @returns {Object} Object containing the directory beyond symbol and the filename
+ */
+function getRelativePathParts(file, symbol) {
+  // Normalize paths to use consistent separators
+  const normalizedFile = file.replaceAll("\\", "/");
+  const normalizedSymbol = symbol.replaceAll("\\", "/");
+
+  // Get the directory beyond the symbol
+  let relativePath = "";
+  if (normalizedFile.startsWith(normalizedSymbol)) {
+    relativePath = normalizedFile.substring(normalizedSymbol.length);
+    // Remove leading slash if present
+    if (relativePath.startsWith("/")) {
+      relativePath = relativePath.substring(1);
+    }
+  }
+
+  // Get the directory and filename
+  const filename = getFilename(normalizedFile);
+  const directory = relativePath.substring(0, relativePath.length - filename.length - 1);
+
+  return {
+    directory,
+    filename
+  };
+}
+
+
+/**
  * Creates a map with key=directory(package) value=array of files(modules) in directory
  * @param {*} symbol the directory or file to create the dependency graphs from
  * @param {*} stat the stats of the symbol to determine if a file or directory was called. 
@@ -211,11 +243,11 @@ function getDirectoriesRecursive(srcpath) {
  */
 export function getModuleArray(symbol, stats) {
   let arr = [];
-  const root = path.dirname(symbol).replaceAll("\\", "/");
+  let root = path.dirname(symbol).replaceAll("\\", "/");
 
   if (stats.isFile()) {
     arr.push({
-      dir: root, file: symbol,
+      dir: root, file: path.getFilename(symbol),
       dependsOnCnt: 0, usedByCnt: 0, exportCnt: 0
     });
   } else if (stats.isDirectory()) {
@@ -227,8 +259,11 @@ export function getModuleArray(symbol, stats) {
       const fileList = getFiles(e);
       fileList.forEach(file => {
         if (hasExtension(file, EXT_LIST)) {
+          const {directory: dir, filename: file2} = getRelativePathParts(file, symbol); // get the directory and filename
           arr.push(
-            { dir: root, file: file, dependsOnCnt: 0, usedByCnt: 0, exportCnt: 0 });
+            {
+              dir: dir, file: file2,
+               dependsOnCnt: 0, usedByCnt: 0, exportCnt: 0 });
         }
       });
     });

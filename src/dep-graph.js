@@ -79,7 +79,7 @@ function processFileOrDirectory(symbol, options) {
     const [moduleArray] = getModuleArray(symbol, stat);
 
     // Process and output results not using usedList yet
-    const [dependencyList, exportList,, errors] = processAST(moduleArray);
+    const [dependencyList, exportList, , errors] = processAST(moduleArray, symbol);
 
     let outputDir = options.output;
     if (!path.isAbsolute(outputDir)) {
@@ -88,7 +88,7 @@ function processFileOrDirectory(symbol, options) {
     }
 
     // Generate and write output files
-    generateOutputFiles(outputDir, moduleArray, dependencyList, exportList);
+    generateOutputFiles(symbol, outputDir, moduleArray, dependencyList, exportList);
 
     // Handle JSON outputs if requested
     if (options.json) {
@@ -164,8 +164,8 @@ function generateJSDoc(source, outputDir, configFile) {
  * Generate standard output files (HTML and DOT)
  * ModuleArray.html, Package.dot, Relations.dot
  */
-function generateOutputFiles(outputDir, moduleArray, dependencyList, exportList) {
-  let result = createModuleHtml(moduleArray, dependencyList, exportList);
+function generateOutputFiles(symbol, outputDir, moduleArray, dependencyList, exportList) {
+  let result = createModuleHtml(symbol, moduleArray, dependencyList, exportList);
   safeWriteFile(path.join(outputDir, "ModuleArray.html"), result);
 
   result = createPackageGraph(moduleArray, dependencyList);

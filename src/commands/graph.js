@@ -40,11 +40,15 @@ function createPackageDependencies(dependencyList) {
   for (const dep of dependencyList) {
     let src = cleanPath(path.dirname(dep.src));
     let dest = cleanPath(path.dirname(dep.relSrcPath));
+    src = src.replaceAll("/", "");
+    dest = dest.replaceAll("/", "");
+    src = src.replaceAll(".", "");
+    dest = dest.replaceAll(".", "");
 
-    // Normalize empty paths to "./"
-    src = (src === ".") ? "./" : src;
-    dest = (dest === ".") ? "./" : dest;
-
+    if (src === dest) {
+      // Skip self-references
+      continue;
+    }
     // Skip node_module dependencies which typically don't have paths
     if (dep.importSrc.indexOf("/") === -1) {
       continue;
@@ -87,7 +91,7 @@ function createPackageNodes(moduleArray) {
     // Add each file in the directory to the node
     const filesInDir = moduleArray.filter(a => directory === a.dir);
     for (const dirFile of filesInDir) {
-      nodeContent += `\t${dirFile.file.replace(directory, ".")}\\l\n`;
+      nodeContent += `\t${dirFile.file}\\l\n`;
     }
 
     result += nodeContent + '}"];\n\n';
@@ -244,7 +248,9 @@ function createModuleRelationNode(mod, dependencyList, nodeModuleDependents) {
         nodeModuleDependents.add(mod.file);
       } else {
         // This is a local module dependency
-        result += `"${dep.src}"->"${prevDependency}"\n`;
+        if (dep.src !== prevDependency) {
+          result += `"${dep.src}"->"${prevDependency}"\n`;
+        }
       }
 
       dependsOnSection += `\t\t${prevDependency}\\l\n`;
@@ -254,7 +260,7 @@ function createModuleRelationNode(mod, dependencyList, nodeModuleDependents) {
   let usedBySection = "|\n";
   prevDependency = "";
 
-  const usedList = getUsedByList(dependencyList, mod.file);
+  const usedList = getUsedByList(dependencyList, mod);
   for (const dep of usedList) {
     if (prevDependency !== dep.src) {
       prevDependency = dep.src;

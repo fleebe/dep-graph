@@ -1,3 +1,4 @@
+import path from 'path';
 /**
  * List Utilities Module
  * Provides utility functions for managing and filtering module dependencies
@@ -42,10 +43,17 @@ export function addToMapArray(map, key, arrVal) {
  * @param {string} file - The file path to check for usage
  * @returns {Array<Object>} List of dependencies where the specified file is being used
  */
-export function getUsedByList(dependencyList, file) {
-  return dependencyList
-    .filter(v => v.relSrcPath === file || v.importSrc === file)
-    .sort((a, b) => a.src.localeCompare(b.src));
+export function getUsedByList(dependencyList, mod) {
+  try {
+  const file = './' + path.join(mod.dir, mod.file).replaceAll("\\", "/");
+    return dependencyList
+      .filter(v => v.relSrcPath === file || v.importSrc === file)
+      .sort((a, b) => a.src.localeCompare(b.src));
+  } catch (error) {
+    console.error(`Error in getUsedByList: ${mod} : ${error.message}`); // Log the error message
+    return []; // Return an empty array in case of error
+  } 
+  
 }
 
 /**

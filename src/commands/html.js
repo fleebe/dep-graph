@@ -1,4 +1,3 @@
-import { cleanPath } from "../utils/file-utils.js";
 import { getUsedByList, getDependsOn, getNodeModuleList, getExportedList } from "../utils/list-utils.js";
 
 /**
@@ -8,7 +7,7 @@ import { getUsedByList, getDependsOn, getNodeModuleList, getExportedList } from 
 
 /**
  * Creates an HTML report of module dependencies and relationships
- * 
+ * @param {string} symbol - root directory where files are found.
  * @param {Array} moduleArray - Array of module objects with metadata
  *   Each object contains: {dir, file, dependsOnCnt, usedByCnt, exportCnt}
  * @param {Array} dependencyList - Array of dependencies
@@ -17,8 +16,9 @@ import { getUsedByList, getDependsOn, getNodeModuleList, getExportedList } from 
  *   Each object contains: {name, exported, type, params}
  * @returns {string} - HTML document as a string
  */
-export function createModuleHtml(moduleArray, dependencyList, exportList) {
+export function createModuleHtml(symbol, moduleArray, dependencyList, exportList) {
   let result = "<html><body>\n";
+  result += `<p><h2>${symbol}</h2>\n`
   
   // Generate summary section
   result += generateSummarySection(moduleArray, dependencyList);
@@ -89,7 +89,7 @@ function generateModuleSummaryTable(moduleArray) {
   moduleArray.forEach(mod => {
     result += "\t<tr>";
     result += "<td>" + mod.dir + "</td>";
-    result += `<td><a href="#${mod.file}">${cleanPath(mod.file.replace(mod.dir, "."))}</a></td>`;
+    result += `<td><a href="#${mod.file}">${mod.file}</a></td>`;
     result += "<td>" + mod.dependsOnCnt + "</td>";
     result += "<td>" + mod.usedByCnt + "</td>";
     result += "<td>" + mod.exportCnt + "</td>";
@@ -118,7 +118,7 @@ function generateUnusedModulesTable(unusedModules) {
   unusedModules.forEach(mod => {
     result += "\t<tr>";
     result += "<td>" + mod.dir + "</td>";
-    result += `<td><a href="#${mod.file}">${cleanPath(mod.file.replace(mod.dir, "."))}</a></td>`;
+    result += `<td><a href="#${mod.file}">${mod.file}</a></td>`;
     result += "<td>" + mod.dependsOnCnt + "</td>";
     result += "<td>" + mod.usedByCnt + "</td>";
     result += "<td>" + mod.exportCnt + "</td>";
@@ -145,7 +145,7 @@ function generateModuleDetails(moduleArray, dependencyList, exportList) {
 
     // Get data for this module
     const exports = getExportedList(exportList, mod.file);
-    const usedList = getUsedByList(dependencyList, mod.file);
+    const usedList = getUsedByList(dependencyList, mod);
     const depsList = getDependsOn(dependencyList, mod.file);
     
     // Generate three sections for each module
@@ -205,7 +205,9 @@ function generateDependsOnTable(depsList) {
   for (const dep of depsList) {
     if (dep.relSrcPath.startsWith(".")) { 
       // Local module with link
-      result += `\t<tr><td><a href="#${dep.relSrcPath}">${dep.relSrcPath}</a></td>\n`;
+      // Extract just the file name from relative path
+      const fileName = dep.relSrcPath.split('/').pop();
+      result += `\t<tr><td><a href="#${fileName}">${dep.relSrcPath}</a></td>\n`;
     } else { 
       // Node module without link
       result += `\t<tr><td>${dep.relSrcPath}</td>\n`;
