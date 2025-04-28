@@ -1,5 +1,6 @@
 /**
- * Utils Module
+ * @module utils/index
+ * @description Utils Module
  * Provides common utility functions for file operations and dependency management
  */
 

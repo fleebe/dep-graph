@@ -4,7 +4,6 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
-
     {
       "type": "node",
       "request": "launch",
@@ -13,9 +12,13 @@
         "<node_internals>/**"
       ],
       "program": "${workspaceFolder}\\index.js",
-      "args" : ["-o", "./out/bfree", "-j", "../nodejs/bfree/pages"]
+      "args": [
+        "-o",
+        "./out/bfree",
+        "-j",
+        "../nodejs/bfree/pages"
+      ]
     },
-    
     {
       "type": "node",
       "request": "launch",
@@ -24,7 +27,17 @@
         "<node_internals>/**"
       ],
       "program": "${workspaceFolder}\\index.js",
-      "args" : ["-j", "-o", "./docs", "./src"]
+      "args": [
+        "-j",
+        "-g",
+        "-o",
+        "./docs",
+        "./src"
+      ],
+      "sourceMaps": true,
+      "outFiles": [
+        "${workspaceFolder}/**/*.js"
+      ]
     }
   ]
 }

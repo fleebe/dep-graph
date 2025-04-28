@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 
-import { runProgram }  from "./src/dep-graph.js";
+import { DependencyGraphGenerator }  from "./src/dep-graph.js";
 
 // from root directory where this file is.
 // install for testing `npm i -g .`
@@ -11,5 +11,5 @@ import { runProgram }  from "./src/dep-graph.js";
 
 // https://hackernoon.com/publishing-a-nodejs-cli-tool-to-npm-in-less-than-15-minutes
 
-
-runProgram();
+const depGen = new DependencyGraphGenerator()
+depGen.runProgram();

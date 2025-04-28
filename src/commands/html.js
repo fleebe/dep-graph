@@ -1,6 +1,8 @@
 import { getUsedByList, getDependsOn, getNodeModuleList, getExportedList } from "../utils/list-utils.js";
 
 /**
+ *  @module commands/html
+ *  @description
  * HTML Command Module
  * Provides functionality to generate HTML reports of module dependencies
  */
@@ -11,14 +13,37 @@ import { getUsedByList, getDependsOn, getNodeModuleList, getExportedList } from 
  * @param {Array} moduleArray - Array of module objects with metadata
  *   Each object contains: {dir, file, dependsOnCnt, usedByCnt, exportCnt}
  * @param {Array} dependencyList - Array of dependencies
- *   Each object contains: {src, importSrc, import, relSrcPath}
+ *   Each object contains: {src, importSrc, import, relSrcName}
  * @param {Array} exportList - Array of exported functions/objects
  *   Each object contains: {name, exported, type, params}
  * @returns {string} - HTML document as a string
  */
 export function createModuleHtml(symbol, moduleArray, dependencyList, exportList) {
-  let result = "<html><body>\n";
-  result += `<p><h2>${symbol}</h2>\n`
+  let result = "<html><head><style>";
+  result += "body { font-family: Arial, sans-serif; margin: 20px; }";
+  result += ".svg-container { max-width: 100%; overflow: auto; margin: 20px 0; border: 1px solid #ddd; padding: 10px; }";
+  result += "h1, h2, h3 { color: #333; }";
+  result += "table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }";
+  result += "th { background-color: #f2f2f2; }";
+  result += "td, th { border: 1px solid #ddd; padding: 8px; }";
+  result += "</style></head><body>\n";
+  
+  result += `<h1>${symbol}</h1>\n`;
+  
+  // Add the SVG visualizations at the top
+  result += `<h2>Package Dependency Graph</h2>\n`;
+  result += `<div class="svg-container">\n`;
+  result += `<object data="Package.svg" type="image/svg+xml" width="100%" height="600px">`;
+  result += `Your browser does not support SVG - <a href="Package.svg">View Package Graph</a>`;
+  result += `</object>\n`;
+  result += `</div>\n`;
+  
+  result += `<h2>Module Relations Graph</h2>\n`;
+  result += `<div class="svg-container">\n`;
+  result += `<object data="Relations.svg" type="image/svg+xml" width="100%" height="600px">`;
+  result += `Your browser does not support SVG - <a href="Relations.svg">View Relations Graph</a>`;
+  result += `</object>\n`;
+  result += `</div>\n`;
   
   // Generate summary section
   result += generateSummarySection(moduleArray, dependencyList);
@@ -143,15 +168,12 @@ function generateModuleDetails(moduleArray, dependencyList, exportList) {
   moduleArray.forEach(mod => {
     result += `<h2 id=${mod.file}>${mod.file}</h2> <a href="#mod_list">(top)</a>\n`;
 
-    // Get data for this module
-    const exports = getExportedList(exportList, mod.file);
     const usedList = getUsedByList(dependencyList, mod);
-    const depsList = getDependsOn(dependencyList, mod.file);
     
     // Generate three sections for each module
-    result += generateExportsTable(exports, usedList);
-    result += generateDependsOnTable(depsList);
-    result += generateUsedByTable(usedList);
+    result += generateExportsTable(exportList, usedList, mod.file);
+    result += generateDependsOnTable(dependencyList, mod.file);
+    result += generateUsedByTable(usedList, mod.file);
   });
 } catch (error) {
     console.error(`Error generating module details: ${error}`);
@@ -168,15 +190,22 @@ function generateModuleDetails(moduleArray, dependencyList, exportList) {
  * @param {Array} usedList - Array of usage information
  * @returns {string} - HTML table of exports
  */
-function generateExportsTable(exports, usedList) {
-  let result = "<h3>Exported</h3>\n";
+function generateExportsTable(exportList, usedList, fileName) {
+  let result = `<h3>${fileName} Exports</h3>\n`;
   result += "<table border=1 cellpadding=5>\n";
   result += "\t<tr><th>Exported</th>";
   result += "<th>Export Declaration</th>";
   result += "<th>Parameters</th>";
   result += "<th>Used Count</th></tr>\n";
+
+  // Get data for this module
+  const exports = getExportedList(exportList, fileName);
+
   
   for (const exported of exports) {
+    if (exported.type !== 'FunctionDeclaration')
+      continue;
+    
     result += `\t<tr><td>${exported.exported}</td>\n`;
     result += `\t<td>${exported.type}</td>\n`;
     result += `\t<td>${exported.params || ""}</td>\n`;
@@ -196,21 +225,23 @@ function generateExportsTable(exports, usedList) {
  * @param {Array} depsList - Array of dependencies for this module
  * @returns {string} - HTML table of dependencies
  */
-function generateDependsOnTable(depsList) {
-  let result = "<h3>Depends On</h3>\n";
+function generateDependsOnTable(dependencyList, fileName) {
+  let result = `<h3>${fileName} Depends On</h3>\n`;
   result += "<table border=1 cellpadding=5>\n";
   result += "\t<tr><th>File or <br>Node Module</th>";
   result += "<th>Import</th></tr>\n";
+
+  const depsList = getDependsOn(dependencyList, fileName);
   
   for (const dep of depsList) {
-    if (dep.relSrcPath.startsWith(".")) { 
+    if (dep.relSrcName.startsWith(".")) { 
       // Local module with link
       // Extract just the file name from relative path
-      const fileName = dep.relSrcPath.split('/').pop();
-      result += `\t<tr><td><a href="#${fileName}">${dep.relSrcPath}</a></td>\n`;
+      const fileName = dep.relSrcName.split('/').pop();
+      result += `\t<tr><td><a href="#${fileName}">${dep.relSrcName}</a></td>\n`;
     } else { 
       // Node module without link
-      result += `\t<tr><td>${dep.relSrcPath}</td>\n`;
+      result += `\t<tr><td>${dep.relSrcName}</td>\n`;
     }
     result += `\t<td>${dep.import}</td></tr>\n`;
   }
@@ -225,8 +256,8 @@ function generateDependsOnTable(depsList) {
  * @param {Array} usedList - Array of usage information
  * @returns {string} - HTML table of module usage
  */
-function generateUsedByTable(usedList) {
-  let result = "<h3>Used By</h3>\n";
+function generateUsedByTable(usedList, fileName) {
+  let result = `<h3>${fileName} Used By</h3>\n`;
   result += "<table border=1 cellpadding=5>\n";
   result += "\t<tr><th>File or <br>Node Module</th>";
   result += "<th>Import</th></tr>\n";

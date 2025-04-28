@@ -1,5 +1,6 @@
 /**
- * Commands Module
+ *  @module commands/index
+ * @description Commands Module
  * Consolidates all command modules into a unified interface
  */
 

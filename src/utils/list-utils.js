@@ -1,6 +1,7 @@
 import path from 'path';
 /**
- * List Utilities Module
+ * @module utils/list-utils
+ * @description List Utilities Module
  * Provides utility functions for managing and filtering module dependencies
  */
 
@@ -45,9 +46,9 @@ export function addToMapArray(map, key, arrVal) {
  */
 export function getUsedByList(dependencyList, mod) {
   try {
-  const file = './' + path.join(mod.dir, mod.file).replaceAll("\\", "/");
+  const file = path.join(mod.dir, mod.file).replaceAll("\\", "/");
     return dependencyList
-      .filter(v => v.relSrcPath === file || v.importSrc === file)
+      .filter(v => v.relSrcName === file)
       .sort((a, b) => a.src.localeCompare(b.src));
   } catch (error) {
     console.error(`Error in getUsedByList: ${mod} : ${error.message}`); // Log the error message
@@ -85,7 +86,7 @@ export function getExportedList(exportList, file) {
       if (a && b && a.exported && b.exported) {
         return a.exported.localeCompare(b.exported);
       } else {
-        console.error(`Invalid export object: ${file} : ${JSON.stringify(a || b)}`);
+        //console.error(`Invalid export object: ${file} : ${JSON.stringify(a || b)}`);
         return 0 // equal
       }
      });

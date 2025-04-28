@@ -1,108 +1,122 @@
 import { readFileSync } from "fs";
-// Remove Babel parser import
-// import { parse as babelParse } from "@babel/parser";
-import {
-  removeExtension } from "./utils/file-utils.js";
+import { removeExtension } from "./utils/file-utils.js";
 import { getUsedByList } from "./utils/list-utils.js";
-// Replace babel-walk with estraverse
-// import * as walk from 'babel-walk';
 import { parse as tsParser } from '@typescript-eslint/parser';
 import estraverse from 'estraverse';
 import path from "path";
 
 /**
- * processes gets the ast for all the modules and creates the dependeciesList, exportList and importMap
- * @param {*} moduleMap Map of packages with modules key=directory, values=array[filename]
+ * @class ASTProcessor
+ * @description Processes Abstract Syntax Trees for JavaScript/TypeScript files to analyze dependencies and exports
  */
-export function processAST(moduleMap, symbol) {
-  // list of dependencies between modules including the functions
-  let dependencyList = [];
-  // list of functions exported from modules/files
-  let exportList = [];
-  let errors = [];
-  let usedList = [];
+export class ASTProcessor {
+  /**
+   * Creates a new ASTProcessor instance
+   * @param {string} baseLoc - The base directory or file to create dependency graphs from
+   */
+  constructor(baseLoc) {
+    this.baseLoc = baseLoc;
+    this.dependencyList = [];
+    this.exportList = [];
+    this.errors = [];
+    this.usedList = [];
+  }
 
-
-  moduleMap.forEach((mod) => {
-    try {
-      const fileloc = path.join(symbol, mod.dir, mod.file);
-      const result = readFileSync(fileloc, 'utf-8');
-      const ast = tsParser(result, {
-        ecmaVersion: 'latest',
-        sourceType: 'module',
-        ecmaFeatures: {
-          jsx: true
-        },
-        filePath: fileloc
-      });
-      
-      const exps = parseExports(ast, mod.file);
-      let deps = parseImports(ast, mod.file);
-
-      // add exported source files as a dependency
-      // know exported source as type starts with ./directory
-      for (const ex of exps.filter(ex => ex.type.startsWith("."))) {
-        deps.push({
-          src: ex.name, 
-          importSrc: ex.type, 
-          relSrcPath: ex.type, 
-          import: ex.exported
+  /**
+   * Processes ASTs for all modules and creates dependency lists, export lists and import maps
+   * @param {Array} moduleMap - Array of module objects with dir and file properties
+   * @returns {Array} - Arrays of [dependencyList, exportList, usedList, errors]
+   */
+  processModules(moduleMap) {
+    moduleMap.forEach((mod) => {
+      try {
+        const fileloc = path.join(this.baseLoc, mod.dir, mod.file);
+        const result = readFileSync(fileloc, 'utf-8');
+        const ast = tsParser(result, {
+          ecmaVersion: 'latest',
+          sourceType: 'module',
+          ecmaFeatures: {
+            jsx: true
+          },
+          filePath: fileloc
         });
+
+        const exps = this.parseExports(ast, mod);
+        let deps = this.parseImports(ast, mod);
+
+        // Add exported source files as a dependency
+        // Know exported source as type starts with ./directory
+        for (const ex of exps.filter(ex => ex.type.startsWith("."))) {
+          deps.push({
+            src: ex.name,
+            importSrc: ex.type,
+            relSrcName: ex.type,
+            import: ex.exported
+          });
+        }
+
+        // Count unique dependencies by source module
+        const uniqueDepSources = new Set(deps.map(dep => dep.importSrc));
+        mod.dependsOnCnt = uniqueDepSources.size;
+        mod.exportCnt = exps.length;
+
+        this.exportList.push(...exps);
+        this.dependencyList.push(...deps);
+      } catch (err) {
+        this.errors.push({
+          "file": mod.file,
+          "err": err,
+          "msg": err.message
+        });
+        console.error(`Error parsing file ${mod.file} :\n${err.message}`);
       }
+    });
 
-      mod.dependsOnCnt = deps.length;
-      mod.exportCnt = exps.length;
-      
-      exportList.push(...exps);
-      dependencyList.push(...deps);
-    } catch (err) {
-      errors.push({ 
-        "file": mod.file, 
-        "err": err, 
-        "msg": err.message
-      });
-      console.error(`Error parsing file ${mod.file} :\n${err.message}`);
-    }
-  });
+    // Normalize dependencies by removing duplicate extensions
+    this.dependencyList = this.normalizeDeps(this.dependencyList);
 
-  // normalize dependencies by removing duplicate extensions
-  dependencyList = normaliseDeps(dependencyList);
+    // Update usage counts
+    moduleMap.forEach((mod) => {
+      const modUsedList = getUsedByList(this.dependencyList, mod);
+      // Count unique dependencies by source module
+      const uniqueUsedList = new Set(modUsedList.map(dep => dep.src));
+      mod.usedByCnt = uniqueUsedList.size;
+      this.usedList.push(...modUsedList);
+    });
 
-  // Update usage counts
-  moduleMap.forEach((mod) => {
-    usedList = getUsedByList(dependencyList, mod);
-    mod.usedByCnt = usedList.length;
-  });
+    return [this.dependencyList, this.exportList, this.usedList, this.errors];
+  }
 
-  return [dependencyList, exportList, usedList, errors];
-}
+  /**
+   * Analyzes an AST to extract import statements and build a dependency list
+   * 
+   * @param {Object} ast - The Abstract Syntax Tree of the JavaScript/TypeScript file
+   * @param {Object} mod - The module object containing dir and file properties
+   * @returns {Array<Object>} - Array of dependency objects
+   */
+  parseImports(ast, mod) {
+    const dependencies = [];
+    const srcFile = path.join(mod.dir, mod.file).replaceAll("\\", "/");
 
-/**
- * Analyzes an AST to extract import statements and build a dependency list
- * 
- * This function traverses the AST and identifies ImportDeclaration nodes,
- * extracting information about what modules are being imported and how they're referenced.
- * 
- * @param {Object} ast - The Abstract Syntax Tree of the JavaScript/TypeScript file
- * @param {string} srcFile - The source file path being analyzed
- * @returns {Array<Object>} - Array of dependency objects with the following properties:
- *   - src: The source file that contains the import
- *   - importSrc: The raw import path as written in the code
- *   - relSrcPath: The normalized path relative to the project root
- *   - import: The name of the imported function/variable
- */
-function parseImports(ast, srcFile) {
-  let dependencies = [];
-
-  estraverse.traverse(ast, {
-    enter: function(node) {
-      if (node.type === 'ImportDeclaration') {
-        moduleDeclaration(node, srcFile);
+    estraverse.traverse(ast, {
+      enter: (node) => {
+        if (node.type === 'ImportDeclaration') {
+          this.processImportDeclaration(node, srcFile, dependencies);
+        }
       }
-    }
-  });
-  
-  function moduleDeclaration(node, srcFile) {
+    });
+
+    return dependencies;
+  }
+
+  /**
+   * Process an import declaration node to extract dependencies
+   * 
+   * @param {Object} node - The ImportDeclaration AST node
+   * @param {string} srcFile - The source file path
+   * @param {Array} dependencies - The array to add dependencies to
+   */
+  processImportDeclaration(node, srcFile, dependencies) {
     for (const sp of node.specifiers) {
       let fnName;
       switch (sp.type) {
@@ -111,71 +125,113 @@ function parseImports(ast, srcFile) {
           break;
         }
         case "ImportDefaultSpecifier": {
-          fnName = sp.local.name
+          fnName = sp.local.name;
           break;
         }
         default:
           // Skip handling for other import types like namespace imports
           continue;
       }
-     dependencies.push({
+
+      dependencies.push({
         src: srcFile,
         importSrc: node.source.value,
-        relSrcPath: node.source.value,
+        relSrcName: this.calRelSrcFile(srcFile, node.source.value),
         import: fnName
       });
     }
   }
 
-  return dependencies;
-}
+  countSubstrings(str, subStr) {
+    let count = 0;
+    let i = 0;
 
-/**
- * Gets the absolute path for a relative import
- * 
- * @param {string} currentFilePath - Absolute path of the current file
- * @param {string} relativePath - Relative import path
- * @returns {string} Absolute path of the import
- */
-function getAbsolutePath(currentFilePath, relativePath) {
-  // Get the directory of the current file
-  const currentDir = path.dirname(currentFilePath);
-
-  // Resolve the relative path against the current directory
-  const absolutePath = path.resolve(currentDir, relativePath).replaceAll("\\", "/");
-
-  //console.log('Current file:', currentFilePath);
-  //console.log('Relative import:', relativePath);
-  //console.log('Resolved to:', absolutePath);
-
-  return absolutePath;
-}
-
-
-/**
- * Traverses the ast to find exported declarations and creates an exportList
- * https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export
- * @param {*} ast 
- * @param {*} srcFile 
- * @returns exportList 
- */
-function parseExports(ast, srcFile) {
-  let exportList = [];
-  
-  estraverse.traverse(ast, {
-    enter: function(node) {
-      if (node.type === 'ExportNamedDeclaration' || node.type === 'ExportDefaultDeclaration') {
-        exportDeclaration(node);
-      }
+    while ((i = str.indexOf(subStr, i)) !== -1) {
+      count++;
+      i += subStr.length;
     }
-  });
 
-  return exportList;
+    return count;
+  }
 
-  function exportDeclaration(node) {
+  replaceWithReversedArray(str, subStr, arr, cnt) {
+    const reversedArr = [...arr].reverse();
+    let index = cnt;
+    while (str.includes(subStr) && index < reversedArr.length) {
+      str = str.replace(subStr, reversedArr[index] + '/');
+      index++;
+    }
+
+    return str;
+  }
+
+  calRelSrcFile(src, relSrcPath) {
+    const cnt = this.countSubstrings(relSrcPath, '../')
+    if (cnt > 0) {
+        const srcDirs = path.dirname(src).split('/');
+        if (cnt >= srcDirs.length) {
+          return relSrcPath.replaceAll("../", ""); 
+        }
+        const ret = this.replaceWithReversedArray(relSrcPath, "../", srcDirs, cnt);
+        return ret;
+   
+    } else if (relSrcPath.startsWith('./')) {
+      return relSrcPath.replace("./", "");
+    } else {
+      // If it's not a relative path, return it as is
+      return relSrcPath;
+    }
+
+  }
+  /**
+   * Gets the absolute path for a relative import
+   * 
+   * @param {string} currentFilePath - Absolute path of the current file
+   * @param {string} relativePath - Relative import path
+   * @returns {string} Absolute path of the import
+   */
+  getAbsolutePath(currentFilePath, relativePath) {
+    // Get the directory of the current file
+    const currentDir = path.dirname(currentFilePath);
+
+    // Resolve the relative path against the current directory
+    return path.resolve(currentDir, relativePath).replaceAll("\\", "/");
+  }
+
+  /**
+   * Traverses the AST to find exported declarations and creates an exportList
+   * 
+   * @param {Object} ast - The Abstract Syntax Tree of the JavaScript/TypeScript file 
+   * @param {Object} mod - The module object containing dir and file properties
+   * @returns {Array} - Array of export objects
+   */
+  parseExports(ast, mod) {
+    const exportList = [];
+    const srcFile = path.join(mod.dir, mod.file);
+
+    estraverse.traverse(ast, {
+      enter: (node) => {
+        if (node.type === 'ExportNamedDeclaration' || node.type === 'ExportDefaultDeclaration') {
+          this.processExportDeclaration(node, srcFile, exportList, mod);
+        }
+      }
+    });
+
+    return exportList;
+  }
+
+  /**
+   * Process an export declaration node to extract exports
+   * 
+   * @param {Object} node - The ExportDeclaration AST node
+   * @param {string} srcFile - The source file path
+   * @param {Array} exportList - The array to add exports to
+   * @param {Object} mod - The module object
+   */
+  processExportDeclaration(node, srcFile, exportList, mod) {
     const addVal = (exp, params) => {
       exportList.push({
-        name: srcFile,
+        name: srcFile.replaceAll("\\", "/"),
         exported: exp,
         type: node.declaration?.type || 'Unknown',
         params: params
@@ -183,23 +239,21 @@ function parseExports(ast, srcFile) {
     };
 
     if (node.source) {
-      node.specifiers.map(e => {
-
+      node.specifiers.forEach(e => {
         exportList.push({
           name: srcFile,
           exported: e.exported.name,
-          type: getAbsolutePath(srcFile, node.source.value)
+          type: this.getAbsolutePath(mod.file, node.source.value)
         });
       });
     } else if (node.declaration) {
       const declarationList = node.declaration?.declarations;
       if (declarationList) {
-        declarationList.map(e => {
-          // "-vr " +
+        declarationList.forEach(e => {
           addVal(e.id.name);
         });
       } else if (node.declaration) {
-        declNode(node.declaration);
+        this.processDeclarationNode(node.declaration, addVal);
       }
     } else if (node.specifiers) {
       for (const sp of node.specifiers) {
@@ -210,154 +264,164 @@ function parseExports(ast, srcFile) {
         });
       }
     }
+  }
 
-    /**
-     * Processes a declaration node
-     * @param {*} decl
-     */
-    function declNode(decl) {
-      switch (decl.type) {
-        case "ClassDeclaration": {
-          //"-cl " + 
+  /**
+   * Processes a declaration node to extract exported items
+   * 
+   * @param {Object} decl - The declaration AST node
+   * @param {Function} addVal - Function to add values to the export list
+   */
+  processDeclarationNode(decl, addVal) {
+    switch (decl.type) {
+      case "ClassDeclaration": {
+        addVal(decl.id.name);
+        break;
+      }
+      case "CallExpression": {
+        if (decl.callee.name)
+          addVal(decl.callee.name);
+        else
+          addVal(decl.callee.callee.name);
+        break;
+      }
+      case "FunctionDeclaration": {
+        if (decl.params) {
+          let params = this.formatFunctionParams(decl.params);
+          addVal(decl.id.name, params);
+        } else {
           addVal(decl.id.name);
-          break;
         }
-        case "CallExpression": {
-          // "-ce " + 
-          if (decl.callee.name)
-            addVal(decl.callee.name);
-          else
-            addVal(decl.callee.callee.name);
-          break;
-        }
-        case "FunctionDeclaration": {
-          // "-fn " + 
-          if (decl.params) {
-            let params = [];
-            for (const param of decl.params) {
-              switch (param.type) {
-                case "Identifier": {
-                  params.push(param.name);
-                  break;
-                }
-                case "AssignmentPattern": {
-                  (param.left.type === "Identifier") ?
-                    params.push(param.left.name) :
-                    params.push(" : " + param.type);
-                  break;
-                }
-                case "ObjectPattern": {
-                  let props = [];
-                  for (const prop of param.properties) {
-                    props.push(prop.key.name);
-                  }
-                  params.push("{" + props.join(", ") + "}");
-                  break;
-                }
-                default: params.push(" : " + param.type);
-              }
-            }
-            params = "(" + params.join(", ") + ")";
-            addVal(decl.id.name, params);
-          } else {
-            addVal(decl.id.name);
-          }
-
-          break;
-        }
-        case "VariableDeclaration": {
-          // "-vr " + 
-          addVal(decl.id.name);
-          break;
-        }
-        case "Identifier": {
-          //"-id " + 
-          addVal(decl.name);
-          break;
-        }
-        case "ObjectExpression": {
-          decl.properties.map(e => {
-            // "-pr " + 
-            addVal(e.key.name);
+        break;
+      }
+      case "VariableDeclaration": {
+        addVal(decl.id.name);
+        break;
+      }
+      case "Identifier": {
+        addVal(decl.name);
+        break;
+      }
+      case "ObjectExpression": {
+        decl.properties.forEach(e => {
+          addVal(e.key.name);
+        });
+        break;
+      }
+      case 'ArrowFunctionExpression': {
+        if (decl.params) {
+          let res = [];
+          decl.params.forEach(e => {
+            res.push(e.name);
           });
-          break;
+          addVal("(" + res.join(", ") + ")");
+        } else {
+          addVal("???");
         }
-        case 'ArrowFunctionExpression': {
-          if (decl.params) {
-            let res = [];
-            decl.params.map(e => {
-              res.push(e.name);
-            });
-            // "-af " + 
-            addVal("(" + res.join(", ") + ")");
-          } else {
-            addVal("???");
-          }
-          break;
-        }
-        case 'ConditionalExpression': {
-          // "-cd " + 
-          addVal(decl.test.name);
-          break;
-        }
-        case 'TSTypeAliasDeclaration': {
-          // Handle TypeScript type aliases
-          addVal(decl.id.name);
-          break;
-        }
-        case 'TSInterfaceDeclaration': {
-          // Handle TypeScript interfaces
-          addVal(decl.id.name);
-          break;
-        }
-        case 'TSEnumDeclaration': {
-          // Handle TypeScript enums
-          addVal(decl.id.name);
-          break;
-        }
-        default: {
-          console.warn(`Export parse encounter unknown type: ${decl.type}`);
-          addVal(`Unknown-${decl.type}`);
-        }
+        break;
+      }
+      case 'ConditionalExpression': {
+        addVal(decl.test.name);
+        break;
+      }
+      case 'TSTypeAliasDeclaration': {
+        addVal(decl.id.name);
+        break;
+      }
+      case 'TSInterfaceDeclaration': {
+        addVal(decl.id.name);
+        break;
+      }
+      case 'TSEnumDeclaration': {
+        addVal(decl.id.name);
+        break;
+      }
+      default: {
+        console.warn(`Export parse encounter unknown type: ${decl.type}`);
+        addVal(`Unknown-${decl.type}`);
       }
     }
+  }
+
+  /**
+   * Formats function parameters for display
+   * 
+   * @param {Array} params - Array of parameter AST nodes
+   * @returns {string} - Formatted parameter string
+   */
+  formatFunctionParams(params) {
+    let formattedParams = [];
+
+    for (const param of params) {
+      switch (param.type) {
+        case "Identifier": {
+          formattedParams.push(param.name);
+          break;
+        }
+        case "AssignmentPattern": {
+          (param.left.type === "Identifier") ?
+            formattedParams.push(param.left.name) :
+            formattedParams.push(" : " + param.type);
+          break;
+        }
+        case "ObjectPattern": {
+          let props = [];
+          for (const prop of param.properties) {
+            props.push(prop.key.name);
+          }
+          formattedParams.push("{" + props.join(", ") + "}");
+          break;
+        }
+        default:
+          formattedParams.push(" : " + param.type);
+      }
+    }
+
+    return "(" + formattedParams.join(", ") + ")";
+  }
+
+  /**
+   * Normalizes dependencies by standardizing import paths with or without extensions
+   * 
+   * @param {Array<Object>} deps - Array of dependency objects
+   * @returns {Array<Object>} - Normalized dependency array
+   */
+  normalizeDeps(deps) {
+    // Track non-js import paths we've already found
+    const nonJsImportPaths = new Set();
+
+    // First pass: collect all non-js import paths
+    deps.forEach(dep => {
+      if (!dep.importSrc.endsWith('.js') && !dep.importSrc.endsWith('.jsx') &&
+        !dep.importSrc.endsWith('.ts') && !dep.importSrc.endsWith('.tsx')) {
+        nonJsImportPaths.add(dep.importSrc);
+      }
+    });
+
+    // Second pass: normalize js/ts imports to match non-js/ts imports when available
+    deps.forEach(dep => {
+      if (dep.importSrc.endsWith('.js') || dep.importSrc.endsWith('.jsx') ||
+        dep.importSrc.endsWith('.ts') || dep.importSrc.endsWith('.tsx')) {
+        const nonJsPath = removeExtension(dep.importSrc);
+        if (nonJsImportPaths.has(nonJsPath)) {
+          dep.importSrc = nonJsPath;
+        }
+      }
+    });
+
+    return deps;
   }
 }
 
 /**
- * Normalizes dependencies by standardizing import paths with or without extensions
- * 
- * JavaScript/TypeScript imports can be referenced with or without extensions.
- * This function ensures consistent references by converting imports with extensions
- * to match their extension-less counterparts when both exist.
- * 
- * @param {Array<Object>} deps - Array of dependency objects
- * @returns {Array<Object>} - Normalized dependency array
+ * Processes ASTs for all modules and creates the dependency lists
+ * @param {Array} moduleMap - Array of module objects
+ * @param {string} baseLoc - The base directory or file
+ * @returns {Array} - Arrays of [dependencyList, exportList, usedList, errors]
  */
-function normaliseDeps(deps) {
-  // Track non-js import paths we've already found
-  const nonJsImportPaths = new Set();
-  
-  // First pass: collect all non-js import paths
-  deps.forEach(dep => {
-    if (!dep.importSrc.endsWith('.js') && !dep.importSrc.endsWith('.jsx') &&
-        !dep.importSrc.endsWith('.ts') && !dep.importSrc.endsWith('.tsx')) {
-      nonJsImportPaths.add(dep.importSrc);
-    }
-  });
-  
-  // Second pass: normalize js/ts imports to match non-js/ts imports when available
-  deps.forEach(dep => {
-    if (dep.importSrc.endsWith('.js') || dep.importSrc.endsWith('.jsx') ||
-        dep.importSrc.endsWith('.ts') || dep.importSrc.endsWith('.tsx')) {
-      const nonJsPath = removeExtension(dep.importSrc);
-      if (nonJsImportPaths.has(nonJsPath)) {
-        dep.importSrc = nonJsPath;
-      }
-    }
-  });
-  
-  return deps;
+export function processAST(moduleMap, baseLoc) {
+  const processor = new ASTProcessor(baseLoc);
+  return processor.processModules(moduleMap);
 }
 
 

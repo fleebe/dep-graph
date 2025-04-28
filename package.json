@@ -13,7 +13,7 @@
     "dev": "node ./src/dep-graph.js -o ./out/bfree -g -j ../nodejs/bfree/pages",
     "depgraph": "node . -j -o ./docs ./src/dep-graph.js",
     "gen_docs": "npx typedoc",
-    "jsdoc": "jsdoc ./src -j -r -c jsdoc.json"
+    "jsdoc": "jsdoc -c jsdoc.json"
   },
   "keywords": [
     "Dependency",
@@ -28,11 +28,12 @@
   "author": "phlee0@gmail.com",
   "license": "MIT",
   "dependencies": {
-    "@babel/parser": "^7.18.11",
+    "@babel/parser": "^7.27.0",
     "@typescript-eslint/parser": "^8.31.0",
     "@typescript-eslint/typescript-estree": "^8.31.0",
-    "babel-walk": "^3.0.0",
+    "babel-walk": "^3.0.1",
     "commander": "^9.4.0",
+    "d3-graphviz": "^5.6.0",
     "estraverse": "^5.3.0",
     "typescript": "^5.7.2"
   },

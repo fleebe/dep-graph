@@ -19,11 +19,11 @@
     "cleverLinks": false,
     "monospaceLinks": false
   }, 
-  "opt" : {
+  "opts" : {
     "recurse" : true,
     "destination" : "./docs/jsdoc",
     "encoding" : "utf8",
-    "verbose" : true,
-    "package" : "package.json"
+    "template": "templates/default",
+    "verbose" : true
   }
 }

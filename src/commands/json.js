@@ -1,8 +1,9 @@
 import fs from "fs";
-import path from "path";
+import { safeWriteFile } from "../utils/file-utils.js";
 
 /**
- * JSON Command Module
+ * @module commands/json
+ * @description JSON Command Module
  * Provides functionality to save and load JSON data structures
  */
 
@@ -17,7 +18,7 @@ import path from "path";
  */
 export function jsonOut(output, title, obj) {
   try {
-    const filePath = path.join(output, `${title}.json`);
+    const filePath = `${title}.json`;
     
     let dataToSave = obj;
     
@@ -27,7 +28,7 @@ export function jsonOut(output, title, obj) {
     }
     
     // Write to file with pretty formatting (2 space indentation)
-    fs.writeFileSync(filePath, JSON.stringify(dataToSave, null, 2), "utf8");
+    safeWriteFile(output, filePath, JSON.stringify(dataToSave, null, 2), "utf8");
   } catch (error) {
     console.error(`Error writing JSON file ${title}: ${error.message}`);
     throw error;
