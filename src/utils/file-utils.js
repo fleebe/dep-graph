@@ -8,6 +8,11 @@ import {EXT_LIST} from "./globals.js";
  * Provides file system operations and path normalization functions
  */
 
+export function moduleName(mod) {
+  return cleanPath(path.join(mod.dir, mod.file).replaceAll("\\", "/"));
+}
+
+
 /**
  * gets the extension of the file
  * @param {*} filename 

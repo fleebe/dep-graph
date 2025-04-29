@@ -1,5 +1,5 @@
 import path from "path";
-import { cleanPath } from "../utils/file-utils.js";
+import { cleanPath, moduleName} from "../utils/file-utils.js";
 import { getUsedByList, getDependsOn, getNodeModuleList, getExportedList } from "../utils/list-utils.js";
 
 /**
@@ -116,24 +116,21 @@ class GraphGenerator {
    * @param {Array} dependencyList - List of imports and their sources
    * @param {Array} exportList - List of files and exported functions
    * @param {Array} moduleArray - List of files to graph
-   * @param {Map} importMap - Map of imports (key=module/file, value=array of functions)
-   * @param {string} [srcDir=""] - Source directory for graph label
    * @returns {string} - DOT file content for dependencies graph
    */
-  createGraph(dependencyList, exportList, moduleArray, importMap, srcDir = "") {
-    let result = this.digraph(srcDir);
+  createGraph(dependencyList, exportList, moduleArray) {
+    let result = this.digraph();
     let modList = [];
 
     // Create nodes for each module
     moduleArray.forEach((mod) => {
-      modList.push(mod.file);
-      result += this.createModuleNode(mod, exportList, dependencyList);
+      const modName = moduleName(mod);
+      modList.push(modName);
+      const exp = getExportedList(exportList, modName);
+      result += this.createModuleNode(mod, exp, dependencyList);
     });
 
-    // Add import modules not already in the module list
-    result += this.createNodes(importMap, modList);
-
-    // Add graph footer
+      // Add graph footer
     result += '}\n';
     return result;
   }
@@ -147,31 +144,33 @@ class GraphGenerator {
    * @returns {string} - DOT syntax for module node
    */
   createModuleNode(mod, exportList, dependencyList) {
-    let nodeContent = `"${mod.file}" [label="{ ${mod.file} | \n`;
 
+    const modName = moduleName(mod);
+    let nodeContent = `"${modName}" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">\n`
+    nodeContent += `<TR><TD bgcolor="lightblue" align="center"><B>${modName}</B></TD></TR>\n`;
+    nodeContent += `<TR><TD align="left">\n`;
     // Add exported functions
-    const exports = getExportedList(exportList, mod.file);
-    mod.exportCnt = exports.length;
-
-    for (const exported of exports) {
-      nodeContent += `\t ${exported.exported} \\l\n`;
-    }
-
-    nodeContent += "|";
-
-    // Add imported functions
-    let prevImportSrc = "";
-    const depsOn = getDependsOn(dependencyList, mod.file);
-
-    for (const dep of depsOn) {
-      if (prevImportSrc !== dep.importSrc) {
-        nodeContent += `\t\t${dep.importSrc}\\l`;
-        prevImportSrc = dep.importSrc;
+    const uniqueExports = new Set();
+    for (const exported of exportList) {
+      if (!uniqueExports.has(exported.exported)) {
+        uniqueExports.add(exported.exported);
+        nodeContent += `${exported.exported}<BR/>\n`;
       }
-      nodeContent += `\t\t${dep.import}\\r\n`;
     }
+    nodeContent +=  `</TD></TR>\n`;
+    nodeContent += `<TR><TD align="center">\n`;
 
-    return `${nodeContent}}"];\n\n`;
+    const depsOn = getDependsOn(dependencyList, modName);
+    let prevDependency = "";
+    for (const dep of depsOn) {
+      if (prevDependency !== dep.relSrcName) {
+        prevDependency = dep.relSrcName;  
+        nodeContent += `<font color="red"><I>${dep.relSrcName}</I></font><BR/>\n`;
+      }
+      nodeContent += `${dep.import}<BR/>\n`;
+    }
+    nodeContent += `</TD></TR>\n`;
+    return `${nodeContent}</TABLE>>];\n\n`;
   }
 
   /**
@@ -235,8 +234,8 @@ class GraphGenerator {
    */
   createModuleRelationNode(mod, dependencyList, nodeModuleDependents) {
     // Node header with module name
-    const moduleName = cleanPath(path.join(mod.dir, mod.file)).replaceAll("\\", "/");
-    let nodeContent = `"${moduleName}" [label="{ ${moduleName}\\n\n`;
+    const modName = moduleName(mod);
+    let nodeContent = `"${modName}" [label="{ ${modName}\\n\n`;
 
     // First section: dependency counts
     nodeContent += `Depend On : ${mod.dependsOnCnt}\\l\n`;
@@ -247,7 +246,7 @@ class GraphGenerator {
     let prevDependency = "";
     let result = "";
 
-    const depsOn = getDependsOn(dependencyList, moduleName);
+    const depsOn = getDependsOn(dependencyList, modName);
     for (const dep of depsOn) {
       if (prevDependency !== dep.relSrcName) {
         prevDependency = dep.relSrcName;
@@ -346,8 +345,8 @@ const graphGenerator = new GraphGenerator();
 export const createPackageGraph = (moduleArray, dependencyList, srcDir = "") => 
   graphGenerator.createPackageGraph(moduleArray, dependencyList, srcDir);
 
-export const createGraph = (dependencyList, exportList, moduleArray, importMap, srcDir = "") => 
-  graphGenerator.createGraph(dependencyList, exportList, moduleArray, importMap, srcDir);
+export const createGraph = (dependencyList, exportList, moduleArray) => 
+  graphGenerator.createGraph(dependencyList, exportList, moduleArray);
 
 export const createRelationsGraph = (dependencyList, moduleArray, srcDir = "") => 
   graphGenerator.createRelationsGraph(dependencyList, moduleArray, srcDir);

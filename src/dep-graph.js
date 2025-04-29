@@ -1,10 +1,10 @@
 import { Command } from 'commander';
 import fs from "fs";
 import path from "path";
-import { ASTProcessor } from './ast.js';
+import ProcessAST from './ast.js';
 import { createGraph, createRelationsGraph, createPackageGraph } from './commands/graph.js';
 import { createModuleHtml } from './commands/html.js';
-import { jsonOut, jsonIn } from './commands/json.js';
+import { jsonOut} from './commands/json.js';
 import { getModuleArray, safeWriteFile } from "./utils/file-utils.js";
 import { fileURLToPath } from 'url';
 import { spawn } from 'child_process';
@@ -84,11 +84,10 @@ export class DependencyGraphGenerator {
       const stat = fs.statSync(baseLoc);
 
       // Get module information
-      const [moduleArray] = getModuleArray(baseLoc, stat);
+      const [moduleArray] =  getModuleArray(baseLoc, stat);
 
       // Process and output results
-      const processor = new ASTProcessor(baseLoc);
-      const [dependencyList, exportList, usedList, errors] = processor.processModules(moduleArray);
+      const [dependencyList, exportList, usedList, errors] = ProcessAST(moduleArray, baseLoc);
 
       let outputDir = options.output;
       if (!path.isAbsolute(outputDir)) {
@@ -106,9 +105,10 @@ export class DependencyGraphGenerator {
 
       // create the graph file for packages or directories for all the modules. -g option
       if (options.graph) {
-        const importMap = jsonIn(outputDir + "ImportMap.json");
-        const depGraph = createGraph(dependencyList, exportList, moduleArray, importMap);
-        safeWriteFile(outputDir, "Dependencies.dot", depGraph);
+        const depGraph = createGraph(dependencyList, exportList, moduleArray);
+        safeWriteFile(outputDir, "Graph.dot", depGraph);
+        // Generate Package.svg using command-line Graphviz
+        this.generateSvgFromDot(path.join(outputDir, "Graph.dot"), path.join(outputDir, "Graph.svg"));
       }
 
       // Run JSDoc if requested
@@ -198,7 +198,6 @@ export class DependencyGraphGenerator {
     // Generate Package.dot
     const pgkGraph = createPackageGraph(moduleArray, dependencyList, baseLoc);
     safeWriteFile(outputDir, "Package.dot", pgkGraph);
-    
     // Generate Package.svg using command-line Graphviz
     this.generateSvgFromDot(path.join(outputDir, "Package.dot"), path.join(outputDir, "Package.svg"));
 

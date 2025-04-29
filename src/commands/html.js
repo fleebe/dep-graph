@@ -44,6 +44,15 @@ export function createModuleHtml(symbol, moduleArray, dependencyList, exportList
   result += `Your browser does not support SVG - <a href="Relations.svg">View Relations Graph</a>`;
   result += `</object>\n`;
   result += `</div>\n`;
+
+  result += `<h2>Graph</h2>\n`;
+  result += `<div class="svg-container">\n`;
+  result += `<object data="Graph.svg" type="image/svg+xml" width="100%" height="600px">`;
+  result += `Your browser does not support SVG - <a href="Graph.svg">View Relations Graph</a>`;
+  result += `</object>\n`;
+  result += `</div>\n`;
+
+
   
   // Generate summary section
   result += generateSummarySection(moduleArray, dependencyList);

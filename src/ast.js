@@ -1,5 +1,5 @@
 import { readFileSync } from "fs";
-import { removeExtension } from "./utils/file-utils.js";
+import { removeExtension, moduleName } from "./utils/file-utils.js";
 import { getUsedByList } from "./utils/list-utils.js";
 import { parse as tsParser } from '@typescript-eslint/parser';
 import estraverse from 'estraverse';
@@ -9,7 +9,7 @@ import path from "path";
  * @class ASTProcessor
  * @description Processes Abstract Syntax Trees for JavaScript/TypeScript files to analyze dependencies and exports
  */
-export class ASTProcessor {
+class ASTProcessor {
   /**
    * Creates a new ASTProcessor instance
    * @param {string} baseLoc - The base directory or file to create dependency graphs from
@@ -96,7 +96,7 @@ export class ASTProcessor {
    */
   parseImports(ast, mod) {
     const dependencies = [];
-    const srcFile = path.join(mod.dir, mod.file).replaceAll("\\", "/");
+    const srcFile =moduleName(mod);
 
     estraverse.traverse(ast, {
       enter: (node) => {
@@ -207,7 +207,7 @@ export class ASTProcessor {
    */
   parseExports(ast, mod) {
     const exportList = [];
-    const srcFile = path.join(mod.dir, mod.file);
+    const srcFile = moduleName(mod);
 
     estraverse.traverse(ast, {
       enter: (node) => {
@@ -231,7 +231,7 @@ export class ASTProcessor {
   processExportDeclaration(node, srcFile, exportList, mod) {
     const addVal = (exp, params) => {
       exportList.push({
-        name: srcFile.replaceAll("\\", "/"),
+        name: srcFile,
         exported: exp,
         type: node.declaration?.type || 'Unknown',
         params: params
@@ -419,7 +419,7 @@ export class ASTProcessor {
  * @param {string} baseLoc - The base directory or file
  * @returns {Array} - Arrays of [dependencyList, exportList, usedList, errors]
  */
-export function processAST(moduleMap, baseLoc) {
+export default function processAST(moduleMap, baseLoc) {
   const processor = new ASTProcessor(baseLoc);
   return processor.processModules(moduleMap);
 }
