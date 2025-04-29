@@ -9,7 +9,7 @@ import htmlCommands from './html.js';
 import jsonCommands from './json.js';
 
 // Re-export individual commands for direct imports
-export { createPackageGraph, createGraph, createRelationsGraph } from './graph.js';
+export { createPackageGraph, createExportGraph as createGraph, createRelationsGraph } from './graph.js';
 export { createModuleHtml } from './html.js';
 export { jsonOut, jsonIn } from './json.js';
 

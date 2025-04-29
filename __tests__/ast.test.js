@@ -1,10 +1,10 @@
 /* eslint-disable no-undef */
 import { getModuleMap } from "../src/utils/file-utils.js";
-import { processAST} from "../src/ast.js"
+import { processAST} from "../src/ast/ASTProcessor.js"
 import fs from "fs";
 import path from "path";
 import { jsonOut, jsonIn } from '../src/commands/json.js';
-import { createGraph } from '../src/commands/graph.js';
+import { createExportGraph } from '../src/commands/graph.js';
 
 const deps = [
   {
@@ -106,7 +106,7 @@ describe("unit-tests", () => {
     const dependencyList = jsonIn(path.join(input, "dependencyList.json"));
     const importMap = jsonIn(path.join(input, "importMap.json"));
     
-    createGraph(moduleMap, exportList, dependencyList, importMap, output);
+    createExportGraph(moduleMap, exportList, dependencyList, importMap, output);
     const packageGraph = fs.readFileSync(path.join(output, "package.dot"), "utf-8");
     const dependencyGraph = fs.readFileSync(path.join(output, "dependencies.dot"), "utf-8");
 

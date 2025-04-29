@@ -30,28 +30,11 @@ export function createModuleHtml(symbol, moduleArray, dependencyList, exportList
   
   result += `<h1>${symbol}</h1>\n`;
   
-  // Add the SVG visualizations at the top
-  result += `<h2>Package Dependency Graph</h2>\n`;
-  result += `<div class="svg-container">\n`;
-  result += `<object data="Package.svg" type="image/svg+xml" width="100%" height="600px">`;
-  result += `Your browser does not support SVG - <a href="Package.svg">View Package Graph</a>`;
-  result += `</object>\n`;
-  result += `</div>\n`;
-  
-  result += `<h2>Module Relations Graph</h2>\n`;
-  result += `<div class="svg-container">\n`;
-  result += `<object data="Relations.svg" type="image/svg+xml" width="100%" height="600px">`;
-  result += `Your browser does not support SVG - <a href="Relations.svg">View Relations Graph</a>`;
-  result += `</object>\n`;
-  result += `</div>\n`;
-
-  result += `<h2>Graph</h2>\n`;
-  result += `<div class="svg-container">\n`;
-  result += `<object data="Graph.svg" type="image/svg+xml" width="100%" height="600px">`;
-  result += `Your browser does not support SVG - <a href="Graph.svg">View Relations Graph</a>`;
-  result += `</object>\n`;
-  result += `</div>\n`;
-
+  // Add the SVG visualizations using the new helper function
+  result += generateSvgSection("Package Dependency Graph", "Package.svg");
+  result += generateSvgSection("Module Relations Graph", "Relations.svg");
+  result += generateSvgSection("Exported Functions", "ExportGraph.svg");
+  result += generateSvgSection("Class Diagram", "ClassDiagram.svg");
 
   
   // Generate summary section
@@ -64,6 +47,39 @@ export function createModuleHtml(symbol, moduleArray, dependencyList, exportList
   result += generateNodeModulesSection(dependencyList);
   
   result += "</body></html>";
+  return result;
+}
+
+/**
+ * Generates an SVG visualization section with proper HTML container
+ * 
+ * @param {string} title - Title for the section
+ * @param {string} svgFileName - Name of the SVG file to embed
+ * @param {string} [linkText] - Optional alternative text for the link (defaults to title)
+ * @returns {string} - HTML for the SVG section
+ */
+function generateSvgSection(title, svgFileName, linkText = null) {
+  if (!linkText) {
+    linkText = `View ${title}`;
+  }
+  // Add class diagram section if the file exists
+  try {
+    const fs = require('fs');
+    if (!fs.existsSync(`./docs/${svgFileName}`)) {
+      return ""
+    }
+  } catch (error) {
+    // Silently ignore if file check fails - will happen in browser context
+  }
+
+
+  let result = `<h2>${title}</h2>\n`;
+  result += `<div class="svg-container">\n`;
+  result += `<object data="${svgFileName}" type="image/svg+xml" width="100%" height="600px">`;
+  result += `Your browser does not support SVG - <a href="${svgFileName}">${linkText}</a>`;
+  result += `</object>\n`;
+  result += `</div>\n`;
+  
   return result;
 }
 

@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import { normalizePath, addToMapArray, getBaseDir, getModuleArray, hasExtension, removeExtension, getUsedByList} from "../src/utils/file-utils.js";
-import { getImportMap } from "../src/ast.js";
+import { getImportMap } from "../src/ast/ASTProcessor.js";
 import { jsonIn } from '../src/commands/json.js';
 import path from "path";
 import { fileURLToPath } from 'url';

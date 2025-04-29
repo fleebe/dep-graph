@@ -1,8 +1,8 @@
 import { Command } from 'commander';
 import fs from "fs";
 import path from "path";
-import ProcessAST from './ast.js';
-import { createGraph, createRelationsGraph, createPackageGraph } from './commands/graph.js';
+import ProcessAST from './ast/ASTProcessor.js';
+import { createExportGraph, createRelationsGraph, createPackageGraph, createClassDiagram } from './commands/graph.js';
 import { createModuleHtml } from './commands/html.js';
 import { jsonOut} from './commands/json.js';
 import { getModuleArray, safeWriteFile } from "./utils/file-utils.js";
@@ -47,6 +47,7 @@ export class DependencyGraphGenerator {
       .description(`A CLI to generate documentation for dependencies of a JavaScript file or directory.`)
       .option("-j --json", "produce .json object files of the dependencies to output directory.")
       .option("-g --graph", "produce package and dependencies .dot files that graphviz can use to generate a graph of the dependencies to output directory.")
+      .option("-c --class", "produce a class diagram .dot file for any classes in the codebase.")
       .option("-o --output <dir>", "directory that the outputs are sent to.", "./docs")
       .option("-d --jsdoc", "generate JSDoc documentation in the output directory.")
       .option("--jsdoc-config <file>", "path to JSDoc configuration file.", "./jsdoc.json")
@@ -87,6 +88,7 @@ export class DependencyGraphGenerator {
       const [moduleArray] =  getModuleArray(baseLoc, stat);
 
       // Process and output results
+      // eslint-disable-next-line no-unused-vars
       const [dependencyList, exportList, usedList, errors] = ProcessAST(moduleArray, baseLoc);
 
       let outputDir = options.output;
@@ -95,26 +97,9 @@ export class DependencyGraphGenerator {
         console.log(`Converted to absolute path: ${outputDir}`);
       }
 
-      // Handle JSON outputs if requested
-      if (options.json) {
-        this.generateJsonOutput(outputDir, moduleArray, dependencyList, exportList, usedList, errors);
-      }
-          
+         
       // Generate and write output files
-      this.generateOutputFiles(outputDir, baseLoc, moduleArray, dependencyList);
-
-      // create the graph file for packages or directories for all the modules. -g option
-      if (options.graph) {
-        const depGraph = createGraph(dependencyList, exportList, moduleArray);
-        safeWriteFile(outputDir, "Graph.dot", depGraph);
-        // Generate Package.svg using command-line Graphviz
-        this.generateSvgFromDot(path.join(outputDir, "Graph.dot"), path.join(outputDir, "Graph.svg"));
-      }
-
-      // Run JSDoc if requested
-      if (options.jsdoc) {
-        this.generateJSDoc(baseLoc, options.output, options.jsdocConfig);
-      }
+      this.generateOutputFiles(outputDir, baseLoc, moduleArray, dependencyList, exportList);
 
       // Generate HTML output
       const modHtml = createModuleHtml(outputDir, moduleArray, dependencyList, exportList);
@@ -193,8 +178,9 @@ export class DependencyGraphGenerator {
    * @param {string} outputDir - Output directory
    * @param {Array} moduleArray - Array of modules
    * @param {Array} dependencyList - List of dependencies
+   * @param {Array} exportList - List of exports
    */
-  generateOutputFiles(outputDir, baseLoc, moduleArray, dependencyList) {
+  generateOutputFiles(outputDir, baseLoc, moduleArray, dependencyList, exportList) {
     // Generate Package.dot
     const pgkGraph = createPackageGraph(moduleArray, dependencyList, baseLoc);
     safeWriteFile(outputDir, "Package.dot", pgkGraph);
@@ -207,6 +193,28 @@ export class DependencyGraphGenerator {
     
     // Generate Relations.svg using command-line Graphviz
     this.generateSvgFromDot(path.join(outputDir, "Relations.dot"), path.join(outputDir, "Relations.svg"));
+
+    // Add class diagram generation if option is specified
+    if (this.program.opts().class) {
+      const classGraph = createClassDiagram(exportList, dependencyList);
+      safeWriteFile(outputDir, "ClassDiagram.dot", classGraph);
+      this.generateSvgFromDot(path.join(outputDir, "ClassDiagram.dot"), path.join(outputDir, "ClassDiagram.svg"));
+    }
+
+    // create the graph file for packages or directories for all the modules. -g option
+    if (this.program.opts().graph) {
+      const depGraph = createExportGraph(dependencyList, exportList, moduleArray);
+      safeWriteFile(outputDir, "ExportGraph.dot", depGraph);
+      // Generate Package.svg using command-line Graphviz
+      this.generateSvgFromDot(path.join(outputDir, "ExportGraph.dot"), path.join(outputDir, "ExportGraph.svg"));
+    }
+
+    // Run JSDoc if requested
+    if (this.program.opts().jsdoc) {
+      this.generateJSDoc(baseLoc, this.program.opts().output, this.program.opts().jsdocConfig);
+    }
+
+
   }
 
   /**
