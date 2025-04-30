@@ -5,12 +5,12 @@ import { GraphBase } from "../core/GraphBase.js";
  */
 export class ClassDiagram extends GraphBase {
   /**
-   * @param {Array} exportList - List of exports to identify classes
+   * @param {Array} classList 
    * @param {Array} dependencyList - List of dependencies to identify relationships
    */
-  constructor(exportList, dependencyList) {
+  constructor(classList, dependencyList) {
     super();
-    this.exportList = exportList;
+    this.classList = classList;
     this.dependencyList = dependencyList;
   }
 
@@ -23,7 +23,7 @@ export class ClassDiagram extends GraphBase {
     let result = this.digraph("Class Diagram");
     
     // Filter out classes from exportList
-    this.classes = this.exportList.filter(exp => 
+    this.classes = this.classList.filter(exp => 
       exp.type === "ClassDeclaration" || 
       (exp.type === "ExportSpecifier" && exp.exported.endsWith("Class"))
     );
@@ -60,7 +60,7 @@ export class ClassDiagram extends GraphBase {
     nodeContent += `<TR><TD align="left">\n`;
     
     // Look for methods in the export list that might belong to this class
-    const classMethods = this.exportList.filter(exp => 
+    const classMethods = this.classList.filter(exp => 
       exp.type === "FunctionDeclaration" && 
       (exp.name.includes(classItem.name) || exp.exported.startsWith(className))
     );

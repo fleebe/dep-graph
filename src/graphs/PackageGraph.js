@@ -24,7 +24,8 @@ export class PackageGraph extends GraphBase {
    * @returns {string} - DOT file content as string
    */
   generate() {
-    let result = this.digraph(this.srcDir);
+    const title = this.srcDir.replaceAll(/\\/g, "/");
+    let result = this.digraph(title);
 
     // Add packages to the graph
     result += this.createPackageNodes();

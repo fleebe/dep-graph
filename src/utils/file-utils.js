@@ -197,14 +197,16 @@ function getDirectories(srcpath) {
 /**
  * @return array of files in the directory
  */
-function getFiles(srcpath) {
+
+export function getFiles(srcpath) {
   return fs.readdirSync(srcpath)
     .map(file => path.join(srcpath, file))
     .filter(path => fs.statSync(path).isFile())
+    .filter(file => hasExtension(file, EXT_LIST))
     .map(f => f.replaceAll('\\', "/"));
 }
 
-function getDirectoriesRecursive(srcpath) {
+export function getDirectoriesRecursive(srcpath) {
   return [srcpath, ...flatten(getDirectories(srcpath).map(getDirectoriesRecursive))];
 }
 
@@ -214,7 +216,7 @@ function getDirectoriesRecursive(srcpath) {
  * @param {string} symbol - The base path to compare against
  * @returns {Object} Object containing the directory beyond symbol and the filename
  */
-function getRelativePathParts(file, symbol) {
+export function getRelativePathParts(file, symbol) {
   // Normalize paths to use consistent separators
   const normalizedFile = file.replaceAll("\\", "/");
   const normalizedSymbol = symbol.replaceAll("\\", "/");
@@ -256,55 +258,13 @@ export function safeWriteFile(dirPath, fileName, content) {
 }
 
 /**
- * Creates a map with key=directory(package) value=array of files(modules) in directory
- * @param {*} srcDir the directory or file to create the dependency graphs from
- * @param {*} stat the stats of the symbol to determine if a file or directory was called. 
- * @returns 1. Map of directories with files
- *  2. the root directory that the list starts from
- */
-export function getModuleArray(srcDir, stats) {
-  let arr = [];
-  let root = path.dirname(srcDir).replaceAll("\\", "/");
-
-  if (stats.isFile()) {
-    arr.push({
-      dir: root, file: path.getFilename(srcDir),
-      dependsOnCnt: 0, usedByCnt: 0, exportCnt: 0
-    });
-  } else if (stats.isDirectory()) {
-    // array of directories
-    const dirArr = getDirectoriesRecursive(srcDir)
-
-    dirArr.forEach(e => {
-       // sets map to the key=file values are the functions returned by getFiles
-      const fileList = getFiles(e);
-      fileList.forEach(file => {
-        if (hasExtension(file, EXT_LIST)) {
-          const {directory: dir, filename: file2} = getRelativePathParts(file, srcDir); // get the directory and filename
-          arr.push(
-            {
-              dir: dir, file: file2,
-               dependsOnCnt: 0, usedByCnt: 0, exportCnt: 0 });
-        }
-      });
-    });
-  }
-
-
-  return [arr];
-
-}
-
-/**
  * Module exports
  */
 export default {
-  hasExtension,
   removeExtension,
   normalizePath,
   cleanPath,
-  getFilename,
-  getModuleArray
+  getFilename
 };
 
 

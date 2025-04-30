@@ -51,12 +51,11 @@ export const createRelationsGraph = (dependencyList, moduleArray, srcDir = "") =
 /**
  * Creates a class diagram showing classes and their relationships
  * 
- * @param {Array} exportList - List of exports to identify classes
  * @param {Array} dependencyList - List of dependencies to identify relationships
  * @returns {string} - DOT file content for class diagram
  */
-export const createClassDiagram = (exportList, dependencyList) => {
-  const classDiagram = new ClassDiagram(exportList, dependencyList);
+export const createClassDiagram = (dependencyList, classList) => {
+  const classDiagram = new ClassDiagram(dependencyList, classList);
   return classDiagram.generate();
 };
 
