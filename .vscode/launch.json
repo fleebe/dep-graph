@@ -11,13 +11,14 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}\\index.js",
+      "program": "${workspaceFolder}/index.js",
       "args": [
         "-o",
         "./out/bfree",
-        "-j",
-        "../nodejs/bfree/pages"
-      ]
+        "../nodejs/bfree/pages"  // This should be the positional argument (file|directory)
+      ],
+      "runtimeArgs": ["--experimental-modules"],
+      "sourceMaps": true
     },
     {
       "type": "node",
@@ -26,19 +27,37 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}\\index.js",
+      "program": "${workspaceFolder}/index.js",
       "args": [
         "-j",
         "-g",
         "-c",
+        "-d",
         "-o",
         "./docs",
-        "./src"
+        "./src"  // This is correctly positioned as the file|directory argument
       ],
+      "runtimeArgs": ["--experimental-modules"],
       "sourceMaps": true,
       "outFiles": [
         "${workspaceFolder}/**/*.js"
       ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Generate",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/index.js",
+      "args": ["./src"],  // Simplified arguments with just the required positional argument
+      "runtimeArgs": ["--experimental-modules"],
+      "sourceMaps": true,
+      "outFiles": [
+        "${workspaceFolder}/**/*.js"
+      ],
+      "console": "integratedTerminal"
     }
   ]
 }

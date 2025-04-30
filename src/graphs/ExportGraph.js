@@ -23,15 +23,14 @@ export class ExportGraph extends GraphBase {
    * 
    * @returns {string} - DOT file content for exports graph
    */
-  generate() {
-    let result = this.digraph("Module Exports");
-    let modList = [];
+  generate(dir) {
+    let result = this.digraph(`${dir} Module Exports`);
 
     // Create nodes for each module
-    this.moduleArray.forEach((mod) => {
-      const modName = moduleName(mod);
-      modList.push(modName);
-      const exp = getExportedList(this.exportList, modName);
+    this.moduleArray
+    .filter(mod => mod.dir === dir)
+    .forEach((mod) => {
+      const exp = getExportedList(this.exportList, moduleName(mod));
       result += this.createModuleNode(mod, exp);
     });
 

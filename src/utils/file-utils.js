@@ -243,14 +243,20 @@ export function getRelativePathParts(file, symbol) {
 
 /**
  * Helper function for safe file writing
+ * If the file already exists, it will be deleted before writing
  * 
-  * @param {string} dirPath - Path to the file
+ * @param {string} dirPath - Path to the file
  * @param {string} fileName - name of the file
  * @param {string} content - Content to write
  */
 export function safeWriteFile(dirPath, fileName, content) {
   const filePath = path.join(dirPath, fileName);
   try {
+    // Check if file exists and delete it
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+    
     fs.writeFileSync(filePath, content, "utf8");
   } catch (error) {
     console.error(`Error writing file ${filePath}: ${error.message}`);

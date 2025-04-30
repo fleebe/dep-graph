@@ -17,13 +17,17 @@
 import fs from "fs";
 import path from "path";
 import ProcessAST from './ast/ASTProcessor.js';
-import { createExportGraph, createRelationsGraph, createPackageGraph, createClassDiagram } from './commands/graph.js';
 import { HtmlGenerator } from './generators/HtmlGenerator.js';
-import { jsonOut } from './commands/json.js';
-import { getModuleArray, safeWriteFile } from "./utils/file-utils.js";
+import { jsonOut } from './utils/json.js';
+import { safeWriteFile } from "./utils/file-utils.js";
 import { spawn } from 'child_process';
 import { getRelativePathParts, getDirectoriesRecursive, getFiles } from './utils/file-utils.js';
 import { DiagramsGenerator } from './generators/DiagramsGenerator.js';
+import { ExportGraph } from './graphs/ExportGraph.js';
+import { RelationsGraph } from './graphs/RelationsGraph.js';
+import { ClassDiagram } from './graphs/ClassDiagram.js';
+import { PackageGraph } from './graphs/PackageGraph.js';
+
 
 /**
  * @class DependencyGraphGenerator
@@ -72,7 +76,7 @@ export class DependencyGraphGenerator {
       const stat = fs.statSync(this.baseLoc);
 
       // Get module information
-      const [moduleArray] = getModuleArray(stat);
+      const [moduleArray] = this.getModuleArray(stat);
 
       // Process and output results
       // eslint-disable-next-line no-unused-vars
@@ -92,11 +96,15 @@ export class DependencyGraphGenerator {
 
       // Generate and write output files
       // Generate Package.dot
-      const pgkGraph = createPackageGraph(moduleArray, dependencyList);
+      const packageGraph = new PackageGraph(moduleArray, dependencyList);
+      const pgkGraph = packageGraph.generate();
       safeWriteFile(this.outputDir, "Package.dot", pgkGraph);
-      // Generate Package.svg using command-line Graphviz
       this.generateSvgFromDot(path.join(this.outputDir, "Package.dot"), path.join(this.outputDir, "Package.svg"));
-      this.createDirGraph("Relations",  moduleArray, dependencyList)
+
+      const relationsGraph = new RelationsGraph(dependencyList, moduleArray);
+      const relGraph =  relationsGraph.generate();
+      safeWriteFile(this.outputDir, "Relations.dot", relGraph);
+      this.generateSvgFromDot(path.join(this.outputDir, "Relations.dot"), path.join(this.outputDir, "Relations.svg"));
 
       // Add class diagram generation if option is specified
       if (this.options.class) {
@@ -116,11 +124,11 @@ export class DependencyGraphGenerator {
       // Generate HTML output
       const htmlGenerator = new HtmlGenerator();
       const modHtml = htmlGenerator.createModuleHtml(this.outputDir, moduleArray, dependencyList, exportList);
-      safeWriteFile(this.outputDir, "ModuleArray.html", modHtml);
+      safeWriteFile(this.outputDir, "index.html", modHtml);
 
       const diagramsGenerator = new DiagramsGenerator();
       const diagHtml =  diagramsGenerator.createDiagramsHtml(this.outputDir, moduleArray);
-      safeWriteFile(this.outputDir, "Diagram.html", diagHtml);
+      safeWriteFile(this.outputDir, "diagrams.html", diagHtml);
 
 
     } catch (error) {
@@ -241,22 +249,19 @@ export class DependencyGraphGenerator {
    */
   createDirGraph(graphName, moduleArray, dependencyList, classList = [], exportList = []) {
     const dirArray = [...new Set(moduleArray.map(module => module.dir))];
+      const exportGraph = new ExportGraph(dependencyList, exportList, moduleArray);
+  const classDiagram = new ClassDiagram(dependencyList, classList);
 
     dirArray.forEach(dir => {
       let graph = null;
       switch (graphName) {
-        case "Relations":
-          graph = createRelationsGraph(dependencyList, moduleArray);
-          break;
         case "ClassDiagram":
-          graph = createClassDiagram(dependencyList, classList);
+          graph = classDiagram.generate();
           break;
         case "ExportGraph":
-          graph = createExportGraph(dependencyList, exportList, moduleArray);
+          graph = exportGraph.generate(dir);
           break;
-
         default:
-          graph = []
       }
       if (graph) {
         const fileDir = path.join(this.outputDir, dir);

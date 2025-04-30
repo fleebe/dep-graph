@@ -3,7 +3,7 @@ import { getModuleMap } from "../src/utils/file-utils.js";
 import { processAST} from "../src/ast/ASTProcessor.js"
 import fs from "fs";
 import path from "path";
-import { jsonOut, jsonIn } from '../src/commands/json.js';
+import { jsonOut, jsonIn } from '../src/utils/json.js';
 import { createExportGraph } from '../src/commands/graph.js';
 
 const deps = [

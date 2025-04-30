@@ -12,11 +12,10 @@ export class RelationsGraph extends GraphBase {
    * @param {Array} moduleArray - List of modules to graph
    * @param {string} [srcDir=""] - Source directory for graph label
    */
-  constructor(dependencyList, moduleArray, srcDir = "") {
+  constructor(dependencyList, moduleArray) {
     super();
     this.dependencyList = dependencyList;
     this.moduleArray = moduleArray;
-    this.srcDir = srcDir;
     this.nodeModuleDependents = new Set();
   }
 
@@ -26,7 +25,7 @@ export class RelationsGraph extends GraphBase {
    * @returns {string} - DOT file content for relations graph
    */
   generate() {
-    let result = this.digraph(this.srcDir);
+    let result = this.digraph();
 
     // Process each module
     this.moduleArray.forEach((mod) => {

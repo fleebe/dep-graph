@@ -1,5 +1,5 @@
 import fs from "fs";
-import { safeWriteFile } from "../utils/file-utils.js";
+import { safeWriteFile } from "./file-utils.js";
 
 /**
  * @module commands/json

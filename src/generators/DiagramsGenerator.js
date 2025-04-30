@@ -29,16 +29,12 @@ export class DiagramsGenerator {
     result += `<h1>${symbol} - Module Diagrams</h1>\n`;
     result += `<a class="back-link" href="index.html">&larr; Back to Module Analysis</a>\n`;
     
-    // Add the SVG visualizations using the helper function
-    const dirArray = [...new Set(moduleArray.map(module => module.dir))];
+
     result += this.generateSvgSection("Package Dependency Graph", "Package.svg");
-    
-    dirArray.forEach(dir => {
-      // Relations graph
-      const relSvgPath = path.join(dir, "Relations.svg");
-      const relGraphName = path.join(dir, "Module Relations Graph");
-      result += this.generateSvgSection(relGraphName, relSvgPath);
-      
+    result += this.generateSvgSection("Module Relations Graph", "Relations.svg");
+
+    // Add the SVG visualizations using the helper function
+    const dirArray = [...new Set(moduleArray.map(module => module.dir))];    dirArray.forEach(dir => {      
       // Export graph (only if it exists)
       const exportSvgPath = path.join(dir, "ExportGraph.svg");
       const exportGraphName = path.join(dir, "Exported Functions Graph");
