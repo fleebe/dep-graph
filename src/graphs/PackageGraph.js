@@ -1,5 +1,4 @@
-import path from "path";
-import { cleanPath } from "../utils/file-utils.js";
+import { cleanDirPath } from "../utils/file-utils.js";
 import { GraphBase } from "../core/GraphBase.js";
 
 /**
@@ -25,7 +24,7 @@ export class PackageGraph extends GraphBase {
    */
   generate() {
     const title = this.srcDir.replaceAll(/\\/g, "/");
-    let result = this.digraph(title);
+    let result = this.recordDigraph(title);
 
     // Add packages to the graph
     result += this.createPackageNodes();
@@ -47,8 +46,8 @@ export class PackageGraph extends GraphBase {
     let result = "";
 
     for (const dep of this.dependencyList) {
-      const src = cleanPath(path.dirname(dep.src));
-      const dest = cleanPath(path.dirname(dep.relSrcName));
+      const src = cleanDirPath(dep.src);
+      const dest = cleanDirPath(dep.relSrcName);
 
       if (src === dest) {
         // Skip self-references

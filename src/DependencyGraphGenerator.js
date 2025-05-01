@@ -76,7 +76,7 @@ export class DependencyGraphGenerator {
       const stat = fs.statSync(this.baseLoc);
 
       // Get module information
-      const [moduleArray] = this.getModuleArray(stat);
+      const [moduleArray] = this.#getModuleArray(stat);
 
       // Process and output results
       // eslint-disable-next-line no-unused-vars
@@ -99,26 +99,26 @@ export class DependencyGraphGenerator {
       const packageGraph = new PackageGraph(moduleArray, dependencyList);
       const pgkGraph = packageGraph.generate();
       safeWriteFile(this.outputDir, "Package.dot", pgkGraph);
-      this.generateSvgFromDot(path.join(this.outputDir, "Package.dot"), path.join(this.outputDir, "Package.svg"));
+      this.#generateSvgFromDot(path.join(this.outputDir, "Package.dot"), path.join(this.outputDir, "Package.svg"));
 
       const relationsGraph = new RelationsGraph(dependencyList, moduleArray);
-      const relGraph =  relationsGraph.generate();
+      const relGraph = relationsGraph.generate();
       safeWriteFile(this.outputDir, "Relations.dot", relGraph);
-      this.generateSvgFromDot(path.join(this.outputDir, "Relations.dot"), path.join(this.outputDir, "Relations.svg"));
+      this.#generateSvgFromDot(path.join(this.outputDir, "Relations.dot"), path.join(this.outputDir, "Relations.svg"));
 
       // Add class diagram generation if option is specified
       if (this.options.class) {
-        this.createDirGraph("ClassDiagram",  moduleArray, dependencyList, classList)
+        this.#createDirGraph("ClassDiagram", moduleArray, dependencyList, classList)
       }
 
       // create the graph file for packages or directories for all the modules. -g option
       if (this.options.graph) {
-        this.createDirGraph("ExportGraph", moduleArray, dependencyList, exportList)
+        this.#createDirGraph("ExportGraph", moduleArray, dependencyList, exportList)
       }
 
       // Run JSDoc if requested
       if (this.options.jsdoc) {
-        this.generateJSDoc(this.baseLoc, this.options.output, this.options.jsdocConfig);
+        this.#generateJSDoc(this.baseLoc, this.options.output, this.options.jsdocConfig);
       }
 
       // Generate HTML output
@@ -127,12 +127,12 @@ export class DependencyGraphGenerator {
       safeWriteFile(this.outputDir, "index.html", modHtml);
 
       const diagramsGenerator = new DiagramsGenerator();
-      const diagHtml =  diagramsGenerator.createDiagramsHtml(this.outputDir, moduleArray);
+      const diagHtml = diagramsGenerator.createDiagramsHtml(this.outputDir, moduleArray);
       safeWriteFile(this.outputDir, "diagrams.html", diagHtml);
 
 
     } catch (error) {
-      console.error(`Error processing ${this.baseLoc}: ${error.message}`);
+      console.error(`Error processing ${this.baseLoc}: ${error}`);
     }
   }
 
@@ -143,7 +143,7 @@ export class DependencyGraphGenerator {
    *   1. Array of module objects with directory, file, and metrics information
    *   2. Array of directories
    */
-  getModuleArray(stats) {
+  #getModuleArray(stats) {
     let arr = [];
     let root = path.dirname(this.baseLoc).replaceAll("\\", "/");
 
@@ -182,7 +182,7 @@ export class DependencyGraphGenerator {
    * @param {string} configFile - Path to JSDoc configuration file (optional)
    * @returns {void}
    */
-  generateJSDoc(source, output, configFile) {
+  #generateJSDoc(source, output, configFile) {
     if (configFile) {
       // Read the config file
       const config = JSON.parse(fs.readFileSync(configFile, 'utf8'));
@@ -247,16 +247,16 @@ export class DependencyGraphGenerator {
    * @param {Array} exportList - List of exported elements (default empty array)
    * @returns {void}
    */
-  createDirGraph(graphName, moduleArray, dependencyList, classList = [], exportList = []) {
+  #createDirGraph(graphName, moduleArray, dependencyList, classList = [], exportList = []) {
     const dirArray = [...new Set(moduleArray.map(module => module.dir))];
-      const exportGraph = new ExportGraph(dependencyList, exportList, moduleArray);
-  const classDiagram = new ClassDiagram(dependencyList, classList);
+    const exportGraph = new ExportGraph(dependencyList, exportList, moduleArray);
+    const classDiagram = new ClassDiagram(dependencyList, classList);
 
     dirArray.forEach(dir => {
       let graph = null;
       switch (graphName) {
         case "ClassDiagram":
-          graph = classDiagram.generate();
+          graph = classDiagram.generate(dir);
           break;
         case "ExportGraph":
           graph = exportGraph.generate(dir);
@@ -271,7 +271,7 @@ export class DependencyGraphGenerator {
         }
 
         safeWriteFile(fileDir, `${graphName}.dot`, graph);
-        this.generateSvgFromDot(path.join(fileDir, `${graphName}.dot`), path.join(fileDir, `${graphName}.svg`));
+        this.#generateSvgFromDot(path.join(fileDir, `${graphName}.dot`), path.join(fileDir, `${graphName}.svg`));
       }
 
     })
@@ -284,7 +284,7 @@ export class DependencyGraphGenerator {
    * @returns {void}
    * @throws {Error} When Graphviz encounters an error
    */
-  generateSvgFromDot(dotFilePath, svgFilePath) {
+  #generateSvgFromDot(dotFilePath, svgFilePath) {
     console.log(`Generating SVG from ${dotFilePath}...`);
 
     try {

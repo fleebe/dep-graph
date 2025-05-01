@@ -21,7 +21,7 @@ export class NodeModulesGraph extends GraphBase {
    * @returns {string} - DOT file content for node_modules graph
    */
   generate() {
-    let result = this.digraph("Node Module Dependencies");
+    let result = this.recordDigraph("Node Module Dependencies");
     
     // Add node_modules node and connections
     result += this.createNodeModulesSection();

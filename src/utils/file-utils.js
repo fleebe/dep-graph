@@ -12,7 +12,6 @@ export function moduleName(mod) {
   return cleanPath(path.join(mod.dir, mod.file).replaceAll("\\", "/"));
 }
 
-
 /**
  * gets the extension of the file
  * @param {*} filename 
@@ -149,12 +148,13 @@ function validateImportFile(relFile, root) {
 }
 
 
+
 /**
  * 
  * @param {*} root 
  * @returns path without any leading directory delimiters
  */
-export function cleanPath(root) {
+function cleanPath(root) {
   if (root.startsWith("."))
     root = root.substring(1, root.length);
   if (root.startsWith("/"))
@@ -163,6 +163,12 @@ export function cleanPath(root) {
     root = root.substring(1, root.length);
   return root;
 }
+
+export function cleanDirPath(root) {
+  root = path.dirname(root); // remove the file name from the path
+  return cleanPath(root);
+}
+
 
 export function getFilename(fullPath) {
   return fullPath.replace(/^.*[\\/]/, '');
@@ -269,7 +275,7 @@ export function safeWriteFile(dirPath, fileName, content) {
 export default {
   removeExtension,
   normalizePath,
-  cleanPath,
+  cleanDirPath,
   getFilename
 };
 

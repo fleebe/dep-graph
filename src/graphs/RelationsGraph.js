@@ -1,6 +1,6 @@
 import path from "path";
 import { GraphBase } from "../core/GraphBase.js";
-import { cleanPath, moduleName } from "../utils/file-utils.js";
+import { cleanDirPath, moduleName } from "../utils/file-utils.js";
 import { getUsedByList, getDependsOn, getNodeModuleList } from "../utils/list-utils.js";
 
 /**
@@ -29,11 +29,11 @@ export class RelationsGraph extends GraphBase {
 
     // Process each module
     this.moduleArray.forEach((mod) => {
-      result += this.createModuleRelationNode(mod);
+      result += this.#createModuleRelationNode(mod);
     });
 
     // Add node_modules section
-    result += this.createNodeModulesSection();
+    result += this.#createNodeModulesSection();
 
     result += '}\n';
     return result;
@@ -45,19 +45,20 @@ export class RelationsGraph extends GraphBase {
    * @param {Object} mod - Module object
    * @returns {string} - DOT syntax for module relation node
    */
-  createModuleRelationNode(mod) {
+  #createModuleRelationNode(mod) {
     // Node header with module name
     const modName = moduleName(mod);
-    let nodeContent = `"${modName}" [label="{ ${modName}\\n\n`;
-
-    // First section: dependency counts
-    nodeContent += `Depend On : ${mod.dependsOnCnt}\\l\n`;
-    nodeContent += `Used By : ${mod.usedByCnt}\\l\n`;
+    let result = "";
+    
+    // Create HTML table-based label instead of record
+    let nodeContent = `"${modName}" [label=<
+      <table border="0" cellborder="1" cellspacing="0">
+        <tr><td bgcolor="lightgrey"><b>${modName}</b></td></tr>
+        <tr><td align="left">Depend On : ${mod.dependsOnCnt}<br/>Used By : ${mod.usedByCnt}</td></tr>`;
 
     // Second section: modules this depends on
-    let dependsOnSection = "|\n";
+    let dependsOnSection = '<tr><td align="left" balign="left">';
     let prevDependency = "";
-    let result = "";
 
     const depsOn = getDependsOn(this.dependencyList, modName);
     for (const dep of depsOn) {
@@ -70,7 +71,7 @@ export class RelationsGraph extends GraphBase {
           this.nodeModuleDependents.add(mod.file);
         } else {
           if (this.inSameDirectory(dep)) {
-            const src = path.join(cleanPath(path.dirname(dep.src)), dep.relSrcName);
+            const src = path.join(cleanDirPath(dep.src), dep.relSrcName);
             prevDependency = src.replaceAll("\\", "/");
           }
 
@@ -80,24 +81,26 @@ export class RelationsGraph extends GraphBase {
           }
         }
 
-        dependsOnSection += `\t\t${prevDependency}\\l\n`;
+        dependsOnSection += `${prevDependency}<br align="left"/>`;
       }
     }
+    dependsOnSection += '</td></tr>';
     
     // Third section: modules that use this module
-    let usedBySection = "|\n";
+    let usedBySection = '<tr><td align="left" balign="left">';
     prevDependency = "";
 
     const usedList = getUsedByList(this.dependencyList, mod);
     for (const dep of usedList) {
       if (prevDependency !== dep.src) {
         prevDependency = dep.src;
-        usedBySection += `\t\t${prevDependency}\\l\n`;
+        usedBySection += `${prevDependency}<br align="left"/>`;
       }
     }
+    usedBySection += '</td></tr>';
 
     // Complete the node
-    return nodeContent + dependsOnSection + usedBySection + `}"];\n\n` + result;
+    return nodeContent + dependsOnSection + usedBySection + `</table>>];\n\n` + result;
   }
 
   /**
@@ -105,9 +108,13 @@ export class RelationsGraph extends GraphBase {
    * 
    * @returns {string} - DOT syntax for node_modules section
    */
-  createNodeModulesSection() {
-    // Create node_modules node
-    let nodeContent = `"node-modules" [label="{node-modules\\n | \n `;
+  #createNodeModulesSection() {
+    // Create node_modules node with HTML label
+    let nodeContent = `"node-modules" [label=<
+      <table border="0" cellborder="1" cellspacing="0">
+        <tr><td bgcolor="lightgrey"><b>node-modules</b></td></tr>
+        <tr><td align="left" balign="left">`;
+    
     let prevModule = "";
 
     // Add each unique node module
@@ -115,10 +122,10 @@ export class RelationsGraph extends GraphBase {
     for (const dep of nodeMods) {
       if (prevModule !== dep.importSrc) {
         prevModule = dep.importSrc;
-        nodeContent += `\t\t${prevModule}\\l\n`;
+        nodeContent += `${prevModule}<br align="left"/>`;
       }
     }
-    nodeContent += `}"];\n`;
+    nodeContent += `</td></tr></table>>];\n`;
 
     // Optionally add connections from modules to node-modules
     let relationships = "";

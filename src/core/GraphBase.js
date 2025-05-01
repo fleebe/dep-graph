@@ -1,5 +1,4 @@
-import path from "path";
-import { cleanPath } from "../utils/file-utils.js";
+import { cleanDirPath } from "../utils/file-utils.js";
 
 /**
  * Base class for all graph generators
@@ -13,16 +12,17 @@ export class GraphBase {
    * @returns {string} - Formatted digraph header
    */
   digraph(title = "") {
+    return `digraph {\nlabel="${title}";\nlabelloc="t";\nnode [shape=none];\n`;
+  }
+
+  recordDigraph(title = "") {
     let result = "digraph {\n";
-
-    if (title) {
-      result += `label="${title}";\n`;
-      result += `labelloc="t";\n`;
-    }
-
+    result += `label="${title}";\n`;
+    result += `labelloc="t";\n`;
     result += "node [shape=record];\n";
     return result;
   }
+
 
   /**
    * Checks if a dependency is a node module
@@ -41,7 +41,7 @@ export class GraphBase {
    * @returns {boolean} - True if the dependency is in the same directory
    */
   inSameDirectory(dep) {
-    const src = cleanPath(path.dirname(dep.src));
+    const src = cleanDirPath(dep.src);
     return ((src !== '') && (dep.importSrc.startsWith('./')));
   }
 

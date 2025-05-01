@@ -1,4 +1,5 @@
 import { GraphBase } from "../core/GraphBase.js";
+import { cleanDirPath } from "../utils/file-utils.js";
 
 /**
  * Generates a class diagram showing classes and their relationships
@@ -8,7 +9,7 @@ export class ClassDiagram extends GraphBase {
    * @param {Array} classList 
    * @param {Array} dependencyList - List of dependencies to identify relationships
    */
-  constructor(classList, dependencyList) {
+  constructor(dependencyList, classList) {
     super();
     this.classList = classList;
     this.dependencyList = dependencyList;
@@ -17,25 +18,27 @@ export class ClassDiagram extends GraphBase {
   /**
    * Creates a class diagram
    * 
+   * @param {string} [dir] - directory name to include in diagram title
    * @returns {string} - DOT file content for class diagram
    */
-  generate() {
-    let result = this.digraph("Class Diagram");
-    
-    // Filter out classes from exportList
-    this.classes = this.classList.filter(exp => 
-      exp.type === "ClassDeclaration" || 
-      (exp.type === "ExportSpecifier" && exp.exported.endsWith("Class"))
-    );
-    
-    // Create nodes for each class
-    for (const classItem of this.classes) {
-      result += this.createClassNode(classItem);
-    }
-    
-    // Add relationships between classes
-    result += this.createClassRelationships();
-    
+  generate(dir) {
+    // Prepare the directory name for the diagram title
+    let title = " base Class Diagram";
+    if (dir != "")  title = `${dir} Class Diagram` 
+  
+    // Start the digraph
+    let result = this.digraph(title);
+    this.classList
+      .filter(cls => {
+        const clsDir = cleanDirPath(cls.filePath)
+        return (clsDir === dir)
+      })
+      .forEach((cls) => {
+        result += this.createClassNode(cls);
+ //       result += this.createClassRelationships(cls);
+      });
+
+    // Close the graph
     result += '}\n';
     return result;
   }
@@ -47,33 +50,21 @@ export class ClassDiagram extends GraphBase {
    * @returns {string} - DOT syntax for class node
    */
   createClassNode(classItem) {
-    const className = classItem.exported;
-    let nodeContent = `"${className}" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">\n`;
-    
+    const className = classItem.name;
+    let nodeContent = `"${className}" [shape=none, label=<<TABLE cellspacing="0" cellborder="1" align="left">\n`;
+
     // Class name header
-    nodeContent += `<TR><TD bgcolor="lightblue" align="center"><B>${className}</B></TD></TR>\n`;
-    
-    // Properties section (placeholder - could be enhanced with property detection)
-    nodeContent += `<TR><TD align="left">properties</TD></TR>\n`;
-    
-    // Methods section - find methods that belong to this class
-    nodeContent += `<TR><TD align="left">\n`;
-    
-    // Look for methods in the export list that might belong to this class
-    const classMethods = this.classList.filter(exp => 
-      exp.type === "FunctionDeclaration" && 
-      (exp.name.includes(classItem.name) || exp.exported.startsWith(className))
-    );
-    
-    for (const method of classMethods) {
-      const methodName = method.exported;
-      const params = method.params || "()";
-      nodeContent += `${methodName}${params}<BR/>\n`;
-    }
-    
+    nodeContent += `<TR><TD bgcolor="lightblue" align="left"><B>${className}</B></TD></TR>\n`;
+    nodeContent += `<TR><TD><B>methods</B><BR/>\n`;
+     classItem.methods.forEach(method => {
+      const methodName = method.name;
+      const params = method.parameters || "()";
+      nodeContent += `${(method.isPrivate) ? "-" : "+"} ${methodName} ${params}<BR/>\n`;
+    });
+
     nodeContent += `</TD></TR>\n`;
     nodeContent += `</TABLE>>];\n\n`;
-    
+
     return nodeContent;
   }
 
@@ -84,22 +75,22 @@ export class ClassDiagram extends GraphBase {
    */
   createClassRelationships() {
     let relationships = "";
-    
+
     // Create a map of class names to their modules
     const classModuleMap = new Map();
-    for (const cls of this.classes) {
+    for (const cls of this.classList) {
       classModuleMap.set(cls.exported, cls.name);
     }
-    
+
     // Look for dependencies between modules containing classes
-    for (const cls of this.classes) {
+    for (const cls of this.classList) {
       const srcModule = cls.name;
-      
+
       // Find dependencies where this class's module imports other class modules
-      const dependencies = this.dependencyList.filter(dep => 
+      const dependencies = this.dependencyList.filter(dep =>
         dep.src.includes(srcModule)
       );
-      
+
       for (const dep of dependencies) {
         // Check if the imported module contains a class
         for (const [className, moduleName] of classModuleMap.entries()) {
@@ -110,7 +101,7 @@ export class ClassDiagram extends GraphBase {
         }
       }
     }
-    
+
     return relationships;
   }
 }
