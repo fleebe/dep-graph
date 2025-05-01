@@ -13,8 +13,7 @@
       ],
       "program": "${workspaceFolder}/index.js",
       "args": [
-        "-o",
-        "./out/bfree",
+        "-o", "./out/bfree",
         "../nodejs/bfree/pages"  // This should be the positional argument (file|directory)
       ],
       "runtimeArgs": ["--experimental-modules"],
@@ -29,13 +28,8 @@
       ],
       "program": "${workspaceFolder}/index.js",
       "args": [
-        "-j",
-        "-g",
-        "-c",
-        "-d",
-        "-o",
-        "./docs",
-        "./src"  // This is correctly positioned as the file|directory argument
+        "-myconfig", "dep-graph-config.json",
+        "./src"  
       ],
       "runtimeArgs": ["--experimental-modules"],
       "sourceMaps": true,
@@ -46,18 +40,22 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug Generate",
+      "name": "bFree Typescript",
       "skipFiles": [
         "<node_internals>/**"
       ],
       "program": "${workspaceFolder}/index.js",
-      "args": ["./src"],  // Simplified arguments with just the required positional argument
-      "runtimeArgs": ["--experimental-modules"],
+      "args": [
+        "--config", "./bfree-dep-graph-config.json",
+        "C:/Code/bfree" // This is correctly positioned as the file|directory argument
+      ],
+      "runtimeArgs": [
+        "--experimental-modules"
+      ],
       "sourceMaps": true,
       "outFiles": [
         "${workspaceFolder}/**/*.js"
-      ],
-      "console": "integratedTerminal"
+      ]
     }
   ]
 }

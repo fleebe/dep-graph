@@ -171,49 +171,103 @@ export function cleanDirPath(root) {
 
 
 export function getFilename(fullPath) {
-  return fullPath.replace(/^.*[\\/]/, '');
+  return path.basename(fullPath);
 }
-/*
-const getAllFiles = function (dirPath, arrayOfFiles) {
-  let files = fs.readdirSync(dirPath);
 
-  arrayOfFiles = arrayOfFiles || []
-
-  files.forEach(function (file) {
-    if (fs.statSync(dirPath + "/" + file).isDirectory()) {
-      arrayOfFiles = getAllFiles(dirPath + "/" + file, arrayOfFiles)
-    } else {
-      arrayOfFiles.push(path.join(dirPath, "/", file))
-    }
-  })
-
-  return arrayOfFiles
-}
-*/
+/**
+ * Flattens an array of arrays into a single array
+ * @param {Array[]} lists - Array of arrays to flatten
+ * @returns {Array} - Flattened array
+ */
 function flatten(lists) {
   return lists.reduce((a, b) => a.concat(b), []);
 }
 
-function getDirectories(srcpath) {
-  return fs.readdirSync(srcpath)
-    .map(file => path.join(srcpath, file))
-    .filter(path => fs.statSync(path).isDirectory());
+/**
+ * Gets all directories in a given path, excluding hidden and ignored directories
+ * @param {string} srcpath - Source path to scan for directories
+ * @param {string[]} ignoredDirs - List of directory names to ignore
+ * @returns {string[]} - Array of directory paths
+ */
+function getDirectories(srcpath, ignoredDirs = []) {
+  try {
+    return fs.readdirSync(srcpath)
+      .filter(file => {
+        // Skip directories that start with a dot
+        if (file.startsWith('.')) return false;
+        
+        // Skip directories that are in the ignoredDirs list
+        if (ignoredDirs.includes(file)) return false;
+        
+        return true;
+      })
+      .map(file => path.join(srcpath, file))
+      .filter(filepath => {
+        try {
+          return fs.statSync(filepath).isDirectory();
+        } catch (error) {
+          console.warn(`Could not check if ${filepath} is a directory: ${error.message}`);
+          return false;
+        }
+      });
+  } catch (error) {
+    console.error(`Error reading directory ${srcpath}: ${error.message}`);
+    return [];
+  }
 }
 
 /**
- * @return array of files in the directory
+ * Gets all JavaScript files in a given path
+ * @param {string} srcpath - Source path to scan for files
+ * @returns {string[]} - Array of file paths
  */
-
 export function getFiles(srcpath) {
-  return fs.readdirSync(srcpath)
-    .map(file => path.join(srcpath, file))
-    .filter(path => fs.statSync(path).isFile())
-    .filter(file => hasExtension(file, EXT_LIST))
-    .map(f => f.replaceAll('\\', "/"));
+  try {
+    return fs.readdirSync(srcpath)
+      // Filter by extension first to avoid unnecessary stat operations
+      .filter(file => hasExtension(file, EXT_LIST))
+      .map(file => path.join(srcpath, file))
+      .filter(filepath => {
+        try {
+          return fs.statSync(filepath).isFile();
+        } catch (error) {
+          console.warn(`Could not check if ${filepath} is a file: ${error.message}`);
+          return false;
+        }
+      })
+      .map(f => f.replaceAll('\\', "/"));
+  } catch (error) {
+    console.error(`Error reading directory ${srcpath}: ${error.message}`);
+    return [];
+  }
 }
 
-export function getDirectoriesRecursive(srcpath) {
-  return [srcpath, ...flatten(getDirectories(srcpath).map(getDirectoriesRecursive))];
+export function getDirectoriesRecursive(srcpath, ignoredDirs = []) {
+  // Make a copy of the directories returned by getDirectories, passing along ignoredDirs
+  const directories = getDirectories(srcpath, ignoredDirs);
+  
+  // Recursively process each directory, continuing to pass ignoredDirs
+  const subdirectories = directories.map(dir => getDirectoriesRecursive(dir, ignoredDirs));
+  
+  // Return the current directory plus all subdirectories
+  return [srcpath, ...flatten(subdirectories)];
+}
+
+/**
+ * Gets all files recursively from a directory
+ * @param {string} srcpath - Source path to scan for files
+ * @param {string[]} ignoredDirs - List of directory names to ignore
+ * @returns {string[]} - Array of file paths
+ */
+export function getFilesRecursive(srcpath, ignoredDirs = []) {
+  // Get all directories recursively
+  const allDirs = getDirectoriesRecursive(srcpath, ignoredDirs);
+  
+  // Get files from each directory
+  const filesArrays = allDirs.map(dir => getFiles(dir));
+  
+  // Flatten the array of arrays
+  return flatten(filesArrays);
 }
 
 /**

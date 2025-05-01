@@ -21,7 +21,7 @@ import { HtmlGenerator } from './generators/HtmlGenerator.js';
 import { jsonOut } from './utils/json.js';
 import { safeWriteFile } from "./utils/file-utils.js";
 import { spawn } from 'child_process';
-import { getRelativePathParts, getDirectoriesRecursive, getFiles } from './utils/file-utils.js';
+import { getRelativePathParts, getDirectoriesRecursive, getFiles, getFilename } from './utils/file-utils.js';
 import { DiagramsGenerator } from './generators/DiagramsGenerator.js';
 import { ExportGraph } from './graphs/ExportGraph.js';
 import { RelationsGraph } from './graphs/RelationsGraph.js';
@@ -50,18 +50,27 @@ export class DependencyGraphGenerator {
    * @param {boolean} [options.graph] - Whether to generate package dependency graphs
    * @param {boolean} [options.class] - Whether to generate class diagrams
    * @param {boolean} [options.jsdoc] - Whether to generate JSDoc documentation
-   * @param {string} [options.output="./docs"] - Output directory for documentation
+   * @param {string} [options.output="./docs"] - Output directory for documentation relative to the baseLoc
    * @param {string} [options.jsdocConfig] - Path to JSDoc configuration file
    */
   constructor(baseLoc, options) {
-    this.baseLoc = this.validateOptions(options, baseLoc);
+    if (!path.isAbsolute(baseLoc)) {
+      baseLoc = path.resolve(process.cwd(), baseLoc);
+    }
+    this.baseLoc = baseLoc;
+
+    console.log(`Base location: ${this.baseLoc}`);
     this.options = options;
     let outputDir = this.options.output;
     if (!path.isAbsolute(outputDir)) {
-      outputDir = path.resolve(process.cwd(), outputDir);
-      console.log(`Converted to absolute path: ${outputDir}`);
+      outputDir = path.resolve(this.baseLoc, outputDir);
     }
     this.outputDir = outputDir;
+    // Ensure output directory exists
+    if (!fs.existsSync(this.outputDir)) {
+      fs.mkdirSync(this.outputDir, { recursive: true });
+    }
+    console.log(`Output directory: ${this.outputDir}`);
   }
 
   /**
@@ -77,12 +86,13 @@ export class DependencyGraphGenerator {
 
       // Get module information
       const [moduleArray] = this.#getModuleArray(stat);
-
+      console.log(`Processing ${moduleArray.length} modules...`);
       // Process and output results
       // eslint-disable-next-line no-unused-vars
       const [dependencyList, exportList, usedList, errors, classList] = ProcessAST(moduleArray, this.baseLoc);
 
       if (this.options.json) {
+        console.log("Writing JSON files...");
         if (errors.length > 0) {
           jsonOut(this.outputDir, "Errors", errors);
         }
@@ -100,7 +110,7 @@ export class DependencyGraphGenerator {
       const pgkGraph = packageGraph.generate();
       safeWriteFile(this.outputDir, "Package.dot", pgkGraph);
       this.#generateSvgFromDot(path.join(this.outputDir, "Package.dot"), path.join(this.outputDir, "Package.svg"));
-
+      
       const relationsGraph = new RelationsGraph(dependencyList, moduleArray);
       const relGraph = relationsGraph.generate();
       safeWriteFile(this.outputDir, "Relations.dot", relGraph);
@@ -108,11 +118,13 @@ export class DependencyGraphGenerator {
 
       // Add class diagram generation if option is specified
       if (this.options.class) {
+        console.log("Generating class diagram...");
         this.#createDirGraph("ClassDiagram", moduleArray, dependencyList, classList)
       }
 
       // create the graph file for packages or directories for all the modules. -g option
       if (this.options.graph) {
+        console.log("Generating export graph...");
         this.#createDirGraph("ExportGraph", moduleArray, dependencyList, exportList)
       }
 
@@ -122,10 +134,12 @@ export class DependencyGraphGenerator {
       }
 
       // Generate HTML output
+      console.log("Generating HTML documentation...");
       const htmlGenerator = new HtmlGenerator();
       const modHtml = htmlGenerator.createModuleHtml(this.outputDir, moduleArray, dependencyList, exportList);
       safeWriteFile(this.outputDir, "index.html", modHtml);
 
+      console.log("Generating diagrams HTML documentation...");
       const diagramsGenerator = new DiagramsGenerator();
       const diagHtml = diagramsGenerator.createDiagramsHtml(this.outputDir, moduleArray);
       safeWriteFile(this.outputDir, "diagrams.html", diagHtml);
@@ -150,17 +164,19 @@ export class DependencyGraphGenerator {
     let dirArr = [];
     if (stats.isFile()) {
       arr.push({
-        dir: root, file: path.getFilename(this.baseLoc),
+        dir: root, file: getFilename(this.baseLoc),
         dependsOnCnt: 0, usedByCnt: 0, exportCnt: 0
       });
       dirArr.push(root);
     } else if (stats.isDirectory()) {
       // array of directories
-      const dirArr = getDirectoriesRecursive(this.baseLoc)
+      const dirArr = getDirectoriesRecursive(this.baseLoc, this.options.ignore || []);
 
       dirArr.forEach(e => {
         const fileList = getFiles(e);
-        fileList.forEach(file => {
+        fileList
+          .filter(file => (!path.basename(file).startsWith('.')))
+        .forEach(file => {
           const { directory, filename } = getRelativePathParts(file, this.baseLoc); // get the directory and filename
           arr.push(
             {
@@ -183,12 +199,31 @@ export class DependencyGraphGenerator {
    * @returns {void}
    */
   #generateJSDoc(source, output, configFile) {
+    let actualConfigFile = configFile;
+    
     if (configFile) {
       // Read the config file
       const config = JSON.parse(fs.readFileSync(configFile, 'utf8'));
 
       // Set the source to the absolute path
       config.source.include = [path.resolve(source)];
+      
+      // Ensure node_modules are excluded
+      if (!config.source.exclude) {
+        config.source.exclude = ["node_modules"];
+      } else if (!config.source.exclude.includes("node_modules")) {
+        config.source.exclude.push("node_modules");
+      }
+      
+      // Add source map configuration
+      if (!config.sourceType) {
+        config.sourceType = "module";
+      }
+      
+      // Disable source maps if not explicitly enabled
+      if (config.opts && typeof config.opts.sourcemap === 'undefined') {
+        config.opts.sourcemap = false;
+      }
 
       // Set the destination to absolute path
       const jsdocOutput = path.resolve(this.outputDir, 'jsdoc');
@@ -202,13 +237,35 @@ export class DependencyGraphGenerator {
       fs.writeFileSync(tempConfigPath, JSON.stringify(config, null, 2));
 
       // Use the temp config
-      configFile = tempConfigPath;
+      actualConfigFile = tempConfigPath;
+    } else {
+      // If no config file is provided, create a basic one
+      const basicConfig = {
+        source: {
+          include: [path.resolve(source)],
+          exclude: ["node_modules"]
+        },
+        sourceType: "module",
+        opts: {
+          destination: path.resolve(this.outputDir, 'jsdoc'),
+          recurse: true,
+          sourcemap: false
+        },
+        plugins: ["plugins/markdown"]
+      };
+      
+      const jsdocOutput = path.resolve(this.outputDir, 'jsdoc');
+      fs.mkdirSync(jsdocOutput, { recursive: true });
+      
+      const tempConfigPath = path.join(this.outputDir, 'temp-jsdoc-config.json');
+      fs.writeFileSync(tempConfigPath, JSON.stringify(basicConfig, null, 2));
+      
+      actualConfigFile = tempConfigPath;
     }
 
-    // Pass ONLY the config file to JSDoc, not the source path
-    const args = ['--configure', configFile];
+    // Pass the config file to JSDoc
+    const args = ['--configure', actualConfigFile];
 
-    console.log(`Running JSDoc with args: ${args.join(' ')}`);
     const jsdocProcess = spawn('jsdoc', args, {
       stdio: ['inherit', 'pipe', 'pipe']
     });
@@ -222,7 +279,7 @@ export class DependencyGraphGenerator {
     });
 
     jsdocProcess.on('error', (err) => {
-      if (err.code === 'ENOENT') {
+      if (err.name === 'ENOENT') {
         console.error(`Error: JSDoc command not found. Please ensure JSDoc is installed globally (npm install -g jsdoc) or as a dependency in your project.`);
       } else {
         console.error(`Error running JSDoc: ${err.message}`);
@@ -285,13 +342,12 @@ export class DependencyGraphGenerator {
    * @throws {Error} When Graphviz encounters an error
    */
   #generateSvgFromDot(dotFilePath, svgFilePath) {
-    console.log(`Generating SVG from ${dotFilePath}...`);
 
     try {
       const graphvizProcess = spawn('dot', ['-Tsvg', dotFilePath, '-o', svgFilePath]);
 
       graphvizProcess.on('error', (err) => {
-        if (err.code === 'ENOENT') {
+        if (err.name === 'ENOENT') {
           console.error('Error: Graphviz dot command not found. Please ensure Graphviz is installed on your system.');
         } else {
           console.error(`Error running Graphviz: ${err.message}`);
@@ -300,7 +356,7 @@ export class DependencyGraphGenerator {
 
       graphvizProcess.on('close', (code) => {
         if (code === 0) {
-          console.log(`SVG file successfully generated: ${svgFilePath}`);
+//          console.log(`SVG file successfully generated: ${svgFilePath}`);
         } else {
           console.error(`Graphviz process exited with code ${code}`);
         }
@@ -310,38 +366,4 @@ export class DependencyGraphGenerator {
     }
   }
 
-  /**
-   * Validates the CLI options and input path
-   * @param {object} options - CLI options including output directory and generation flags
-   * @param {string} symbol - Path to analyze (file or directory)
-   * @returns {string} Validated absolute path to the symbol
-   * @throws {Error} When path is invalid or doesn't exist
-   */
-  validateOptions(options, symbol) {
-    // Validate path is absolute (full path)
-    if (!path.isAbsolute(symbol)) {
-      // Instead of throwing an error, let's convert to absolute path
-      symbol = path.resolve(process.cwd(), symbol);
-      console.log(`Converted to absolute path: ${symbol}`);
-    }
-
-    // Verify the path exists
-    if (!fs.existsSync(symbol)) {
-      throw new Error(`Path does not exist: ${symbol}`);
-    }
-
-    // Create output directory if it doesn't exist
-    if (!fs.existsSync(options.output)) {
-      fs.mkdirSync(options.output, { recursive: true });
-      console.log("Created output directory:", options.output);
-      return symbol;
-    }
-
-    // Since graph option is commented out in the program definition,
-    // we shouldn't check for it in validation
-    if (options.json === undefined) {
-      console.warn("No output format was specified. Using default outputs only.");
-    }
-    return symbol;
-  }
 }

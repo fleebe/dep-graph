@@ -1,0 +1,14 @@
+{
+  "json": true,
+  "graph": true,
+  "class": true,
+  "output": "C:/Code/dep-graph/docs",
+  "jsdoc": true,
+  "jsdocConfig": "./jsdoc.json",
+  "ignore": [
+    "node_modules",
+    "dist",
+    "build",
+    ".git"
+  ]
+}

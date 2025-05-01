@@ -1,0 +1,18 @@
+{
+  "json": true,
+  "graph": true,
+  "class": true,
+  "jsdoc": false,
+  "output": "C:\\Code\\bfree\\depgraph_docs",
+  "jsdocConfig": ".\\jsdoc.json",
+  "ignore": [
+    "node_modules",
+    "dist",
+    "build",
+    "_scratch",
+    "doc",
+    "public",
+    "styles",
+    "depgraph-docs"
+  ]
+}
