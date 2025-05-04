@@ -73,6 +73,8 @@ class ASTProcessor {
 
         this.dependencyProcessor.dependencyList.push(...deps);
       } catch (err) {
+        console.error(`Error processing ${mod.dir}/${mod.file}: ${err}`);
+        console.error(`${err.stack}`);
         this.errorCollector.addError(mod.file, err);
       }
     });

@@ -29,6 +29,10 @@ export class ClassProcessor extends BaseProcessor {
 
     estraverse.traverse(ast, {
       enter: (node) => {
+        // Skip JSX and common TS types estraverse doesn't know by default
+        const skip = this.skipNode(node.type);
+        if (skip) return skip;
+
         if (node.type === 'ClassDeclaration' || 
             (node.type === 'ClassExpression' && node.id)) {
           const className = node.id ? node.id.name : 'AnonymousClass';

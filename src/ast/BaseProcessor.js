@@ -23,17 +23,30 @@ export class BaseProcessor {
    */
   getParentNode(ast, targetNode) {
     let parentNode = null;
-    
+
     estraverse.traverse(ast, {
-      enter: function(node, parent) {
+      enter: function (node, parent) {
         if (node === targetNode) {
           parentNode = parent;
           return this.break();
         }
       }
     });
-    
+
     return parentNode;
+  }
+
+  skipNode(nodeType) {
+    // Skip JSX and common TS types estraverse doesn't know by default
+    if (nodeType === 'JSXElement' ||
+      nodeType === 'JSXFragment' ||
+      nodeType === 'TSInterfaceDeclaration' ||
+      nodeType === 'TSTypeAliasDeclaration' ||
+      nodeType === 'TSAsExpression' ||
+      nodeType === 'TSEnumDeclaration') {
+      return estraverse.VisitorOption.Skip;
+    }
+    return null
   }
 
   /**
@@ -95,12 +108,12 @@ export class BaseProcessor {
   calRelSrcFile(src, relSrcPath) {
     const cnt = this.countSubstrings(relSrcPath, '../')
     if (cnt > 0) {
-        const srcDirs = path.dirname(src).split('/');
-        if (cnt >= srcDirs.length) {
-          return relSrcPath.replaceAll("../", ""); 
-        }
-        const ret = this.replaceWithReversedArray(relSrcPath, "../", srcDirs, cnt);
-        return ret;
+      const srcDirs = path.dirname(src).split('/');
+      if (cnt >= srcDirs.length) {
+        return relSrcPath.replaceAll("../", "");
+      }
+      const ret = this.replaceWithReversedArray(relSrcPath, "../", srcDirs, cnt);
+      return ret;
     } else if (relSrcPath.startsWith('./')) {
       return relSrcPath.replace("./", "");
     } else {

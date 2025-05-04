@@ -29,6 +29,10 @@ export class ExportProcessor extends BaseProcessor {
 
     estraverse.traverse(ast, {
       enter: (node) => {
+        // Use the base class helper to skip nodes estraverse doesn't know
+        const skip = this.skipNode(node.type);
+        if (skip) return skip;
+
         if (node.type === 'ExportNamedDeclaration' || node.type === 'ExportDefaultDeclaration') {
           this.processExportDeclaration(node, srcFile, exportList, mod);
         }
