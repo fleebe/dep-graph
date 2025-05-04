@@ -1,5 +1,5 @@
 import path from "path";
-import { GraphBase } from "../core/GraphBase.js";
+import { GraphBase } from "./GraphBase.js";
 import { cleanDirPath, moduleName } from "../utils/file-utils.js";
 import { getUsedByList, getDependsOn, getNodeModuleList } from "../utils/list-utils.js";
 

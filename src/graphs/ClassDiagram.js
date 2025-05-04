@@ -1,4 +1,4 @@
-import { GraphBase } from "../core/GraphBase.js";
+import { GraphBase } from "./GraphBase.js";
 import { cleanDirPath } from "../utils/file-utils.js";
 
 /**
@@ -35,7 +35,12 @@ export class ClassDiagram extends GraphBase {
       })
       .forEach((cls) => {
         result += this.createClassNode(cls);
- //       result += this.createClassRelationships(cls);
+        // Add inheritance relationship if a superclass exists
+        if (cls.superClass) {
+          // Draw an edge from subclass to superclass with an empty arrow for inheritance
+          result += `"${cls.name}"->"${cls.superClass}" [arrowhead=empty];\n`;
+        }
+        result += `\n`
       });
 
     // Close the graph
@@ -63,45 +68,9 @@ export class ClassDiagram extends GraphBase {
     });
 
     nodeContent += `</TD></TR>\n`;
-    nodeContent += `</TABLE>>];\n\n`;
+    nodeContent += `</TABLE>>];\n`;
 
     return nodeContent;
   }
 
-  /**
-   * Creates relationships between classes
-   * 
-   * @returns {string} - DOT syntax for class relationships
-   */
-  createClassRelationships() {
-    let relationships = "";
-
-    // Create a map of class names to their modules
-    const classModuleMap = new Map();
-    for (const cls of this.classList) {
-      classModuleMap.set(cls.exported, cls.name);
-    }
-
-    // Look for dependencies between modules containing classes
-    for (const cls of this.classList) {
-      const srcModule = cls.name;
-
-      // Find dependencies where this class's module imports other class modules
-      const dependencies = this.dependencyList.filter(dep =>
-        dep.src.includes(srcModule)
-      );
-
-      for (const dep of dependencies) {
-        // Check if the imported module contains a class
-        for (const [className, moduleName] of classModuleMap.entries()) {
-          if (dep.relSrcName.includes(moduleName) && cls.exported !== className) {
-            // Found a relationship between classes
-            relationships += `"${cls.exported}" -> "${className}" [arrowhead=vee];\n`;
-          }
-        }
-      }
-    }
-
-    return relationships;
-  }
 }

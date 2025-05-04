@@ -28,7 +28,7 @@
       ],
       "program": "${workspaceFolder}/index.js",
       "args": [
-        "-myconfig", "dep-graph-config.json",
+        "--config", "./dep-graph-config.json",
         "./src"  
       ],
       "runtimeArgs": ["--experimental-modules"],

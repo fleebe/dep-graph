@@ -3,12 +3,7 @@
   "graph": true,
   "class": true,
   "output": "C:/Code/dep-graph/docs",
-  "jsdoc": true,
+  "jsdoc": false,
   "jsdocConfig": "./jsdoc.json",
-  "ignore": [
-    "node_modules",
-    "dist",
-    "build",
-    ".git"
-  ]
+  "ignore": []
 }

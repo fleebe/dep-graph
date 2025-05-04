@@ -1,4 +1,4 @@
-import { GraphBase } from "../core/GraphBase.js";
+import { GraphBase } from "./GraphBase.js";
 import { getNodeModuleList } from "../utils/list-utils.js";
 
 /**

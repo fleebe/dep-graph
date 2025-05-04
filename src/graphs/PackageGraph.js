@@ -1,5 +1,5 @@
 import { cleanDirPath } from "../utils/file-utils.js";
-import { GraphBase } from "../core/GraphBase.js";
+import { GraphBase } from "./GraphBase.js";
 
 /**
  * Generates a package dependency graph showing directory-level dependencies

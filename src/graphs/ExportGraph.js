@@ -1,4 +1,4 @@
-import { GraphBase } from "../core/GraphBase.js";
+import { GraphBase } from "./GraphBase.js";
 import { moduleName } from "../utils/file-utils.js";
 import { getExportedList, getDependsOn } from "../utils/list-utils.js";
 
