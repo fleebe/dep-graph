@@ -2,7 +2,7 @@ import { readFileSync } from "fs";
 import { getUsedByList } from "../utils/list-utils.js";
 import { parse as tsParser } from '@typescript-eslint/parser';
 import path from "path";
-import { DependencyProcessor } from "./DependencyProcessor.js";
+import { ImportProcessor } from "./ImportProcessor.js";
 import { ExportProcessor } from "./ExportProcessor.js";
 import { ClassProcessor } from "./ClassProcessor.js";
 import { ErrorCollector } from "./ErrorCollector.js";
@@ -19,7 +19,7 @@ class ASTProcessor {
    */
   constructor(baseLoc) {
     this.baseLoc = baseLoc;
-    this.dependencyProcessor = new DependencyProcessor(baseLoc);
+    this.importProcessor = new ImportProcessor(baseLoc);
     this.exportProcessor = new ExportProcessor(baseLoc);
     this.classProcessor = new ClassProcessor(baseLoc);
     this.errorCollector = new ErrorCollector(baseLoc);
@@ -50,7 +50,7 @@ class ASTProcessor {
         this.exportProcessor.exportList.push(...exps);
         
         // Parse dependencies
-        let deps = this.dependencyProcessor.parseImports(ast, mod);
+        let deps = this.importProcessor.parseImports(ast, mod);
         
         // Parse class information
         const classes = this.classProcessor.parseClasses(ast, mod);
@@ -71,7 +71,7 @@ class ASTProcessor {
         mod.dependsOnCnt = uniqueDepSources.size;
         mod.exportCnt = exps.length;
 
-        this.dependencyProcessor.dependencyList.push(...deps);
+        this.importProcessor.dependencyList.push(...deps);
       } catch (err) {
         console.error(`Error processing ${mod.dir}/${mod.file}: ${err}`);
         console.error(`${err.stack}`);
@@ -80,12 +80,12 @@ class ASTProcessor {
     });
 
     // Normalize dependencies
-    this.dependencyProcessor.dependencyList = 
-      this.dependencyProcessor.normalizeDeps(this.dependencyProcessor.dependencyList);
+    this.importProcessor.dependencyList = 
+      this.importProcessor.normalizeDeps(this.importProcessor.dependencyList);
 
     // Update usage counts
     moduleMap.forEach((mod) => {
-      const modUsedList = getUsedByList(this.dependencyProcessor.dependencyList, mod);
+      const modUsedList = getUsedByList(this.importProcessor.dependencyList, mod);
       // Count unique dependencies by source module
       const uniqueUsedList = new Set(modUsedList.map(dep => dep.src));
       mod.usedByCnt = uniqueUsedList.size;
@@ -93,7 +93,7 @@ class ASTProcessor {
     });
 
     return [
-      this.dependencyProcessor.dependencyList,
+      this.importProcessor.dependencyList,
       this.exportProcessor.exportList,
       this.usageProcessor.usedList,
       this.errorCollector.errors,

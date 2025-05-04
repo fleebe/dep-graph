@@ -4,12 +4,12 @@ import estraverse from 'estraverse';
 import { BaseProcessor } from "./BaseProcessor.js";
 
 /**
- * @class DependencyProcessor
+ * @class ImportProcessor
  * @description Processes ASTs to extract import dependencies
  */
-export class DependencyProcessor extends BaseProcessor {
+export class ImportProcessor extends BaseProcessor {
   /**
-   * Creates a new DependencyProcessor
+   * Creates a new ImportProcessor
    * @param {string} baseLoc - Base location
    */
   constructor(baseLoc) {
