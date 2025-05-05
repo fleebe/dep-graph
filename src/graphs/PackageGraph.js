@@ -8,13 +8,15 @@ export class PackageGraph extends GraphBase {
   /**
    * @param {Array} moduleArray - Array of module objects with metadata
    * @param {Array} dependencyList - Array of dependencies
-   * @param {string} [srcDir=""] - Source directory for labeling the graph
    */
-  constructor(moduleArray, dependencyList, srcDir = "") {
+
+  #moduleArray = []
+  #dependencyList = []
+
+  constructor(moduleArray, dependencyList) {
     super();
     this.moduleArray = moduleArray;
     this.dependencyList = dependencyList;
-    this.srcDir = srcDir;
   }
 
   /**
@@ -23,8 +25,7 @@ export class PackageGraph extends GraphBase {
    * @returns {string} - DOT file content as string
    */
   generate() {
-    const title = this.srcDir.replaceAll(/\\/g, "/");
-    let result = this.recordDigraph(title);
+    let result = this.recordDigraph("");
 
     // Add packages to the graph
     result += this.createPackageNodes();

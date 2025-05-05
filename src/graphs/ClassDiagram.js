@@ -5,6 +5,9 @@ import { cleanDirPath } from "../utils/file-utils.js";
  * Generates a class diagram showing classes and their relationships
  */
 export class ClassDiagram extends GraphBase {
+  #classList = []
+  #dependencyList = []
+
   /**
    * @param {Array} classList 
    * @param {Array} dependencyList - List of dependencies to identify relationships
@@ -22,17 +25,22 @@ export class ClassDiagram extends GraphBase {
    * @returns {string} - DOT file content for class diagram
    */
   generate(dir) {
-    // Prepare the directory name for the diagram title
-    let title = " base Class Diagram";
-    if (dir != "")  title = `${dir} Class Diagram` 
-  
-    // Start the digraph
-    let result = this.digraph(title);
-    this.classList
+    const dirClassList = this.classList
       .filter(cls => {
         const clsDir = cleanDirPath(cls.filePath)
         return (clsDir === dir)
       })
+
+    if (dirClassList.length < 1)
+      return null
+
+    // Prepare the directory name for the diagram title
+    let title = " base Class Diagram";
+    if (dir != "") title = `${dir} Class Diagram`
+
+    // Start the digraph
+    let result = this.digraph(title);
+    dirClassList
       .forEach((cls) => {
         result += this.createClassNode(cls);
         // Add inheritance relationship if a superclass exists
@@ -59,17 +67,24 @@ export class ClassDiagram extends GraphBase {
     let nodeContent = `"${className}" [shape=none, label=<<TABLE cellspacing="0" cellborder="1" align="left">\n`;
 
     // Class name header
-    nodeContent += `<TR><TD bgcolor="lightblue" align="left"><B>${className}</B></TD></TR>\n`;
-    nodeContent += `<TR><TD><B>methods</B><BR/>\n`;
-     classItem.methods.forEach(method => {
-      const methodName = method.name;
-      const params = method.parameters || "()";
-      nodeContent += `${(method.isPrivate) ? "-" : "+"} ${methodName} ${params}<BR/>\n`;
+    const superClass = (classItem.superClass) ? ":" + classItem.superClass : ""
+    nodeContent += `<TR><TD bgcolor="lightblue" align="left"><B>`
+    nodeContent += `${className}${superClass}</B></TD></TR>\n`;
+ 
+    nodeContent += `<TR><TD align="left"><B>properties</B><BR/>\n`;
+    classItem.properties.forEach(prop => {
+      nodeContent += `${(prop.isPrivate) ? "-" : "+"} ${prop.name}<BR/>\n`;
     });
-
     nodeContent += `</TD></TR>\n`;
-    nodeContent += `</TABLE>>];\n`;
 
+    nodeContent += `<TR><TD align="left"><B>methods</B><BR/>\n`;
+    classItem.methods.forEach(method => {
+      const params = method.parameters || "()";
+      nodeContent += `${(method.isPrivate) ? "-" : "+"} ${method.name} ${params}<BR/>\n`;
+    });
+    nodeContent += `</TD></TR>\n`;
+
+    nodeContent += `</TABLE>>];\n`;
     return nodeContent;
   }
 

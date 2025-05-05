@@ -6,7 +6,8 @@ import path from "path";
  * @description Base class for AST processors with common utility methods
  */
 export class BaseProcessor {
-  /**
+  #baseLoc = '';
+   /**
    * Creates a new BaseProcessor instance
    * @param {string} baseLoc - The base directory or file
    */

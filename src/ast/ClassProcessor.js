@@ -7,6 +7,7 @@ import { BaseProcessor } from "./BaseProcessor.js";
  * @description Processes ASTs to extract class information
  */
 export class ClassProcessor extends BaseProcessor {
+  classList = [];
   /**
    * Creates a new ClassProcessor
    * @param {string} baseLoc - Base location
@@ -14,7 +15,7 @@ export class ClassProcessor extends BaseProcessor {
   constructor(baseLoc) {
     super(baseLoc);
     this.classList = [];
-  }
+   }
 
   /**
    * Analyzes an AST to extract class declarations with their methods and properties

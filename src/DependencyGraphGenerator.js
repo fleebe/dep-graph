@@ -41,6 +41,9 @@ import { PackageGraph } from './graphs/PackageGraph.js';
  * @property {string} outputDir - Absolute path to output directory
  */
 export class DependencyGraphGenerator {
+  #baseLoc = '';
+  #options = {};
+  #outputDir = '';
 
   /**
    * Creates a new DependencyGraphGenerator instance
@@ -110,7 +113,7 @@ export class DependencyGraphGenerator {
       const pgkGraph = packageGraph.generate();
       safeWriteFile(this.outputDir, "Package.dot", pgkGraph);
       this.#generateSvgFromDot(path.join(this.outputDir, "Package.dot"), path.join(this.outputDir, "Package.svg"));
-      
+
       const relationsGraph = new RelationsGraph(dependencyList, moduleArray);
       const relGraph = relationsGraph.generate();
       safeWriteFile(this.outputDir, "Relations.dot", relGraph);
@@ -176,14 +179,14 @@ export class DependencyGraphGenerator {
         const fileList = getFiles(e);
         fileList
           .filter(file => (!path.basename(file).startsWith('.')))
-        .forEach(file => {
-          const { directory, filename } = getRelativePathParts(file, this.baseLoc); // get the directory and filename
-          arr.push(
-            {
-              dir: directory, file: filename,
-              dependsOnCnt: 0, usedByCnt: 0, exportCnt: 0
-            })
-        });
+          .forEach(file => {
+            const { directory, filename } = getRelativePathParts(file, this.baseLoc); // get the directory and filename
+            arr.push(
+              {
+                dir: directory, file: filename,
+                dependsOnCnt: 0, usedByCnt: 0, exportCnt: 0
+              })
+          });
       });
     }
 
@@ -200,26 +203,26 @@ export class DependencyGraphGenerator {
    */
   #generateJSDoc(source, output, configFile) {
     let actualConfigFile = configFile;
-    
+
     if (configFile) {
       // Read the config file
       const config = JSON.parse(fs.readFileSync(configFile, 'utf8'));
 
       // Set the source to the absolute path
       config.source.include = [path.resolve(source)];
-      
+
       // Ensure node_modules are excluded
       if (!config.source.exclude) {
         config.source.exclude = ["node_modules"];
       } else if (!config.source.exclude.includes("node_modules")) {
         config.source.exclude.push("node_modules");
       }
-      
+
       // Add source map configuration
       if (!config.sourceType) {
         config.sourceType = "module";
       }
-      
+
       // Disable source maps if not explicitly enabled
       if (config.opts && typeof config.opts.sourcemap === 'undefined') {
         config.opts.sourcemap = false;
@@ -253,13 +256,13 @@ export class DependencyGraphGenerator {
         },
         plugins: ["plugins/markdown"]
       };
-      
+
       const jsdocOutput = path.resolve(this.outputDir, 'jsdoc');
       fs.mkdirSync(jsdocOutput, { recursive: true });
-      
+
       const tempConfigPath = path.join(this.outputDir, 'temp-jsdoc-config.json');
       fs.writeFileSync(tempConfigPath, JSON.stringify(basicConfig, null, 2));
-      
+
       actualConfigFile = tempConfigPath;
     }
 
@@ -320,17 +323,15 @@ export class DependencyGraphGenerator {
           break;
         default:
       }
-      if (graph) {
-        const fileDir = path.join(this.outputDir, dir);
-        // Ensure the directory exists before writing files
-        if (!fs.existsSync(fileDir)) {
-          fs.mkdirSync(fileDir, { recursive: true });
-        }
-
-        safeWriteFile(fileDir, `${graphName}.dot`, graph);
-        this.#generateSvgFromDot(path.join(fileDir, `${graphName}.dot`), path.join(fileDir, `${graphName}.svg`));
+      const fileDir = path.join(this.outputDir, dir);
+      // Ensure the directory exists before writing files
+      if (!fs.existsSync(fileDir)) {
+        fs.mkdirSync(fileDir, { recursive: true });
       }
 
+      safeWriteFile(fileDir, `${graphName}.dot`, graph);
+      
+      this.#generateSvgFromDot(path.join(fileDir, `${graphName}.dot`), path.join(fileDir, `${graphName}.svg`));
     })
   }
 
@@ -344,6 +345,14 @@ export class DependencyGraphGenerator {
   #generateSvgFromDot(dotFilePath, svgFilePath) {
 
     try {
+      // Check if file exists and delete it
+      if (fs.existsSync(svgFilePath)) {
+        fs.unlinkSync(svgFilePath);
+      }
+      if (!fs.existsSync(dotFilePath)) {
+        return
+      }
+
       const graphvizProcess = spawn('dot', ['-Tsvg', dotFilePath, '-o', svgFilePath]);
 
       graphvizProcess.on('error', (err) => {
@@ -356,7 +365,7 @@ export class DependencyGraphGenerator {
 
       graphvizProcess.on('close', (code) => {
         if (code === 0) {
-//          console.log(`SVG file successfully generated: ${svgFilePath}`);
+          //          console.log(`SVG file successfully generated: ${svgFilePath}`);
         } else {
           console.error(`Graphviz process exited with code ${code}`);
         }

@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs";
-import {EXT_LIST} from "./globals.js";
+import { EXT_LIST } from "./globals.js";
 
 /**
  * @module utils/file-utils
@@ -97,19 +97,19 @@ export function normalizePath(dest, src, root) {
   if (!dest.startsWith(".")) return dest; // node module as does not start with "."
   let srcDir = path.dirname(src);
   if (srcDir === ".") return dest;  // current dir so no need to replace
-  let relFile = "./" + path.normalize(path.join(srcDir, dest)).replaceAll("\\", "/");  
+  let relFile = "./" + path.normalize(path.join(srcDir, dest)).replaceAll("\\", "/");
   const validSrc = validateImportFile(relFile, root);
 
- /*
-  if (res.indexOf("..") !== -1) { // up dirs in the importSrc
-    //  const fname = getFilename(dest);
-    const d = dest.split("/");
-    const s = path.dirname(src).split("/");
-    const count = (dest.split("..").length - 1); // count how many up dirs
-    res = s.slice(0, -count).join("/") + "/" + d.slice(count).join("/"); // remove up dirs and rejoin to create a path
-    if (res.startsWith("/")) res = "./" + res.substring(1, res.length);
-  }
-  */
+  /*
+   if (res.indexOf("..") !== -1) { // up dirs in the importSrc
+     //  const fname = getFilename(dest);
+     const d = dest.split("/");
+     const s = path.dirname(src).split("/");
+     const count = (dest.split("..").length - 1); // count how many up dirs
+     res = s.slice(0, -count).join("/") + "/" + d.slice(count).join("/"); // remove up dirs and rejoin to create a path
+     if (res.startsWith("/")) res = "./" + res.substring(1, res.length);
+   }
+   */
   return validSrc;
 }
 
@@ -195,10 +195,10 @@ function getDirectories(srcpath, ignoredDirs = []) {
       .filter(file => {
         // Skip directories that start with a dot
         if (file.startsWith('.')) return false;
-        
+
         // Skip directories that are in the ignoredDirs list
         if (ignoredDirs.includes(file)) return false;
-        
+
         return true;
       })
       .map(file => path.join(srcpath, file))
@@ -245,10 +245,10 @@ export function getFiles(srcpath) {
 export function getDirectoriesRecursive(srcpath, ignoredDirs = []) {
   // Make a copy of the directories returned by getDirectories, passing along ignoredDirs
   const directories = getDirectories(srcpath, ignoredDirs);
-  
+
   // Recursively process each directory, continuing to pass ignoredDirs
   const subdirectories = directories.map(dir => getDirectoriesRecursive(dir, ignoredDirs));
-  
+
   // Return the current directory plus all subdirectories
   return [srcpath, ...flatten(subdirectories)];
 }
@@ -262,10 +262,10 @@ export function getDirectoriesRecursive(srcpath, ignoredDirs = []) {
 export function getFilesRecursive(srcpath, ignoredDirs = []) {
   // Get all directories recursively
   const allDirs = getDirectoriesRecursive(srcpath, ignoredDirs);
-  
+
   // Get files from each directory
   const filesArrays = allDirs.map(dir => getFiles(dir));
-  
+
   // Flatten the array of arrays
   return flatten(filesArrays);
 }
@@ -316,8 +316,7 @@ export function safeWriteFile(dirPath, fileName, content) {
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
-    
-    fs.writeFileSync(filePath, content, "utf8");
+    if (content) fs.writeFileSync(filePath, content, "utf8");
   } catch (error) {
     console.error(`Error writing file ${filePath}: ${error.message}`);
   }

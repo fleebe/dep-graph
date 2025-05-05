@@ -13,6 +13,13 @@ import { UsageProcessor } from "./UsageProcessor.js";
  * @description Main orchestrator for AST processing using specialized processors
  */
 class ASTProcessor {
+  #importProcessor = null;
+  #exportProcessor = null;
+  #classProcessor = null;
+  #errorCollector = null;
+  #usageProcessor = null;
+  #baseLoc = '';
+
   /**
    * Creates a new ASTProcessor instance
    * @param {string} baseLoc - The base directory or file to create dependency graphs from
@@ -54,7 +61,8 @@ class ASTProcessor {
         
         // Parse class information
         const classes = this.classProcessor.parseClasses(ast, mod);
-        this.classProcessor.classList.push(...classes);
+        if (classes.length > 0)
+          this.classProcessor.classList.push(...classes);
 
         // Add exported source files as dependencies
         for (const ex of exps.filter(ex => ex.type.startsWith("."))) {
