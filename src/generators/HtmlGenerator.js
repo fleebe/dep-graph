@@ -1,4 +1,5 @@
-import { getUsedByList, getDependsOn, getNodeModuleList, getExportedList } from "../utils/list-utils.js";
+import {
+  getUsedByList, getDependsOn, getUniqueNodeModules,  getExportedList } from "../utils/list-utils.js";
 
 /**
  *  @module commands/html
@@ -71,7 +72,7 @@ constructor(diagramHTML) {
     result += `<h1 id="mod_list">Module List</h1>\n`;
 
     // Get unique node modules
-    const nodMods = this.getUniqueNodeModules(dependencyList);
+    const nodMods = getUniqueNodeModules(dependencyList);
     
     // Generate counts table
     result += tblStyle;
@@ -285,7 +286,7 @@ constructor(diagramHTML) {
     result += "\t<tr><th>File</th>";
     result += "<th>Node Module</th></tr>\n";
     
-    const nodMods = this.getUniqueNodeModules(dependencyList);
+    const nodMods = getUniqueNodeModules(dependencyList);
     
     for (const dep of nodMods) {
       result += `\t<tr><td>${dep.importSrc}</td>\n`;
@@ -295,33 +296,5 @@ constructor(diagramHTML) {
     result += `</table><br>\n`;
     return result;
   }
-
-  /**
-   * Gets a list of unique node modules from the dependency list
-   * 
-   * @param {Array} dependencyList - Array of dependencies
-   * @returns {Array} - Array of unique node modules
-   */
-  getUniqueNodeModules(dependencyList) {
-    const objArray = getNodeModuleList(dependencyList);
-    let uniqueObjArray = [...new Map(
-      objArray.map((item) => [item.importSrc, item])
-    ).values()];
-    return uniqueObjArray;
-  }
 }
-
-// Function for backward compatibility
-export function createModuleHtml(symbol, moduleArray, dependencyList, exportList) {
-  const htmlGenerator = new HtmlGenerator();
-  return htmlGenerator.createModuleHtml(symbol, moduleArray, dependencyList, exportList);
-}
-
-/**
- * Module exports
- */
-export default {
-  createModuleHtml,
-  HtmlGenerator
-};
 

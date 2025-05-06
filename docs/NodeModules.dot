@@ -1,0 +1,33 @@
+digraph {label="Node Modules Dependencies";
+labelloc="t";
+"node-modules" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD><B>node-modules</B></TD></TR>
+<TR><TD align="left">
+@typescript-eslint/parser<BR/>
+child_process<BR/>
+commander<BR/>
+estraverse<BR/>
+fs<BR/>
+path<BR/>
+url<BR/>
+</TD></TR>
+</TABLE>>];
+"modules" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD><B>modules</B></TD></TR>
+<TR><TD align="left">
+dep-graph.js<BR/>
+DependencyGraphGenerator.js<BR/>
+ast/ASTProcessor.js<BR/>
+ast/BaseProcessor.js<BR/>
+ast/ClassProcessor.js<BR/>
+ast/ExportProcessor.js<BR/>
+ast/ImportProcessor.js<BR/>
+generators/DiagramsGenerator.js<BR/>
+graphs/RelationsGraph.js<BR/>
+utils/file-utils.js<BR/>
+utils/json.js<BR/>
+utils/list-utils.js<BR/>
+</TD></TR>
+</TABLE>>];
+"modules"->"node-modules"
+}

@@ -1,6 +1,6 @@
 digraph {label="graphs Class Diagram";
 labelloc="t";
-"ClassDiagram"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"ClassDiagram" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD align="left"><B>ClassDiagram:GraphBase</B></TD></TR>
 <TR><TD align="left"><B>properties</B><BR/>
 - #classList<BR/>
@@ -14,9 +14,12 @@ labelloc="t";
 </TABLE>>];
 "ClassDiagram"->"GraphBase" [arrowhead=empty];
 
-"ExportGraph"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"ExportGraph" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD align="left"><B>ExportGraph:GraphBase</B></TD></TR>
 <TR><TD align="left"><B>properties</B><BR/>
+- #dependencyList<BR/>
+- #exportList<BR/>
+- #moduleArray<BR/>
 </TD></TR>
 <TR><TD align="left"><B>methods</B><BR/>
 + constructor (dependencyList, exportList, moduleArray)<BR/>
@@ -26,7 +29,7 @@ labelloc="t";
 </TABLE>>];
 "ExportGraph"->"GraphBase" [arrowhead=empty];
 
-"GraphBase"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"GraphBase" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD align="left"><B>GraphBase</B></TD></TR>
 <TR><TD align="left"><B>properties</B><BR/>
 </TD></TR>
@@ -41,19 +44,20 @@ labelloc="t";
 </TD></TR>
 </TABLE>>];
 
-"NodeModulesGraph"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"NodeModulesGraph" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD align="left"><B>NodeModulesGraph:GraphBase</B></TD></TR>
 <TR><TD align="left"><B>properties</B><BR/>
+- #dependencyList<BR/>
 </TD></TR>
 <TR><TD align="left"><B>methods</B><BR/>
-+ constructor (dependencyList, nodeModuleDependents)<BR/>
++ constructor (dependencyList)<BR/>
 + generate ()<BR/>
 + createNodeModulesSection ()<BR/>
 </TD></TR>
 </TABLE>>];
 "NodeModulesGraph"->"GraphBase" [arrowhead=empty];
 
-"PackageGraph"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"PackageGraph" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD align="left"><B>PackageGraph:GraphBase</B></TD></TR>
 <TR><TD align="left"><B>properties</B><BR/>
 - #moduleArray<BR/>
@@ -69,7 +73,7 @@ labelloc="t";
 </TABLE>>];
 "PackageGraph"->"GraphBase" [arrowhead=empty];
 
-"RelationsGraph"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"RelationsGraph" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD align="left"><B>RelationsGraph:GraphBase</B></TD></TR>
 <TR><TD align="left"><B>properties</B><BR/>
 </TD></TR>

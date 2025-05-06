@@ -1,28 +1,29 @@
 digraph {label="";
 labelloc="t";
-"dep-graph.js"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"dep-graph.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD ALIGN="center">dep-graph.js</TD></TR>
 <TR><TD ALIGN="left">Depend On : 5<BR/>
 Used By : 0</TD></TR>
 <TR><TD align="left">DependencyGraphGenerator.js<BR />commander<BR />fs<BR />path<BR />url<BR /></TD></TR><TR><TD align="left"></TD></TR>
 </TABLE>>];
 "dep-graph.js"->"DependencyGraphGenerator.js"
-"DependencyGraphGenerator.js"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"DependencyGraphGenerator.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD ALIGN="center">DependencyGraphGenerator.js</TD></TR>
-<TR><TD ALIGN="left">Depend On : 12<BR/>
+<TR><TD ALIGN="left">Depend On : 13<BR/>
 Used By : 1</TD></TR>
-<TR><TD align="left">ast/ASTProcessor.js<BR />generators/DiagramsGenerator.js<BR />generators/HtmlGenerator.js<BR />graphs/ClassDiagram.js<BR />graphs/ExportGraph.js<BR />graphs/PackageGraph.js<BR />graphs/RelationsGraph.js<BR />utils/file-utils.js<BR />utils/json.js<BR />child_process<BR />fs<BR />path<BR /></TD></TR><TR><TD align="left">dep-graph.js<BR/></TD></TR>
+<TR><TD align="left">ast/ASTProcessor.js<BR />generators/DiagramsGenerator.js<BR />generators/HtmlGenerator.js<BR />graphs/ClassDiagram.js<BR />graphs/ExportGraph.js<BR />graphs/NodeModulesGraph.js<BR />graphs/PackageGraph.js<BR />graphs/RelationsGraph.js<BR />utils/file-utils.js<BR />utils/json.js<BR />child_process<BR />fs<BR />path<BR /></TD></TR><TR><TD align="left">dep-graph.js<BR/></TD></TR>
 </TABLE>>];
 "DependencyGraphGenerator.js"->"ast/ASTProcessor.js"
 "DependencyGraphGenerator.js"->"generators/DiagramsGenerator.js"
 "DependencyGraphGenerator.js"->"generators/HtmlGenerator.js"
 "DependencyGraphGenerator.js"->"graphs/ClassDiagram.js"
 "DependencyGraphGenerator.js"->"graphs/ExportGraph.js"
+"DependencyGraphGenerator.js"->"graphs/NodeModulesGraph.js"
 "DependencyGraphGenerator.js"->"graphs/PackageGraph.js"
 "DependencyGraphGenerator.js"->"graphs/RelationsGraph.js"
 "DependencyGraphGenerator.js"->"utils/file-utils.js"
 "DependencyGraphGenerator.js"->"utils/json.js"
-"ast/ASTProcessor.js"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"ast/ASTProcessor.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD ALIGN="center">ast/ASTProcessor.js</TD></TR>
 <TR><TD ALIGN="left">Depend On : 9<BR/>
 Used By : 1</TD></TR>
@@ -34,13 +35,13 @@ Used By : 1</TD></TR>
 "ast/ASTProcessor.js"->"ast/ExportProcessor.js"
 "ast/ASTProcessor.js"->"ast/ImportProcessor.js"
 "ast/ASTProcessor.js"->"ast/UsageProcessor.js"
-"ast/BaseProcessor.js"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"ast/BaseProcessor.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD ALIGN="center">ast/BaseProcessor.js</TD></TR>
 <TR><TD ALIGN="left">Depend On : 2<BR/>
 Used By : 0</TD></TR>
 <TR><TD align="left">estraverse<BR />path<BR /></TD></TR><TR><TD align="left"></TD></TR>
 </TABLE>>];
-"ast/ClassProcessor.js"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"ast/ClassProcessor.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD ALIGN="center">ast/ClassProcessor.js</TD></TR>
 <TR><TD ALIGN="left">Depend On : 3<BR/>
 Used By : 0</TD></TR>
@@ -48,14 +49,14 @@ Used By : 0</TD></TR>
 </TABLE>>];
 "ast/ClassProcessor.js"->"utils/file-utils.js"
 "ast/ClassProcessor.js"->"ast/BaseProcessor.js"
-"ast/ErrorCollector.js"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"ast/ErrorCollector.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD ALIGN="center">ast/ErrorCollector.js</TD></TR>
 <TR><TD ALIGN="left">Depend On : 1<BR/>
 Used By : 0</TD></TR>
 <TR><TD align="left">ast/BaseProcessor.js<BR /></TD></TR><TR><TD align="left"></TD></TR>
 </TABLE>>];
 "ast/ErrorCollector.js"->"ast/BaseProcessor.js"
-"ast/ExportProcessor.js"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"ast/ExportProcessor.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD ALIGN="center">ast/ExportProcessor.js</TD></TR>
 <TR><TD ALIGN="left">Depend On : 3<BR/>
 Used By : 0</TD></TR>
@@ -63,7 +64,7 @@ Used By : 0</TD></TR>
 </TABLE>>];
 "ast/ExportProcessor.js"->"utils/file-utils.js"
 "ast/ExportProcessor.js"->"ast/BaseProcessor.js"
-"ast/ImportProcessor.js"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"ast/ImportProcessor.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD ALIGN="center">ast/ImportProcessor.js</TD></TR>
 <TR><TD ALIGN="left">Depend On : 3<BR/>
 Used By : 0</TD></TR>
@@ -71,27 +72,27 @@ Used By : 0</TD></TR>
 </TABLE>>];
 "ast/ImportProcessor.js"->"utils/file-utils.js"
 "ast/ImportProcessor.js"->"ast/BaseProcessor.js"
-"ast/UsageProcessor.js"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"ast/UsageProcessor.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD ALIGN="center">ast/UsageProcessor.js</TD></TR>
 <TR><TD ALIGN="left">Depend On : 1<BR/>
 Used By : 0</TD></TR>
 <TR><TD align="left">ast/BaseProcessor.js<BR /></TD></TR><TR><TD align="left"></TD></TR>
 </TABLE>>];
 "ast/UsageProcessor.js"->"ast/BaseProcessor.js"
-"generators/DiagramsGenerator.js"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"generators/DiagramsGenerator.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD ALIGN="center">generators/DiagramsGenerator.js</TD></TR>
 <TR><TD ALIGN="left">Depend On : 2<BR/>
 Used By : 1</TD></TR>
 <TR><TD align="left">fs<BR />path<BR /></TD></TR><TR><TD align="left">DependencyGraphGenerator.js<BR/></TD></TR>
 </TABLE>>];
-"generators/HtmlGenerator.js"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"generators/HtmlGenerator.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD ALIGN="center">generators/HtmlGenerator.js</TD></TR>
 <TR><TD ALIGN="left">Depend On : 1<BR/>
 Used By : 1</TD></TR>
 <TR><TD align="left">utils/list-utils.js<BR /></TD></TR><TR><TD align="left">DependencyGraphGenerator.js<BR/></TD></TR>
 </TABLE>>];
 "generators/HtmlGenerator.js"->"utils/list-utils.js"
-"graphs/ClassDiagram.js"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"graphs/ClassDiagram.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD ALIGN="center">graphs/ClassDiagram.js</TD></TR>
 <TR><TD ALIGN="left">Depend On : 2<BR/>
 Used By : 1</TD></TR>
@@ -99,7 +100,7 @@ Used By : 1</TD></TR>
 </TABLE>>];
 "graphs/ClassDiagram.js"->"utils/file-utils.js"
 "graphs/ClassDiagram.js"->"graphs/GraphBase.js"
-"graphs/ExportGraph.js"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"graphs/ExportGraph.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD ALIGN="center">graphs/ExportGraph.js</TD></TR>
 <TR><TD ALIGN="left">Depend On : 3<BR/>
 Used By : 1</TD></TR>
@@ -108,22 +109,22 @@ Used By : 1</TD></TR>
 "graphs/ExportGraph.js"->"utils/file-utils.js"
 "graphs/ExportGraph.js"->"utils/list-utils.js"
 "graphs/ExportGraph.js"->"graphs/GraphBase.js"
-"graphs/GraphBase.js"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"graphs/GraphBase.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD ALIGN="center">graphs/GraphBase.js</TD></TR>
 <TR><TD ALIGN="left">Depend On : 1<BR/>
 Used By : 0</TD></TR>
 <TR><TD align="left">utils/file-utils.js<BR /></TD></TR><TR><TD align="left"></TD></TR>
 </TABLE>>];
 "graphs/GraphBase.js"->"utils/file-utils.js"
-"graphs/NodeModulesGraph.js"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"graphs/NodeModulesGraph.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD ALIGN="center">graphs/NodeModulesGraph.js</TD></TR>
 <TR><TD ALIGN="left">Depend On : 2<BR/>
-Used By : 0</TD></TR>
-<TR><TD align="left">utils/list-utils.js<BR />graphs/GraphBase.js<BR /></TD></TR><TR><TD align="left"></TD></TR>
+Used By : 1</TD></TR>
+<TR><TD align="left">utils/list-utils.js<BR />graphs/GraphBase.js<BR /></TD></TR><TR><TD align="left">DependencyGraphGenerator.js<BR/></TD></TR>
 </TABLE>>];
 "graphs/NodeModulesGraph.js"->"utils/list-utils.js"
 "graphs/NodeModulesGraph.js"->"graphs/GraphBase.js"
-"graphs/PackageGraph.js"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"graphs/PackageGraph.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD ALIGN="center">graphs/PackageGraph.js</TD></TR>
 <TR><TD ALIGN="left">Depend On : 2<BR/>
 Used By : 1</TD></TR>
@@ -131,7 +132,7 @@ Used By : 1</TD></TR>
 </TABLE>>];
 "graphs/PackageGraph.js"->"utils/file-utils.js"
 "graphs/PackageGraph.js"->"graphs/GraphBase.js"
-"graphs/RelationsGraph.js"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"graphs/RelationsGraph.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD ALIGN="center">graphs/RelationsGraph.js</TD></TR>
 <TR><TD ALIGN="left">Depend On : 4<BR/>
 Used By : 1</TD></TR>
@@ -140,20 +141,20 @@ Used By : 1</TD></TR>
 "graphs/RelationsGraph.js"->"utils/file-utils.js"
 "graphs/RelationsGraph.js"->"utils/list-utils.js"
 "graphs/RelationsGraph.js"->"graphs/GraphBase.js"
-"utils/file-utils.js"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"utils/file-utils.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD ALIGN="center">utils/file-utils.js</TD></TR>
 <TR><TD ALIGN="left">Depend On : 3<BR/>
 Used By : 9</TD></TR>
 <TR><TD align="left">utils/globals.js<BR />fs<BR />path<BR /></TD></TR><TR><TD align="left">ast/ClassProcessor.js<BR/>ast/ExportProcessor.js<BR/>ast/ImportProcessor.js<BR/>DependencyGraphGenerator.js<BR/>graphs/ClassDiagram.js<BR/>graphs/ExportGraph.js<BR/>graphs/GraphBase.js<BR/>graphs/PackageGraph.js<BR/>graphs/RelationsGraph.js<BR/></TD></TR>
 </TABLE>>];
 "utils/file-utils.js"->"utils/globals.js"
-"utils/globals.js"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"utils/globals.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD ALIGN="center">utils/globals.js</TD></TR>
 <TR><TD ALIGN="left">Depend On : 0<BR/>
 Used By : 0</TD></TR>
 <TR><TD align="left"></TD></TR><TR><TD align="left"></TD></TR>
 </TABLE>>];
-"utils/index.js"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"utils/index.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD ALIGN="center">utils/index.js</TD></TR>
 <TR><TD ALIGN="left">Depend On : 2<BR/>
 Used By : 0</TD></TR>
@@ -161,14 +162,14 @@ Used By : 0</TD></TR>
 </TABLE>>];
 "utils/index.js"->"utils/file-utils.js"
 "utils/index.js"->"utils/list-utils.js"
-"utils/json.js"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"utils/json.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD ALIGN="center">utils/json.js</TD></TR>
 <TR><TD ALIGN="left">Depend On : 2<BR/>
 Used By : 1</TD></TR>
 <TR><TD align="left">utils/file-utils.js<BR />fs<BR /></TD></TR><TR><TD align="left">DependencyGraphGenerator.js<BR/></TD></TR>
 </TABLE>>];
 "utils/json.js"->"utils/file-utils.js"
-"utils/list-utils.js"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"utils/list-utils.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD ALIGN="center">utils/list-utils.js</TD></TR>
 <TR><TD ALIGN="left">Depend On : 1<BR/>
 Used By : 5</TD></TR>

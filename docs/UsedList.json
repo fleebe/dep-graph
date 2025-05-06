@@ -37,6 +37,12 @@
   },
   {
     "src": "DependencyGraphGenerator.js",
+    "importSrc": "./graphs/NodeModulesGraph.js",
+    "relSrcName": "graphs/NodeModulesGraph.js",
+    "import": "NodeModulesGraph"
+  },
+  {
+    "src": "DependencyGraphGenerator.js",
     "importSrc": "./graphs/PackageGraph.js",
     "relSrcName": "graphs/PackageGraph.js",
     "import": "PackageGraph"
@@ -165,7 +171,7 @@
     "src": "generators/HtmlGenerator.js",
     "importSrc": "../utils/list-utils.js",
     "relSrcName": "utils/list-utils.js",
-    "import": "getNodeModuleList"
+    "import": "getUniqueNodeModules"
   },
   {
     "src": "generators/HtmlGenerator.js",

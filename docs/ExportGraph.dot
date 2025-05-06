@@ -3,6 +3,7 @@ labelloc="t";
 "dep-graph.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
 <TR><TD bgcolor="lightblue" align="center"><B>dep-graph.js</B></TD></TR>
 <TR><TD align="left">
+runProgram<BR/>
 </TD></TR>
 <TR><TD align="center">
 <font color="red"><I>DependencyGraphGenerator.js</I></font><BR/>
@@ -21,6 +22,7 @@ fileURLToPath<BR/>
 "DependencyGraphGenerator.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
 <TR><TD bgcolor="lightblue" align="center"><B>DependencyGraphGenerator.js</B></TD></TR>
 <TR><TD align="left">
+DependencyGraphGenerator<BR/>
 </TD></TR>
 <TR><TD align="center">
 <font color="red"><I>ast/ASTProcessor.js</I></font><BR/>
@@ -33,6 +35,8 @@ HtmlGenerator<BR/>
 ClassDiagram<BR/>
 <font color="red"><I>graphs/ExportGraph.js</I></font><BR/>
 ExportGraph<BR/>
+<font color="red"><I>graphs/NodeModulesGraph.js</I></font><BR/>
+NodeModulesGraph<BR/>
 <font color="red"><I>graphs/PackageGraph.js</I></font><BR/>
 PackageGraph<BR/>
 <font color="red"><I>graphs/RelationsGraph.js</I></font><BR/>

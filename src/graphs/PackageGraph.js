@@ -16,8 +16,8 @@ export class PackageGraph extends GraphBase {
 
   constructor(moduleArray, dependencyList) {
     super();
-    this.moduleArray = moduleArray;
-    this.dependencyList = dependencyList;
+    this.#moduleArray = moduleArray;
+    this.#dependencyList = dependencyList;
     this.#diagramsHTML = "diagrams.html";
   }
 
@@ -48,7 +48,7 @@ export class PackageGraph extends GraphBase {
     let depArr = [];
     let result = "";
 
-    for (const dep of this.dependencyList) {
+    for (const dep of this.#dependencyList) {
       const src = cleanDirPath(dep.src);
       const dest = cleanDirPath(dep.relSrcName);
 
@@ -86,7 +86,7 @@ export class PackageGraph extends GraphBase {
   createPackageNodes() {
     let nodeContent = "";
     // Get unique set of directories
-    const dirList = new Set(this.moduleArray.map(a => a.dir));
+    const dirList = new Set(this.#moduleArray.map(a => a.dir));
 
     // For each directory, create a node with its files
     for (const directory of dirList) {
@@ -95,7 +95,7 @@ export class PackageGraph extends GraphBase {
       nodeContent += `<TR><TD ALIGN="left">\n`
 
       // Add each file in the directory to the node
-      const filesInDir = this.moduleArray.filter(a => directory === a.dir);
+      const filesInDir = this.#moduleArray.filter(a => directory === a.dir);
       for (const dirFile of filesInDir) {
         nodeContent += `${dirFile.file}<BR/>\n`;
       }

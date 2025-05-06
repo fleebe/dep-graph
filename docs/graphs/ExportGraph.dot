@@ -3,6 +3,7 @@ labelloc="t";
 "graphs/ClassDiagram.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
 <TR><TD bgcolor="lightblue" align="center"><B>graphs/ClassDiagram.js</B></TD></TR>
 <TR><TD align="left">
+ClassDiagram<BR/>
 </TD></TR>
 <TR><TD align="center">
 <font color="red"><I>utils/file-utils.js</I></font><BR/>
@@ -15,6 +16,7 @@ GraphBase<BR/>
 "graphs/ExportGraph.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
 <TR><TD bgcolor="lightblue" align="center"><B>graphs/ExportGraph.js</B></TD></TR>
 <TR><TD align="left">
+ExportGraph<BR/>
 </TD></TR>
 <TR><TD align="center">
 <font color="red"><I>utils/file-utils.js</I></font><BR/>
@@ -30,6 +32,7 @@ GraphBase<BR/>
 "graphs/GraphBase.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
 <TR><TD bgcolor="lightblue" align="center"><B>graphs/GraphBase.js</B></TD></TR>
 <TR><TD align="left">
+GraphBase<BR/>
 </TD></TR>
 <TR><TD align="center">
 <font color="red"><I>utils/file-utils.js</I></font><BR/>
@@ -40,6 +43,7 @@ cleanDirPath<BR/>
 "graphs/NodeModulesGraph.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
 <TR><TD bgcolor="lightblue" align="center"><B>graphs/NodeModulesGraph.js</B></TD></TR>
 <TR><TD align="left">
+NodeModulesGraph<BR/>
 </TD></TR>
 <TR><TD align="center">
 <font color="red"><I>utils/list-utils.js</I></font><BR/>
@@ -52,6 +56,7 @@ GraphBase<BR/>
 "graphs/PackageGraph.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
 <TR><TD bgcolor="lightblue" align="center"><B>graphs/PackageGraph.js</B></TD></TR>
 <TR><TD align="left">
+PackageGraph<BR/>
 </TD></TR>
 <TR><TD align="center">
 <font color="red"><I>utils/file-utils.js</I></font><BR/>
@@ -64,6 +69,7 @@ GraphBase<BR/>
 "graphs/RelationsGraph.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
 <TR><TD bgcolor="lightblue" align="center"><B>graphs/RelationsGraph.js</B></TD></TR>
 <TR><TD align="left">
+RelationsGraph<BR/>
 </TD></TR>
 <TR><TD align="center">
 <font color="red"><I>utils/file-utils.js</I></font><BR/>

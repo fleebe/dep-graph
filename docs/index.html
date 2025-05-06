@@ -7,12 +7,12 @@
 	<tr><th>Type</th><th>Count</td></th></tr>
 	<tr><td><a href="#node_modules">Node Modules</a></td>	<td>7</td></tr>
 	<tr><td>Application Modules</td>	<td>22</td></tr>
-	<tr><td><a href="#unused">Unused Application Modules</a></td>	<td>11</td></tr>
+	<tr><td><a href="#unused">Unused Application Modules</a></td>	<td>10</td></tr>
 </table><br>
 <table border=1 cellpadding=5>
 	<tr><th>Directory</th><th>File</th><th>Depends On</th><th>Used By</th><th>Exported</th></tr>
 	<tr><td></td><td><a href="#dep-graph.js">dep-graph.js</a></td><td>5</td><td>0</td><td>1</td></tr>
-	<tr><td></td><td><a href="#DependencyGraphGenerator.js">DependencyGraphGenerator.js</a></td><td>12</td><td>1</td><td>1</td></tr>
+	<tr><td></td><td><a href="#DependencyGraphGenerator.js">DependencyGraphGenerator.js</a></td><td>13</td><td>1</td><td>1</td></tr>
 	<tr><td>ast</td><td><a href="#ASTProcessor.js">ASTProcessor.js</a></td><td>9</td><td>1</td><td>1</td></tr>
 	<tr><td>ast</td><td><a href="#BaseProcessor.js">BaseProcessor.js</a></td><td>2</td><td>0</td><td>1</td></tr>
 	<tr><td>ast</td><td><a href="#ClassProcessor.js">ClassProcessor.js</a></td><td>3</td><td>0</td><td>1</td></tr>
@@ -21,18 +21,18 @@
 	<tr><td>ast</td><td><a href="#ImportProcessor.js">ImportProcessor.js</a></td><td>3</td><td>0</td><td>1</td></tr>
 	<tr><td>ast</td><td><a href="#UsageProcessor.js">UsageProcessor.js</a></td><td>1</td><td>0</td><td>1</td></tr>
 	<tr><td>generators</td><td><a href="#DiagramsGenerator.js">DiagramsGenerator.js</a></td><td>2</td><td>1</td><td>1</td></tr>
-	<tr><td>generators</td><td><a href="#HtmlGenerator.js">HtmlGenerator.js</a></td><td>1</td><td>1</td><td>4</td></tr>
+	<tr><td>generators</td><td><a href="#HtmlGenerator.js">HtmlGenerator.js</a></td><td>1</td><td>1</td><td>1</td></tr>
 	<tr><td>graphs</td><td><a href="#ClassDiagram.js">ClassDiagram.js</a></td><td>2</td><td>1</td><td>1</td></tr>
 	<tr><td>graphs</td><td><a href="#ExportGraph.js">ExportGraph.js</a></td><td>3</td><td>1</td><td>1</td></tr>
 	<tr><td>graphs</td><td><a href="#GraphBase.js">GraphBase.js</a></td><td>1</td><td>0</td><td>1</td></tr>
-	<tr><td>graphs</td><td><a href="#NodeModulesGraph.js">NodeModulesGraph.js</a></td><td>2</td><td>0</td><td>1</td></tr>
+	<tr><td>graphs</td><td><a href="#NodeModulesGraph.js">NodeModulesGraph.js</a></td><td>2</td><td>1</td><td>1</td></tr>
 	<tr><td>graphs</td><td><a href="#PackageGraph.js">PackageGraph.js</a></td><td>2</td><td>1</td><td>1</td></tr>
 	<tr><td>graphs</td><td><a href="#RelationsGraph.js">RelationsGraph.js</a></td><td>4</td><td>1</td><td>1</td></tr>
 	<tr><td>utils</td><td><a href="#file-utils.js">file-utils.js</a></td><td>3</td><td>9</td><td>15</td></tr>
 	<tr><td>utils</td><td><a href="#globals.js">globals.js</a></td><td>0</td><td>0</td><td>1</td></tr>
 	<tr><td>utils</td><td><a href="#index.js">index.js</a></td><td>2</td><td>0</td><td>4</td></tr>
 	<tr><td>utils</td><td><a href="#json.js">json.js</a></td><td>2</td><td>1</td><td>4</td></tr>
-	<tr><td>utils</td><td><a href="#list-utils.js">list-utils.js</a></td><td>1</td><td>5</td><td>10</td></tr>
+	<tr><td>utils</td><td><a href="#list-utils.js">list-utils.js</a></td><td>1</td><td>5</td><td>12</td></tr>
 </table>
 <h2 id="unused">Unused Application Modules</h2><a href="#mod_list">(top)</a>
 <table border=1 cellpadding=5>
@@ -45,7 +45,6 @@
 	<tr><td>ast</td><td><a href="#ImportProcessor.js">ImportProcessor.js</a></td><td>3</td><td>0</td><td>1</td></tr>
 	<tr><td>ast</td><td><a href="#UsageProcessor.js">UsageProcessor.js</a></td><td>1</td><td>0</td><td>1</td></tr>
 	<tr><td>graphs</td><td><a href="#GraphBase.js">GraphBase.js</a></td><td>1</td><td>0</td><td>1</td></tr>
-	<tr><td>graphs</td><td><a href="#NodeModulesGraph.js">NodeModulesGraph.js</a></td><td>2</td><td>0</td><td>1</td></tr>
 	<tr><td>utils</td><td><a href="#globals.js">globals.js</a></td><td>0</td><td>0</td><td>1</td></tr>
 	<tr><td>utils</td><td><a href="#index.js">index.js</a></td><td>2</td><td>0</td><td>4</td></tr>
 </table>
@@ -94,6 +93,8 @@
 	<td>ClassDiagram</td></tr>
 	<tr><td>graphs/ExportGraph.js</td>
 	<td>ExportGraph</td></tr>
+	<tr><td>graphs/NodeModulesGraph.js</td>
+	<td>NodeModulesGraph</td></tr>
 	<tr><td>graphs/PackageGraph.js</td>
 	<td>PackageGraph</td></tr>
 	<tr><td>graphs/RelationsGraph.js</td>
@@ -301,6 +302,8 @@
 <h3>NodeModulesGraph.js Used By</h3>
 <table border=1 cellpadding=5>
 	<tr><th>File or <br>Node Module</th><th>Import</th></tr>
+	<tr><td><a href="#DependencyGraphGenerator.js">DependencyGraphGenerator.js</a></td>
+	<td>NodeModulesGraph</td></tr>
 </table><br>
 <h2 id=PackageGraph.js>PackageGraph.js</h2> <a href="#mod_list">(top)</a>
 <h3>PackageGraph.js Exports</h3>
@@ -435,7 +438,7 @@
 	<tr><td><a href="#generators/HtmlGenerator.js">generators/HtmlGenerator.js</a></td>
 	<td>getDependsOn</td></tr>
 	<tr><td><a href="#generators/HtmlGenerator.js">generators/HtmlGenerator.js</a></td>
-	<td>getNodeModuleList</td></tr>
+	<td>getUniqueNodeModules</td></tr>
 	<tr><td><a href="#generators/HtmlGenerator.js">generators/HtmlGenerator.js</a></td>
 	<td>getExportedList</td></tr>
 	<tr><td><a href="#graphs/ExportGraph.js">graphs/ExportGraph.js</a></td>

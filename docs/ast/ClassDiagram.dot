@@ -1,6 +1,6 @@
 digraph {label="ast Class Diagram";
 labelloc="t";
-"ASTProcessor"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"ASTProcessor" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD align="left"><B>ASTProcessor</B></TD></TR>
 <TR><TD align="left"><B>properties</B><BR/>
 - #importProcessor<BR/>
@@ -16,7 +16,7 @@ labelloc="t";
 </TD></TR>
 </TABLE>>];
 
-"BaseProcessor"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"BaseProcessor" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD align="left"><B>BaseProcessor</B></TD></TR>
 <TR><TD align="left"><B>properties</B><BR/>
 - #baseLoc<BR/>
@@ -33,7 +33,7 @@ labelloc="t";
 </TD></TR>
 </TABLE>>];
 
-"ClassProcessor"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"ClassProcessor" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD align="left"><B>ClassProcessor:BaseProcessor</B></TD></TR>
 <TR><TD align="left"><B>properties</B><BR/>
 + classList<BR/>
@@ -52,7 +52,7 @@ labelloc="t";
 </TABLE>>];
 "ClassProcessor"->"BaseProcessor" [arrowhead=empty];
 
-"ErrorCollector"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"ErrorCollector" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD align="left"><B>ErrorCollector:BaseProcessor</B></TD></TR>
 <TR><TD align="left"><B>properties</B><BR/>
 </TD></TR>
@@ -63,7 +63,7 @@ labelloc="t";
 </TABLE>>];
 "ErrorCollector"->"BaseProcessor" [arrowhead=empty];
 
-"ExportProcessor"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"ExportProcessor" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD align="left"><B>ExportProcessor:BaseProcessor</B></TD></TR>
 <TR><TD align="left"><B>properties</B><BR/>
 </TD></TR>
@@ -76,7 +76,7 @@ labelloc="t";
 </TABLE>>];
 "ExportProcessor"->"BaseProcessor" [arrowhead=empty];
 
-"ImportProcessor"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"ImportProcessor" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD align="left"><B>ImportProcessor:BaseProcessor</B></TD></TR>
 <TR><TD align="left"><B>properties</B><BR/>
 </TD></TR>
@@ -89,7 +89,7 @@ labelloc="t";
 </TABLE>>];
 "ImportProcessor"->"BaseProcessor" [arrowhead=empty];
 
-"UsageProcessor"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"UsageProcessor" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD align="left"><B>UsageProcessor:BaseProcessor</B></TD></TR>
 <TR><TD align="left"><B>properties</B><BR/>
 </TD></TR>

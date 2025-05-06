@@ -57,22 +57,6 @@
     "type": "ClassDeclaration"
   },
   {
-    "name": "generators/HtmlGenerator.js",
-    "exported": "createModuleHtml",
-    "type": "FunctionDeclaration",
-    "params": "(symbol, moduleArray, dependencyList, exportList)"
-  },
-  {
-    "name": "generators/HtmlGenerator.js",
-    "exported": "createModuleHtml",
-    "type": "ObjectExpression"
-  },
-  {
-    "name": "generators/HtmlGenerator.js",
-    "exported": "HtmlGenerator",
-    "type": "ObjectExpression"
-  },
-  {
     "name": "graphs/ClassDiagram.js",
     "exported": "ClassDiagram",
     "type": "ClassDeclaration"
@@ -263,6 +247,12 @@
   },
   {
     "name": "utils/list-utils.js",
+    "exported": "getUniqueNodeModules",
+    "type": "FunctionDeclaration",
+    "params": "(dependencyList)"
+  },
+  {
+    "name": "utils/list-utils.js",
     "exported": "addToMapArray",
     "type": "ObjectExpression"
   },
@@ -279,6 +269,11 @@
   {
     "name": "utils/list-utils.js",
     "exported": "getExportedList",
+    "type": "ObjectExpression"
+  },
+  {
+    "name": "utils/list-utils.js",
+    "exported": "getUniqueNodeModules",
     "type": "ObjectExpression"
   },
   {

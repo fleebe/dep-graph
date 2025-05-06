@@ -9,7 +9,7 @@
   {
     "dir": "",
     "file": "DependencyGraphGenerator.js",
-    "dependsOnCnt": 12,
+    "dependsOnCnt": 13,
     "usedByCnt": 1,
     "exportCnt": 1
   },
@@ -74,7 +74,7 @@
     "file": "HtmlGenerator.js",
     "dependsOnCnt": 1,
     "usedByCnt": 1,
-    "exportCnt": 4
+    "exportCnt": 1
   },
   {
     "dir": "graphs",
@@ -101,7 +101,7 @@
     "dir": "graphs",
     "file": "NodeModulesGraph.js",
     "dependsOnCnt": 2,
-    "usedByCnt": 0,
+    "usedByCnt": 1,
     "exportCnt": 1
   },
   {
@@ -151,6 +151,6 @@
     "file": "list-utils.js",
     "dependsOnCnt": 1,
     "usedByCnt": 5,
-    "exportCnt": 10
+    "exportCnt": 12
   }
 ]

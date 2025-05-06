@@ -3,6 +3,7 @@ labelloc="t";
 "ast/ASTProcessor.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
 <TR><TD bgcolor="lightblue" align="center"><B>ast/ASTProcessor.js</B></TD></TR>
 <TR><TD align="left">
+processAST<BR/>
 </TD></TR>
 <TR><TD align="center">
 <font color="red"><I>utils/list-utils.js</I></font><BR/>
@@ -29,6 +30,7 @@ path<BR/>
 "ast/BaseProcessor.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
 <TR><TD bgcolor="lightblue" align="center"><B>ast/BaseProcessor.js</B></TD></TR>
 <TR><TD align="left">
+BaseProcessor<BR/>
 </TD></TR>
 <TR><TD align="center">
 <font color="red"><I>estraverse</I></font><BR/>
@@ -41,6 +43,7 @@ path<BR/>
 "ast/ClassProcessor.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
 <TR><TD bgcolor="lightblue" align="center"><B>ast/ClassProcessor.js</B></TD></TR>
 <TR><TD align="left">
+ClassProcessor<BR/>
 </TD></TR>
 <TR><TD align="center">
 <font color="red"><I>utils/file-utils.js</I></font><BR/>
@@ -55,6 +58,7 @@ estraverse<BR/>
 "ast/ErrorCollector.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
 <TR><TD bgcolor="lightblue" align="center"><B>ast/ErrorCollector.js</B></TD></TR>
 <TR><TD align="left">
+ErrorCollector<BR/>
 </TD></TR>
 <TR><TD align="center">
 <font color="red"><I>BaseProcessor.js</I></font><BR/>
@@ -65,6 +69,7 @@ BaseProcessor<BR/>
 "ast/ExportProcessor.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
 <TR><TD bgcolor="lightblue" align="center"><B>ast/ExportProcessor.js</B></TD></TR>
 <TR><TD align="left">
+ExportProcessor<BR/>
 </TD></TR>
 <TR><TD align="center">
 <font color="red"><I>utils/file-utils.js</I></font><BR/>
@@ -79,6 +84,7 @@ estraverse<BR/>
 "ast/ImportProcessor.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
 <TR><TD bgcolor="lightblue" align="center"><B>ast/ImportProcessor.js</B></TD></TR>
 <TR><TD align="left">
+ImportProcessor<BR/>
 </TD></TR>
 <TR><TD align="center">
 <font color="red"><I>utils/file-utils.js</I></font><BR/>
@@ -94,6 +100,7 @@ estraverse<BR/>
 "ast/UsageProcessor.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
 <TR><TD bgcolor="lightblue" align="center"><B>ast/UsageProcessor.js</B></TD></TR>
 <TR><TD align="left">
+UsageProcessor<BR/>
 </TD></TR>
 <TR><TD align="center">
 <font color="red"><I>BaseProcessor.js</I></font><BR/>

@@ -16,7 +16,7 @@ export class GraphBase {
    }
 
   nodeStart(title) {
-    return `"${title}"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">\n`;
+    return `"${title}" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">\n`;
   }
 
   nodeFinish() {

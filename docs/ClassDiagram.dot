@@ -1,11 +1,11 @@
 digraph {label=" base Class Diagram";
 labelloc="t";
-"DependencyGraphGenerator"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"DependencyGraphGenerator" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD align="left"><B>DependencyGraphGenerator</B></TD></TR>
 <TR><TD align="left"><B>properties</B><BR/>
-- #baseLoc<BR/>
++ baseLoc<BR/>
 - #options<BR/>
-- #outputDir<BR/>
++ outputDir<BR/>
 + diagramHTML<BR/>
 + indexHTML<BR/>
 </TD></TR>
@@ -13,8 +13,9 @@ labelloc="t";
 + constructor (baseLoc, options)<BR/>
 + generate ()<BR/>
 - #getModuleArray (stats)<BR/>
-- #generateJSDoc (source, output, configFile)<BR/>
-- #createDirGraph (graphName, moduleArray, dependencyList, classList, exportList)<BR/>
+- #generateJSDoc (source)<BR/>
+- #createExportDirGraph (graphName, dirArray, exportGraph)<BR/>
+- #createClassDirGraph (graphName, dirArray, classDiagram)<BR/>
 - #generateSvgFromDot (dotFilePath, svgFilePath)<BR/>
 </TD></TR>
 </TABLE>>];

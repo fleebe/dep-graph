@@ -1,13 +1,13 @@
 digraph {label="";
 labelloc="t";
-""[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD ALIGN="center" HREF="diagrams.html#" TARGET="_top"></TD></TR>
 <TR><TD ALIGN="left">
 dep-graph.js<BR/>
 DependencyGraphGenerator.js<BR/>
 </TD></TR>
 </TABLE>>];
-"ast"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"ast" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD ALIGN="center" HREF="diagrams.html#ast" TARGET="_top">ast</TD></TR>
 <TR><TD ALIGN="left">
 ASTProcessor.js<BR/>
@@ -19,14 +19,14 @@ ImportProcessor.js<BR/>
 UsageProcessor.js<BR/>
 </TD></TR>
 </TABLE>>];
-"generators"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"generators" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD ALIGN="center" HREF="diagrams.html#generators" TARGET="_top">generators</TD></TR>
 <TR><TD ALIGN="left">
 DiagramsGenerator.js<BR/>
 HtmlGenerator.js<BR/>
 </TD></TR>
 </TABLE>>];
-"graphs"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"graphs" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD ALIGN="center" HREF="diagrams.html#graphs" TARGET="_top">graphs</TD></TR>
 <TR><TD ALIGN="left">
 ClassDiagram.js<BR/>
@@ -37,7 +37,7 @@ PackageGraph.js<BR/>
 RelationsGraph.js<BR/>
 </TD></TR>
 </TABLE>>];
-"utils"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+"utils" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD ALIGN="center" HREF="diagrams.html#utils" TARGET="_top">utils</TD></TR>
 <TR><TD ALIGN="left">
 file-utils.js<BR/>

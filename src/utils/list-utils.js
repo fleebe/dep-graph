@@ -108,6 +108,20 @@ export function getNodeModuleList(dependencyList) {
 }
 
 /**
+ * Gets a list of unique node modules from the dependency list
+ * 
+ * @param {Array} dependencyList - Array of dependencies
+ * @returns {Array} - Array of unique node modules
+ */
+export function getUniqueNodeModules(dependencyList) {
+  const objArray = getNodeModuleList(dependencyList);
+  let uniqueObjArray = [...new Map(
+    objArray.map((item) => [item.importSrc, item])
+  ).values()];
+  return uniqueObjArray;
+}
+
+/**
  * Module exports
  */
 export default {
@@ -115,6 +129,7 @@ export default {
   getUsedByList,
   getDependsOn,
   getExportedList,
+  getUniqueNodeModules,
   getNodeModuleList
 };
 

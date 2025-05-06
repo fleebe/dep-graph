@@ -5,14 +5,14 @@ import { getNodeModuleList } from "../utils/list-utils.js";
  * Generates a graph showing node_modules dependencies
  */
 export class NodeModulesGraph extends GraphBase {
+  #dependencyList = []
   /**
    * @param {Array} dependencyList - List of dependencies
    * @param {Set} [nodeModuleDependents=new Set()] - Set of modules depending on node_modules
    */
-  constructor(dependencyList, nodeModuleDependents = new Set()) {
+  constructor(dependencyList) {
     super();
-    this.dependencyList = dependencyList;
-    this.nodeModuleDependents = nodeModuleDependents;
+    this.#dependencyList = dependencyList;
   }
 
   /**
@@ -21,8 +21,7 @@ export class NodeModulesGraph extends GraphBase {
    * @returns {string} - DOT file content for node_modules graph
    */
   generate() {
-    let result = this.recordDigraph("Node Module Dependencies");
-    
+    let result = this.digraph("Node Modules Dependencies");
     // Add node_modules node and connections
     result += this.createNodeModulesSection();
     
@@ -37,29 +36,32 @@ export class NodeModulesGraph extends GraphBase {
    */
   createNodeModulesSection() {
     // Create node_modules node
-    let nodeContent = `"node-modules" [label="{node-modules\\n | \n `;
-    let prevModule = "";
+    let nodeContent = this.nodeStart("node-modules");
+    nodeContent += `<TR><TD><B>node-modules</B></TD></TR>\n<TR><TD align="left">\n`;
 
     // Add each unique node module
-    const nodeMods = getNodeModuleList(this.dependencyList);
-    for (const dep of nodeMods) {
-      if (prevModule !== dep.importSrc) {
-        prevModule = dep.importSrc;
-        nodeContent += `\t\t${prevModule}\\l\n`;
-      }
+    const nodeMods = getNodeModuleList(this.#dependencyList);
+    // Get the set of unique node module names
+    const nodeModuleNames = new Set(nodeMods.map(dep => dep.importSrc));
+    for (const dep of nodeModuleNames) {
+      nodeContent += `${dep}<BR/>\n`;
     }
-    nodeContent += `}"];\n`;
+    nodeContent += this.nodeFinish();
 
-    // Optionally add connections from modules to node-modules
-    let relationships = "";
-    
-    // Uncomment to enable module-to-nodemodule connections
-    /*
-    for (const module of this.nodeModuleDependents) {
-      relationships += `"${module}"->"node-modules"\n`;
+    const nodeModuleDependents = new Set(
+      this.#dependencyList
+          .filter(dep => nodeModuleNames.has(dep.importSrc))
+      .map(dep => dep.src));
+
+    nodeContent += this.nodeStart("modules");
+    nodeContent += `<TR><TD><B>modules</B></TD></TR>\n<TR><TD align="left">\n`;
+    for (const module of nodeModuleDependents) {
+      nodeContent += `${module}<BR/>\n`;
     }
-    */
+    nodeContent += this.nodeFinish();
 
-    return nodeContent + relationships;
+    nodeContent += `"modules"->"node-modules"\n`;
+
+    return nodeContent;
   }
 }

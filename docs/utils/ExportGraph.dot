@@ -3,6 +3,17 @@ labelloc="t";
 "utils/file-utils.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
 <TR><TD bgcolor="lightblue" align="center"><B>utils/file-utils.js</B></TD></TR>
 <TR><TD align="left">
+cleanDirPath<BR/>
+getDirectoriesRecursive<BR/>
+getFilename<BR/>
+getFiles<BR/>
+getFilesRecursive<BR/>
+getRelativePathParts<BR/>
+hasExtension<BR/>
+moduleName<BR/>
+normalizePath<BR/>
+removeExtension<BR/>
+safeWriteFile<BR/>
 </TD></TR>
 <TR><TD align="center">
 <font color="red"><I>globals.js</I></font><BR/>
@@ -17,6 +28,7 @@ path<BR/>
 "utils/globals.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
 <TR><TD bgcolor="lightblue" align="center"><B>utils/globals.js</B></TD></TR>
 <TR><TD align="left">
+EXT_LIST<BR/>
 </TD></TR>
 <TR><TD align="center">
 </TD></TR>
@@ -25,6 +37,9 @@ path<BR/>
 "utils/index.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
 <TR><TD bgcolor="lightblue" align="center"><B>utils/index.js</B></TD></TR>
 <TR><TD align="left">
+undefined<BR/>
+file<BR/>
+list<BR/>
 </TD></TR>
 <TR><TD align="center">
 <font color="red"><I>file-utils.js</I></font><BR/>
@@ -37,6 +52,8 @@ listUtils<BR/>
 "utils/json.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
 <TR><TD bgcolor="lightblue" align="center"><B>utils/json.js</B></TD></TR>
 <TR><TD align="left">
+jsonIn<BR/>
+jsonOut<BR/>
 </TD></TR>
 <TR><TD align="center">
 <font color="red"><I>file-utils.js</I></font><BR/>
@@ -49,6 +66,12 @@ fs<BR/>
 "utils/list-utils.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
 <TR><TD bgcolor="lightblue" align="center"><B>utils/list-utils.js</B></TD></TR>
 <TR><TD align="left">
+addToMapArray<BR/>
+getDependsOn<BR/>
+getExportedList<BR/>
+getNodeModuleList<BR/>
+getUniqueNodeModules<BR/>
+getUsedByList<BR/>
 </TD></TR>
 <TR><TD align="center">
 <font color="red"><I>path</I></font><BR/>

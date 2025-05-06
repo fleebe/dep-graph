@@ -6,6 +6,10 @@ import { getExportedList, getDependsOn } from "../utils/list-utils.js";
  * Generates a graph showing module exports and imports
  */
 export class ExportGraph extends GraphBase {
+  #dependencyList = []
+  #exportList = []
+  #moduleArray = []
+
   /**
    * @param {Array} dependencyList - List of imports and their sources
    * @param {Array} exportList - List of files and exported functions
@@ -13,9 +17,9 @@ export class ExportGraph extends GraphBase {
    */
   constructor(dependencyList, exportList, moduleArray) {
     super();
-    this.dependencyList = dependencyList;
-    this.exportList = exportList;
-    this.moduleArray = moduleArray;
+    this.#dependencyList = dependencyList;
+    this.#exportList = exportList;
+    this.#moduleArray = moduleArray;
   }
 
   /**
@@ -27,10 +31,10 @@ export class ExportGraph extends GraphBase {
     let result = this.digraph(`${dir} Module Exports`);
 
     // Create nodes for each module
-    this.moduleArray
+    this.#moduleArray
     .filter(mod => mod.dir === dir)
     .forEach((mod) => {
-      const exp = getExportedList(this.exportList, moduleName(mod));
+      const exp = getExportedList(this.#exportList, moduleName(mod));
       result += this.createModuleNode(mod, exp);
     });
 
@@ -64,7 +68,7 @@ export class ExportGraph extends GraphBase {
     nodeContent +=  `</TD></TR>\n`;
     nodeContent += `<TR><TD align="center">\n`;
 
-    const depsOn = getDependsOn(this.dependencyList, modName);
+    const depsOn = getDependsOn(this.#dependencyList, modName);
     let prevDependency = "";
     for (const dep of depsOn) {
       if (prevDependency !== dep.relSrcName) {

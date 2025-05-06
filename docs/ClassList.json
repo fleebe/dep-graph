@@ -29,14 +29,21 @@
         "kind": "method",
         "isStatic": false,
         "isPrivate": true,
-        "parameters": "(source, output, configFile)"
+        "parameters": "(source)"
       },
       {
-        "name": "#createDirGraph",
+        "name": "#createExportDirGraph",
         "kind": "method",
         "isStatic": false,
         "isPrivate": true,
-        "parameters": "(graphName, moduleArray, dependencyList, classList, exportList)"
+        "parameters": "(graphName, dirArray, exportGraph)"
+      },
+      {
+        "name": "#createClassDirGraph",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": true,
+        "parameters": "(graphName, dirArray, classDiagram)"
       },
       {
         "name": "#generateSvgFromDot",
@@ -48,9 +55,9 @@
     ],
     "properties": [
       {
-        "name": "#baseLoc",
+        "name": "baseLoc",
         "isStatic": false,
-        "isPrivate": true,
+        "isPrivate": false,
         "hasDefaultValue": true
       },
       {
@@ -60,9 +67,9 @@
         "hasDefaultValue": true
       },
       {
-        "name": "#outputDir",
+        "name": "outputDir",
         "isStatic": false,
-        "isPrivate": true,
+        "isPrivate": false,
         "hasDefaultValue": true
       },
       {
@@ -421,7 +428,7 @@
         "kind": "method",
         "isStatic": false,
         "isPrivate": false,
-        "parameters": "(outDir, moduleArray)"
+        "parameters": "(outDir, dirArray)"
       },
       {
         "name": "generateSvgSection",
@@ -521,13 +528,6 @@
         "isStatic": false,
         "isPrivate": false,
         "parameters": "(dependencyList)"
-      },
-      {
-        "name": "getUniqueNodeModules",
-        "kind": "method",
-        "isStatic": false,
-        "isPrivate": false,
-        "parameters": "(dependencyList)"
       }
     ],
     "properties": [
@@ -610,7 +610,26 @@
         "parameters": "(mod, exportList)"
       }
     ],
-    "properties": [],
+    "properties": [
+      {
+        "name": "#dependencyList",
+        "isStatic": false,
+        "isPrivate": true,
+        "hasDefaultValue": true
+      },
+      {
+        "name": "#exportList",
+        "isStatic": false,
+        "isPrivate": true,
+        "hasDefaultValue": true
+      },
+      {
+        "name": "#moduleArray",
+        "isStatic": false,
+        "isPrivate": true,
+        "hasDefaultValue": true
+      }
+    ],
     "superClass": "GraphBase",
     "isExported": true
   },
@@ -681,7 +700,7 @@
         "kind": "constructor",
         "isStatic": false,
         "isPrivate": false,
-        "parameters": "(dependencyList, nodeModuleDependents)"
+        "parameters": "(dependencyList)"
       },
       {
         "name": "generate",
@@ -698,7 +717,14 @@
         "parameters": "()"
       }
     ],
-    "properties": [],
+    "properties": [
+      {
+        "name": "#dependencyList",
+        "isStatic": false,
+        "isPrivate": true,
+        "hasDefaultValue": true
+      }
+    ],
     "superClass": "GraphBase",
     "isExported": true
   },

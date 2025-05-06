@@ -14,8 +14,8 @@ export class ClassDiagram extends GraphBase {
    */
   constructor(dependencyList, classList) {
     super();
-    this.classList = classList;
-    this.dependencyList = dependencyList;
+    this.#classList = classList;
+    this.#dependencyList = dependencyList;
   }
 
   /**
@@ -25,7 +25,7 @@ export class ClassDiagram extends GraphBase {
    * @returns {string} - DOT file content for class diagram
    */
   generate(dir) {
-    const dirClassList = this.classList
+    const dirClassList = this.#classList
       .filter(cls => {
         const clsDir = cleanDirPath(cls.filePath)
         return (clsDir === dir)

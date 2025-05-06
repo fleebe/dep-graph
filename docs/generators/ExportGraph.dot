@@ -3,6 +3,7 @@ labelloc="t";
 "generators/DiagramsGenerator.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
 <TR><TD bgcolor="lightblue" align="center"><B>generators/DiagramsGenerator.js</B></TD></TR>
 <TR><TD align="left">
+DiagramsGenerator<BR/>
 </TD></TR>
 <TR><TD align="center">
 <font color="red"><I>fs</I></font><BR/>
@@ -15,12 +16,13 @@ path<BR/>
 "generators/HtmlGenerator.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
 <TR><TD bgcolor="lightblue" align="center"><B>generators/HtmlGenerator.js</B></TD></TR>
 <TR><TD align="left">
+HtmlGenerator<BR/>
 </TD></TR>
 <TR><TD align="center">
 <font color="red"><I>utils/list-utils.js</I></font><BR/>
 getUsedByList<BR/>
 getDependsOn<BR/>
-getNodeModuleList<BR/>
+getUniqueNodeModules<BR/>
 getExportedList<BR/>
 </TD></TR>
 </TABLE>>];

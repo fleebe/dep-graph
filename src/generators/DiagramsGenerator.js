@@ -20,10 +20,10 @@ export class DiagramsGenerator {
   /**
    * Creates a separate HTML page for SVG diagrams
    * @param {string} outDir - root directory where files are found
-   * @param {Array} moduleArray - Array of module objects with metadata
+   * @param {Array} dirArray - Array of directories to process
    * @returns {string} - HTML document for diagrams as a string
    */
-  createDiagramsHtml(outDir, moduleArray) {
+  createDiagramsHtml(outDir, dirArray) {
     let result = "<html><head><title>Module Diagrams</title><style>";
     result += "body { font-family: Arial, sans-serif; margin: 20px; }";
     result += ".svg-container { max-width: 100%; overflow: auto; margin: 20px 0; border: 1px solid #ddd; padding: 10px; }";
@@ -36,10 +36,10 @@ export class DiagramsGenerator {
     result += `<a class="back-link" href="${this.indexHTML}">&larr; Back to Module Analysis</a>\n`;
 
     result += this.generateSvgSection("Package Dependency Graph", "Package.svg");
-    result += this.generateSvgSection("Module Relations Graph", "Relations.svg");
-
-    // Add the SVG visualizations using the helper function
-    const dirArray = [...new Set(moduleArray.map(module => module.dir))];
+    result += `Module Relations Graph - <a class="back-link" href="#diagram_top">(top)</a>`
+    result += this.generateSvgSection(null, "Relations.svg");
+    result += `Node Modules Relations Graph - <a class="back-link" href="#diagram_top">(top)</a>`
+    result += this.generateSvgSection(null, "NodeModules.svg");
 
     dirArray.forEach(dir => {
       const hdrTxt = (dir != '') 
@@ -79,7 +79,7 @@ export class DiagramsGenerator {
    * @param {string} [linkText] - Optional alternative text for the link (defaults to title)
    * @returns {string} - HTML for the SVG section
    */
-  generateSvgSection(title, svgFileName, linkText = null) {
+  generateSvgSection(title = null, svgFileName, linkText = null) {
     if (!linkText) {
       linkText = `View ${title}`;
     }
@@ -93,7 +93,8 @@ export class DiagramsGenerator {
     }
 
     let result = "";
-    result += `<h3 align="left">${title}</h3>\n`;
+    if (title)
+      result += `<h3 align="left">${title}</h3>\n`;
     result += `<div class="svg-container">\n`;
     result += `<object data="${svgFileName}" type="image/svg+xml" width="100%" height="600px">`;
     result += `Your browser does not support SVG - <a href="${svgFileName}">${linkText}</a>`;
