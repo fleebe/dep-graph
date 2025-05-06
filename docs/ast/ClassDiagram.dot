@@ -1,0 +1,102 @@
+digraph {label="ast Class Diagram";
+labelloc="t";
+"ASTProcessor"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD align="left"><B>ASTProcessor</B></TD></TR>
+<TR><TD align="left"><B>properties</B><BR/>
+- #importProcessor<BR/>
+- #exportProcessor<BR/>
+- #classProcessor<BR/>
+- #errorCollector<BR/>
+- #usageProcessor<BR/>
+- #baseLoc<BR/>
+</TD></TR>
+<TR><TD align="left"><B>methods</B><BR/>
++ constructor (baseLoc)<BR/>
++ processModules (moduleMap)<BR/>
+</TD></TR>
+</TABLE>>];
+
+"BaseProcessor"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD align="left"><B>BaseProcessor</B></TD></TR>
+<TR><TD align="left"><B>properties</B><BR/>
+- #baseLoc<BR/>
+</TD></TR>
+<TR><TD align="left"><B>methods</B><BR/>
++ constructor (baseLoc)<BR/>
++ getParentNode (ast, targetNode)<BR/>
++ skipNode (nodeType)<BR/>
++ getAbsolutePath (currentFilePath, relativePath)<BR/>
++ formatFunctionParams (params)<BR/>
++ calRelSrcFile (src, relSrcPath)<BR/>
++ countSubstrings (str, subStr)<BR/>
++ replaceWithReversedArray (str, subStr, arr, cnt)<BR/>
+</TD></TR>
+</TABLE>>];
+
+"ClassProcessor"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD align="left"><B>ClassProcessor:BaseProcessor</B></TD></TR>
+<TR><TD align="left"><B>properties</B><BR/>
++ classList<BR/>
+</TD></TR>
+<TR><TD align="left"><B>methods</B><BR/>
++ constructor (baseLoc)<BR/>
++ parseClasses (ast, mod)<BR/>
++ extractSuperClassName (superClassNode)<BR/>
++ extractMemberExpressionName (node)<BR/>
++ extractMethodInfo (methodNode)<BR/>
++ getMethodName (methodNode)<BR/>
++ extractPropertyInfo (propertyNode)<BR/>
++ getPropertyName (propertyNode)<BR/>
++ extractTypeAnnotation (typeAnnotation)<BR/>
+</TD></TR>
+</TABLE>>];
+"ClassProcessor"->"BaseProcessor" [arrowhead=empty];
+
+"ErrorCollector"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD align="left"><B>ErrorCollector:BaseProcessor</B></TD></TR>
+<TR><TD align="left"><B>properties</B><BR/>
+</TD></TR>
+<TR><TD align="left"><B>methods</B><BR/>
++ constructor (baseLoc)<BR/>
++ addError (file, err)<BR/>
+</TD></TR>
+</TABLE>>];
+"ErrorCollector"->"BaseProcessor" [arrowhead=empty];
+
+"ExportProcessor"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD align="left"><B>ExportProcessor:BaseProcessor</B></TD></TR>
+<TR><TD align="left"><B>properties</B><BR/>
+</TD></TR>
+<TR><TD align="left"><B>methods</B><BR/>
++ constructor (baseLoc)<BR/>
++ parseExports (ast, mod)<BR/>
++ processExportDeclaration (node, srcFile, exportList, mod)<BR/>
++ processDeclarationNode (decl, addVal)<BR/>
+</TD></TR>
+</TABLE>>];
+"ExportProcessor"->"BaseProcessor" [arrowhead=empty];
+
+"ImportProcessor"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD align="left"><B>ImportProcessor:BaseProcessor</B></TD></TR>
+<TR><TD align="left"><B>properties</B><BR/>
+</TD></TR>
+<TR><TD align="left"><B>methods</B><BR/>
++ constructor (baseLoc)<BR/>
++ parseImports (ast, mod)<BR/>
++ processImportDeclaration (node, srcFile, dependencies)<BR/>
++ normalizeDeps (deps)<BR/>
+</TD></TR>
+</TABLE>>];
+"ImportProcessor"->"BaseProcessor" [arrowhead=empty];
+
+"UsageProcessor"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD align="left"><B>UsageProcessor:BaseProcessor</B></TD></TR>
+<TR><TD align="left"><B>properties</B><BR/>
+</TD></TR>
+<TR><TD align="left"><B>methods</B><BR/>
++ constructor (baseLoc)<BR/>
+</TD></TR>
+</TABLE>>];
+"UsageProcessor"->"BaseProcessor" [arrowhead=empty];
+
+}

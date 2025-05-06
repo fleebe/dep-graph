@@ -8,12 +8,22 @@ export class GraphBase {
   /**
    * Creates the standard header for a graphviz digraph
    * 
-   * @param {string} [title=""] - Title to use for the graph
+   * @param {string} [title] - Title to use for the graph
    * @returns {string} - Formatted digraph header
    */
-  digraph(title = "") {
-    return `digraph {\nlabel="${title}";\nlabelloc="t";\nnode [shape=none];\n`;
+  digraph(title) {
+    return `digraph {label="${title}";\nlabelloc="t";\n`
+   }
+
+  nodeStart(title) {
+    return `"${title}"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">\n`;
   }
+
+  nodeFinish() {
+    return `</TD></TR>\n</TABLE>>];\n`
+  }
+
+
 
   recordDigraph(title = "") {
     let result = "digraph {\n";

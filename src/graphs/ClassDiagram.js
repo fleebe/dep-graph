@@ -63,13 +63,11 @@ export class ClassDiagram extends GraphBase {
    * @returns {string} - DOT syntax for class node
    */
   createClassNode(classItem) {
-    const className = classItem.name;
-    let nodeContent = `"${className}" [shape=none, label=<<TABLE cellspacing="0" cellborder="1" align="left">\n`;
-
     // Class name header
     const superClass = (classItem.superClass) ? ":" + classItem.superClass : ""
-    nodeContent += `<TR><TD bgcolor="lightblue" align="left"><B>`
-    nodeContent += `${className}${superClass}</B></TD></TR>\n`;
+
+    let nodeContent = this.nodeStart(classItem.name);
+    nodeContent += `<TR><TD align="left"><B>${classItem.name}${superClass}</B></TD></TR>\n`;
  
     nodeContent += `<TR><TD align="left"><B>properties</B><BR/>\n`;
     classItem.properties.forEach(prop => {
@@ -82,9 +80,7 @@ export class ClassDiagram extends GraphBase {
       const params = method.parameters || "()";
       nodeContent += `${(method.isPrivate) ? "-" : "+"} ${method.name} ${params}<BR/>\n`;
     });
-    nodeContent += `</TD></TR>\n`;
-
-    nodeContent += `</TABLE>>];\n`;
+    nodeContent += this.nodeFinish();
     return nodeContent;
   }
 

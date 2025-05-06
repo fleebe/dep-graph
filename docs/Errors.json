@@ -1,0 +1,112 @@
+[
+  {
+    "file": "dep-graph.js",
+    "err": {},
+    "msg": "Cannot read properties of undefined (reading 'push')"
+  },
+  {
+    "file": "DependencyGraphGenerator.js",
+    "err": {},
+    "msg": "Cannot read properties of undefined (reading 'push')"
+  },
+  {
+    "file": "ASTProcessor.js",
+    "err": {},
+    "msg": "Cannot read properties of undefined (reading 'push')"
+  },
+  {
+    "file": "BaseProcessor.js",
+    "err": {},
+    "msg": "Cannot read properties of undefined (reading 'push')"
+  },
+  {
+    "file": "ClassProcessor.js",
+    "err": {},
+    "msg": "Cannot read properties of undefined (reading 'push')"
+  },
+  {
+    "file": "ErrorCollector.js",
+    "err": {},
+    "msg": "Cannot read properties of undefined (reading 'push')"
+  },
+  {
+    "file": "ExportProcessor.js",
+    "err": {},
+    "msg": "Cannot read properties of undefined (reading 'push')"
+  },
+  {
+    "file": "ImportProcessor.js",
+    "err": {},
+    "msg": "Cannot read properties of undefined (reading 'push')"
+  },
+  {
+    "file": "UsageProcessor.js",
+    "err": {},
+    "msg": "Cannot read properties of undefined (reading 'push')"
+  },
+  {
+    "file": "DiagramsGenerator.js",
+    "err": {},
+    "msg": "Cannot read properties of undefined (reading 'push')"
+  },
+  {
+    "file": "HtmlGenerator.js",
+    "err": {},
+    "msg": "Cannot read properties of undefined (reading 'push')"
+  },
+  {
+    "file": "ClassDiagram.js",
+    "err": {},
+    "msg": "Cannot read properties of undefined (reading 'push')"
+  },
+  {
+    "file": "ExportGraph.js",
+    "err": {},
+    "msg": "Cannot read properties of undefined (reading 'push')"
+  },
+  {
+    "file": "GraphBase.js",
+    "err": {},
+    "msg": "Cannot read properties of undefined (reading 'push')"
+  },
+  {
+    "file": "NodeModulesGraph.js",
+    "err": {},
+    "msg": "Cannot read properties of undefined (reading 'push')"
+  },
+  {
+    "file": "PackageGraph.js",
+    "err": {},
+    "msg": "Cannot read properties of undefined (reading 'push')"
+  },
+  {
+    "file": "RelationsGraph.js",
+    "err": {},
+    "msg": "Cannot read properties of undefined (reading 'push')"
+  },
+  {
+    "file": "file-utils.js",
+    "err": {},
+    "msg": "Cannot read properties of undefined (reading 'push')"
+  },
+  {
+    "file": "globals.js",
+    "err": {},
+    "msg": "Cannot read properties of undefined (reading 'push')"
+  },
+  {
+    "file": "index.js",
+    "err": {},
+    "msg": "Cannot read properties of undefined (reading 'push')"
+  },
+  {
+    "file": "json.js",
+    "err": {},
+    "msg": "Cannot read properties of undefined (reading 'push')"
+  },
+  {
+    "file": "list-utils.js",
+    "err": {},
+    "msg": "Cannot read properties of undefined (reading 'push')"
+  }
+]

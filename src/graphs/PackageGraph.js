@@ -12,11 +12,13 @@ export class PackageGraph extends GraphBase {
 
   #moduleArray = []
   #dependencyList = []
+  #diagramsHTML = "diagrams.html"
 
   constructor(moduleArray, dependencyList) {
     super();
     this.moduleArray = moduleArray;
     this.dependencyList = dependencyList;
+    this.#diagramsHTML = "diagrams.html";
   }
 
   /**
@@ -25,7 +27,7 @@ export class PackageGraph extends GraphBase {
    * @returns {string} - DOT file content as string
    */
   generate() {
-    let result = this.recordDigraph("");
+    let result = this.digraph("");
 
     // Add packages to the graph
     result += this.createPackageNodes();
@@ -64,7 +66,7 @@ export class PackageGraph extends GraphBase {
         continue;
       }
       // Create relationship between src and dest packages
-      let ln = `"${src}"->"${dest}"\n`;
+      let ln = `"${src}"->"${dest}";\n`;
 
       // Add dependency to graph and array if it doesn't already exist
       if (depArr.indexOf(ln) === -1) {
@@ -82,24 +84,24 @@ export class PackageGraph extends GraphBase {
    * @returns {string} - DOT syntax for package nodes
    */
   createPackageNodes() {
-    let result = "";
-
+    let nodeContent = "";
     // Get unique set of directories
     const dirList = new Set(this.moduleArray.map(a => a.dir));
 
     // For each directory, create a node with its files
     for (const directory of dirList) {
-      let nodeContent = `"${directory}" [label="{${directory}|\n`;
+      nodeContent += this.nodeStart(directory);
+      nodeContent += `<TR><TD ALIGN="center" HREF="${this.#diagramsHTML}#${directory}" TARGET="_top">${directory}</TD></TR>\n`;
+      nodeContent += `<TR><TD ALIGN="left">\n`
 
       // Add each file in the directory to the node
       const filesInDir = this.moduleArray.filter(a => directory === a.dir);
       for (const dirFile of filesInDir) {
-        nodeContent += `\t${dirFile.file}\\l\n`;
+        nodeContent += `${dirFile.file}<BR/>\n`;
       }
 
-      result += nodeContent + '}"];\n\n';
+      nodeContent += this.nodeFinish();
     }
-
-    return result;
+    return nodeContent;
   }
 }

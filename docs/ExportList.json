@@ -1,0 +1,289 @@
+[
+  {
+    "name": "dep-graph.js",
+    "exported": "runProgram",
+    "type": "FunctionDeclaration",
+    "params": "()"
+  },
+  {
+    "name": "DependencyGraphGenerator.js",
+    "exported": "DependencyGraphGenerator",
+    "type": "ClassDeclaration"
+  },
+  {
+    "name": "ast/ASTProcessor.js",
+    "exported": "processAST",
+    "type": "FunctionDeclaration",
+    "params": "(moduleMap, baseLoc)"
+  },
+  {
+    "name": "ast/BaseProcessor.js",
+    "exported": "BaseProcessor",
+    "type": "ClassDeclaration"
+  },
+  {
+    "name": "ast/ClassProcessor.js",
+    "exported": "ClassProcessor",
+    "type": "ClassDeclaration"
+  },
+  {
+    "name": "ast/ErrorCollector.js",
+    "exported": "ErrorCollector",
+    "type": "ClassDeclaration"
+  },
+  {
+    "name": "ast/ExportProcessor.js",
+    "exported": "ExportProcessor",
+    "type": "ClassDeclaration"
+  },
+  {
+    "name": "ast/ImportProcessor.js",
+    "exported": "ImportProcessor",
+    "type": "ClassDeclaration"
+  },
+  {
+    "name": "ast/UsageProcessor.js",
+    "exported": "UsageProcessor",
+    "type": "ClassDeclaration"
+  },
+  {
+    "name": "generators/DiagramsGenerator.js",
+    "exported": "DiagramsGenerator",
+    "type": "ClassDeclaration"
+  },
+  {
+    "name": "generators/HtmlGenerator.js",
+    "exported": "HtmlGenerator",
+    "type": "ClassDeclaration"
+  },
+  {
+    "name": "generators/HtmlGenerator.js",
+    "exported": "createModuleHtml",
+    "type": "FunctionDeclaration",
+    "params": "(symbol, moduleArray, dependencyList, exportList)"
+  },
+  {
+    "name": "generators/HtmlGenerator.js",
+    "exported": "createModuleHtml",
+    "type": "ObjectExpression"
+  },
+  {
+    "name": "generators/HtmlGenerator.js",
+    "exported": "HtmlGenerator",
+    "type": "ObjectExpression"
+  },
+  {
+    "name": "graphs/ClassDiagram.js",
+    "exported": "ClassDiagram",
+    "type": "ClassDeclaration"
+  },
+  {
+    "name": "graphs/ExportGraph.js",
+    "exported": "ExportGraph",
+    "type": "ClassDeclaration"
+  },
+  {
+    "name": "graphs/GraphBase.js",
+    "exported": "GraphBase",
+    "type": "ClassDeclaration"
+  },
+  {
+    "name": "graphs/NodeModulesGraph.js",
+    "exported": "NodeModulesGraph",
+    "type": "ClassDeclaration"
+  },
+  {
+    "name": "graphs/PackageGraph.js",
+    "exported": "PackageGraph",
+    "type": "ClassDeclaration"
+  },
+  {
+    "name": "graphs/RelationsGraph.js",
+    "exported": "RelationsGraph",
+    "type": "ClassDeclaration"
+  },
+  {
+    "name": "utils/file-utils.js",
+    "exported": "moduleName",
+    "type": "FunctionDeclaration",
+    "params": "(mod)"
+  },
+  {
+    "name": "utils/file-utils.js",
+    "exported": "hasExtension",
+    "type": "VariableDeclaration"
+  },
+  {
+    "name": "utils/file-utils.js",
+    "exported": "removeExtension",
+    "type": "VariableDeclaration"
+  },
+  {
+    "name": "utils/file-utils.js",
+    "exported": "normalizePath",
+    "type": "FunctionDeclaration",
+    "params": "(dest, src, root)"
+  },
+  {
+    "name": "utils/file-utils.js",
+    "exported": "cleanDirPath",
+    "type": "FunctionDeclaration",
+    "params": "(root)"
+  },
+  {
+    "name": "utils/file-utils.js",
+    "exported": "getFilename",
+    "type": "FunctionDeclaration",
+    "params": "(fullPath)"
+  },
+  {
+    "name": "utils/file-utils.js",
+    "exported": "getFiles",
+    "type": "FunctionDeclaration",
+    "params": "(srcpath)"
+  },
+  {
+    "name": "utils/file-utils.js",
+    "exported": "getDirectoriesRecursive",
+    "type": "FunctionDeclaration",
+    "params": "(srcpath, ignoredDirs)"
+  },
+  {
+    "name": "utils/file-utils.js",
+    "exported": "getFilesRecursive",
+    "type": "FunctionDeclaration",
+    "params": "(srcpath, ignoredDirs)"
+  },
+  {
+    "name": "utils/file-utils.js",
+    "exported": "getRelativePathParts",
+    "type": "FunctionDeclaration",
+    "params": "(file, symbol)"
+  },
+  {
+    "name": "utils/file-utils.js",
+    "exported": "safeWriteFile",
+    "type": "FunctionDeclaration",
+    "params": "(dirPath, fileName, content)"
+  },
+  {
+    "name": "utils/file-utils.js",
+    "exported": "removeExtension",
+    "type": "ObjectExpression"
+  },
+  {
+    "name": "utils/file-utils.js",
+    "exported": "normalizePath",
+    "type": "ObjectExpression"
+  },
+  {
+    "name": "utils/file-utils.js",
+    "exported": "cleanDirPath",
+    "type": "ObjectExpression"
+  },
+  {
+    "name": "utils/file-utils.js",
+    "exported": "getFilename",
+    "type": "ObjectExpression"
+  },
+  {
+    "name": "utils/globals.js",
+    "exported": "EXT_LIST",
+    "type": "VariableDeclaration"
+  },
+  {
+    "name": "utils/index.js",
+    "type": "VariableDeclaration"
+  },
+  {
+    "name": "utils/index.js",
+    "type": "VariableDeclaration"
+  },
+  {
+    "name": "utils/index.js",
+    "exported": "file",
+    "type": "ObjectExpression"
+  },
+  {
+    "name": "utils/index.js",
+    "exported": "list",
+    "type": "ObjectExpression"
+  },
+  {
+    "name": "utils/json.js",
+    "exported": "jsonOut",
+    "type": "FunctionDeclaration",
+    "params": "(output, title, obj)"
+  },
+  {
+    "name": "utils/json.js",
+    "exported": "jsonIn",
+    "type": "FunctionDeclaration",
+    "params": "(file)"
+  },
+  {
+    "name": "utils/json.js",
+    "exported": "jsonOut",
+    "type": "ObjectExpression"
+  },
+  {
+    "name": "utils/json.js",
+    "exported": "jsonIn",
+    "type": "ObjectExpression"
+  },
+  {
+    "name": "utils/list-utils.js",
+    "exported": "addToMapArray",
+    "type": "FunctionDeclaration",
+    "params": "(map, key, arrVal)"
+  },
+  {
+    "name": "utils/list-utils.js",
+    "exported": "getUsedByList",
+    "type": "FunctionDeclaration",
+    "params": "(dependencyList, mod)"
+  },
+  {
+    "name": "utils/list-utils.js",
+    "exported": "getDependsOn",
+    "type": "FunctionDeclaration",
+    "params": "(dependencyList, file)"
+  },
+  {
+    "name": "utils/list-utils.js",
+    "exported": "getExportedList",
+    "type": "FunctionDeclaration",
+    "params": "(exportList, file)"
+  },
+  {
+    "name": "utils/list-utils.js",
+    "exported": "getNodeModuleList",
+    "type": "FunctionDeclaration",
+    "params": "(dependencyList)"
+  },
+  {
+    "name": "utils/list-utils.js",
+    "exported": "addToMapArray",
+    "type": "ObjectExpression"
+  },
+  {
+    "name": "utils/list-utils.js",
+    "exported": "getUsedByList",
+    "type": "ObjectExpression"
+  },
+  {
+    "name": "utils/list-utils.js",
+    "exported": "getDependsOn",
+    "type": "ObjectExpression"
+  },
+  {
+    "name": "utils/list-utils.js",
+    "exported": "getExportedList",
+    "type": "ObjectExpression"
+  },
+  {
+    "name": "utils/list-utils.js",
+    "exported": "getNodeModuleList",
+    "type": "ObjectExpression"
+  }
+]

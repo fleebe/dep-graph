@@ -1,0 +1,798 @@
+[
+  {
+    "name": "DependencyGraphGenerator",
+    "filePath": "DependencyGraphGenerator.js",
+    "methods": [
+      {
+        "name": "constructor",
+        "kind": "constructor",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(baseLoc, options)"
+      },
+      {
+        "name": "generate",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "()"
+      },
+      {
+        "name": "#getModuleArray",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": true,
+        "parameters": "(stats)"
+      },
+      {
+        "name": "#generateJSDoc",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": true,
+        "parameters": "(source, output, configFile)"
+      },
+      {
+        "name": "#createDirGraph",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": true,
+        "parameters": "(graphName, moduleArray, dependencyList, classList, exportList)"
+      },
+      {
+        "name": "#generateSvgFromDot",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": true,
+        "parameters": "(dotFilePath, svgFilePath)"
+      }
+    ],
+    "properties": [
+      {
+        "name": "#baseLoc",
+        "isStatic": false,
+        "isPrivate": true,
+        "hasDefaultValue": true
+      },
+      {
+        "name": "#options",
+        "isStatic": false,
+        "isPrivate": true,
+        "hasDefaultValue": true
+      },
+      {
+        "name": "#outputDir",
+        "isStatic": false,
+        "isPrivate": true,
+        "hasDefaultValue": true
+      },
+      {
+        "name": "diagramHTML",
+        "isStatic": false,
+        "isPrivate": false,
+        "hasDefaultValue": true
+      },
+      {
+        "name": "indexHTML",
+        "isStatic": false,
+        "isPrivate": false,
+        "hasDefaultValue": true
+      }
+    ],
+    "superClass": null,
+    "isExported": true
+  },
+  {
+    "name": "ASTProcessor",
+    "filePath": "ast/ASTProcessor.js",
+    "methods": [
+      {
+        "name": "constructor",
+        "kind": "constructor",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(baseLoc)"
+      },
+      {
+        "name": "processModules",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(moduleMap)"
+      }
+    ],
+    "properties": [
+      {
+        "name": "#importProcessor",
+        "isStatic": false,
+        "isPrivate": true,
+        "hasDefaultValue": true
+      },
+      {
+        "name": "#exportProcessor",
+        "isStatic": false,
+        "isPrivate": true,
+        "hasDefaultValue": true
+      },
+      {
+        "name": "#classProcessor",
+        "isStatic": false,
+        "isPrivate": true,
+        "hasDefaultValue": true
+      },
+      {
+        "name": "#errorCollector",
+        "isStatic": false,
+        "isPrivate": true,
+        "hasDefaultValue": true
+      },
+      {
+        "name": "#usageProcessor",
+        "isStatic": false,
+        "isPrivate": true,
+        "hasDefaultValue": true
+      },
+      {
+        "name": "#baseLoc",
+        "isStatic": false,
+        "isPrivate": true,
+        "hasDefaultValue": true
+      }
+    ],
+    "superClass": null,
+    "isExported": false
+  },
+  {
+    "name": "BaseProcessor",
+    "filePath": "ast/BaseProcessor.js",
+    "methods": [
+      {
+        "name": "constructor",
+        "kind": "constructor",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(baseLoc)"
+      },
+      {
+        "name": "getParentNode",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(ast, targetNode)"
+      },
+      {
+        "name": "skipNode",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(nodeType)"
+      },
+      {
+        "name": "getAbsolutePath",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(currentFilePath, relativePath)"
+      },
+      {
+        "name": "formatFunctionParams",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(params)"
+      },
+      {
+        "name": "calRelSrcFile",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(src, relSrcPath)"
+      },
+      {
+        "name": "countSubstrings",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(str, subStr)"
+      },
+      {
+        "name": "replaceWithReversedArray",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(str, subStr, arr, cnt)"
+      }
+    ],
+    "properties": [
+      {
+        "name": "#baseLoc",
+        "isStatic": false,
+        "isPrivate": true,
+        "hasDefaultValue": true
+      }
+    ],
+    "superClass": null,
+    "isExported": true
+  },
+  {
+    "name": "ClassProcessor",
+    "filePath": "ast/ClassProcessor.js",
+    "methods": [
+      {
+        "name": "constructor",
+        "kind": "constructor",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(baseLoc)"
+      },
+      {
+        "name": "parseClasses",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(ast, mod)"
+      },
+      {
+        "name": "extractSuperClassName",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(superClassNode)"
+      },
+      {
+        "name": "extractMemberExpressionName",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(node)"
+      },
+      {
+        "name": "extractMethodInfo",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(methodNode)"
+      },
+      {
+        "name": "getMethodName",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(methodNode)"
+      },
+      {
+        "name": "extractPropertyInfo",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(propertyNode)"
+      },
+      {
+        "name": "getPropertyName",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(propertyNode)"
+      },
+      {
+        "name": "extractTypeAnnotation",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(typeAnnotation)"
+      }
+    ],
+    "properties": [
+      {
+        "name": "classList",
+        "isStatic": false,
+        "isPrivate": false,
+        "hasDefaultValue": true
+      }
+    ],
+    "superClass": "BaseProcessor",
+    "isExported": true
+  },
+  {
+    "name": "ErrorCollector",
+    "filePath": "ast/ErrorCollector.js",
+    "methods": [
+      {
+        "name": "constructor",
+        "kind": "constructor",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(baseLoc)"
+      },
+      {
+        "name": "addError",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(file, err)"
+      }
+    ],
+    "properties": [],
+    "superClass": "BaseProcessor",
+    "isExported": true
+  },
+  {
+    "name": "ExportProcessor",
+    "filePath": "ast/ExportProcessor.js",
+    "methods": [
+      {
+        "name": "constructor",
+        "kind": "constructor",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(baseLoc)"
+      },
+      {
+        "name": "parseExports",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(ast, mod)"
+      },
+      {
+        "name": "processExportDeclaration",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(node, srcFile, exportList, mod)"
+      },
+      {
+        "name": "processDeclarationNode",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(decl, addVal)"
+      }
+    ],
+    "properties": [],
+    "superClass": "BaseProcessor",
+    "isExported": true
+  },
+  {
+    "name": "ImportProcessor",
+    "filePath": "ast/ImportProcessor.js",
+    "methods": [
+      {
+        "name": "constructor",
+        "kind": "constructor",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(baseLoc)"
+      },
+      {
+        "name": "parseImports",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(ast, mod)"
+      },
+      {
+        "name": "processImportDeclaration",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(node, srcFile, dependencies)"
+      },
+      {
+        "name": "normalizeDeps",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(deps)"
+      }
+    ],
+    "properties": [],
+    "superClass": "BaseProcessor",
+    "isExported": true
+  },
+  {
+    "name": "UsageProcessor",
+    "filePath": "ast/UsageProcessor.js",
+    "methods": [
+      {
+        "name": "constructor",
+        "kind": "constructor",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(baseLoc)"
+      }
+    ],
+    "properties": [],
+    "superClass": "BaseProcessor",
+    "isExported": true
+  },
+  {
+    "name": "DiagramsGenerator",
+    "filePath": "generators/DiagramsGenerator.js",
+    "methods": [
+      {
+        "name": "constructor",
+        "kind": "constructor",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(indexHTML)"
+      },
+      {
+        "name": "createDiagramsHtml",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(outDir, moduleArray)"
+      },
+      {
+        "name": "generateSvgSection",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(title, svgFileName, linkText)"
+      }
+    ],
+    "properties": [
+      {
+        "name": "indexHTML",
+        "isStatic": false,
+        "isPrivate": false,
+        "hasDefaultValue": true
+      },
+      {
+        "name": "diagramsHTML",
+        "isStatic": false,
+        "isPrivate": false,
+        "hasDefaultValue": true
+      }
+    ],
+    "superClass": null,
+    "isExported": true
+  },
+  {
+    "name": "HtmlGenerator",
+    "filePath": "generators/HtmlGenerator.js",
+    "methods": [
+      {
+        "name": "constructor",
+        "kind": "constructor",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(diagramHTML)"
+      },
+      {
+        "name": "createModuleHtml",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(symbol, moduleArray, dependencyList, exportList)"
+      },
+      {
+        "name": "generateSummarySection",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(moduleArray, dependencyList)"
+      },
+      {
+        "name": "generateModuleSummaryTable",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(moduleArray)"
+      },
+      {
+        "name": "generateUnusedModulesTable",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(unusedModules)"
+      },
+      {
+        "name": "generateModuleDetails",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(moduleArray, dependencyList, exportList)"
+      },
+      {
+        "name": "generateExportsTable",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(exportList, usedList, fileName)"
+      },
+      {
+        "name": "generateDependsOnTable",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(dependencyList, fileName)"
+      },
+      {
+        "name": "generateUsedByTable",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(usedList, fileName)"
+      },
+      {
+        "name": "generateNodeModulesSection",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(dependencyList)"
+      },
+      {
+        "name": "getUniqueNodeModules",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(dependencyList)"
+      }
+    ],
+    "properties": [
+      {
+        "name": "#diagramHTML",
+        "isStatic": false,
+        "isPrivate": true,
+        "hasDefaultValue": true
+      }
+    ],
+    "superClass": null,
+    "isExported": true
+  },
+  {
+    "name": "ClassDiagram",
+    "filePath": "graphs/ClassDiagram.js",
+    "methods": [
+      {
+        "name": "constructor",
+        "kind": "constructor",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(dependencyList, classList)"
+      },
+      {
+        "name": "generate",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(dir)"
+      },
+      {
+        "name": "createClassNode",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(classItem)"
+      }
+    ],
+    "properties": [
+      {
+        "name": "#classList",
+        "isStatic": false,
+        "isPrivate": true,
+        "hasDefaultValue": true
+      },
+      {
+        "name": "#dependencyList",
+        "isStatic": false,
+        "isPrivate": true,
+        "hasDefaultValue": true
+      }
+    ],
+    "superClass": "GraphBase",
+    "isExported": true
+  },
+  {
+    "name": "ExportGraph",
+    "filePath": "graphs/ExportGraph.js",
+    "methods": [
+      {
+        "name": "constructor",
+        "kind": "constructor",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(dependencyList, exportList, moduleArray)"
+      },
+      {
+        "name": "generate",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(dir)"
+      },
+      {
+        "name": "createModuleNode",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(mod, exportList)"
+      }
+    ],
+    "properties": [],
+    "superClass": "GraphBase",
+    "isExported": true
+  },
+  {
+    "name": "GraphBase",
+    "filePath": "graphs/GraphBase.js",
+    "methods": [
+      {
+        "name": "digraph",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(title)"
+      },
+      {
+        "name": "nodeStart",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(title)"
+      },
+      {
+        "name": "nodeFinish",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "()"
+      },
+      {
+        "name": "recordDigraph",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(title)"
+      },
+      {
+        "name": "isNodeModule",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(dep)"
+      },
+      {
+        "name": "inSameDirectory",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(dep)"
+      },
+      {
+        "name": "generate",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "()"
+      }
+    ],
+    "properties": [],
+    "superClass": null,
+    "isExported": true
+  },
+  {
+    "name": "NodeModulesGraph",
+    "filePath": "graphs/NodeModulesGraph.js",
+    "methods": [
+      {
+        "name": "constructor",
+        "kind": "constructor",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(dependencyList, nodeModuleDependents)"
+      },
+      {
+        "name": "generate",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "()"
+      },
+      {
+        "name": "createNodeModulesSection",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "()"
+      }
+    ],
+    "properties": [],
+    "superClass": "GraphBase",
+    "isExported": true
+  },
+  {
+    "name": "PackageGraph",
+    "filePath": "graphs/PackageGraph.js",
+    "methods": [
+      {
+        "name": "constructor",
+        "kind": "constructor",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(moduleArray, dependencyList)"
+      },
+      {
+        "name": "generate",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "()"
+      },
+      {
+        "name": "createPackageDependencies",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "()"
+      },
+      {
+        "name": "createPackageNodes",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "()"
+      }
+    ],
+    "properties": [
+      {
+        "name": "#moduleArray",
+        "isStatic": false,
+        "isPrivate": true,
+        "hasDefaultValue": true
+      },
+      {
+        "name": "#dependencyList",
+        "isStatic": false,
+        "isPrivate": true,
+        "hasDefaultValue": true
+      },
+      {
+        "name": "#diagramsHTML",
+        "isStatic": false,
+        "isPrivate": true,
+        "hasDefaultValue": true
+      }
+    ],
+    "superClass": "GraphBase",
+    "isExported": true
+  },
+  {
+    "name": "RelationsGraph",
+    "filePath": "graphs/RelationsGraph.js",
+    "methods": [
+      {
+        "name": "constructor",
+        "kind": "constructor",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "(dependencyList, moduleArray)"
+      },
+      {
+        "name": "generate",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": false,
+        "parameters": "()"
+      },
+      {
+        "name": "#createModuleRelationNode",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": true,
+        "parameters": "(mod)"
+      },
+      {
+        "name": "#createNodeModulesSection",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": true,
+        "parameters": "()"
+      }
+    ],
+    "properties": [],
+    "superClass": "GraphBase",
+    "isExported": true
+  }
+]

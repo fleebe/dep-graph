@@ -5,12 +5,17 @@ import fs from "fs";
  * Class responsible for generating HTML pages for SVG diagrams
  */
 export class DiagramsGenerator {
+
+  indexHTML = "index.html"
+  diagramsHTML= "diagrams.html"
+
   /**
    * Constructor for DiagramsGenerator
    */
-  constructor() {
+  constructor(indexHTML) {
     // Any initialization can go here
-  }
+    this.indexHTML = indexHTML;
+   }
 
   /**
    * Creates a separate HTML page for SVG diagrams
@@ -27,9 +32,8 @@ export class DiagramsGenerator {
     result += "a.back-link:hover { text-decoration: underline; }";
     result += "</style></head><body>\n";
 
-    result += `<h1>${outDir} - Module Diagrams</h1>\n`;
-    result += `<a class="back-link" href="index.html">&larr; Back to Module Analysis</a>\n`;
-
+    result += `<h1 id="diagram_top">${outDir} - Module Diagrams</h1>\n`;
+    result += `<a class="back-link" href="${this.indexHTML}">&larr; Back to Module Analysis</a>\n`;
 
     result += this.generateSvgSection("Package Dependency Graph", "Package.svg");
     result += this.generateSvgSection("Module Relations Graph", "Relations.svg");
@@ -38,14 +42,18 @@ export class DiagramsGenerator {
     const dirArray = [...new Set(moduleArray.map(module => module.dir))];
 
     dirArray.forEach(dir => {
-      const hdrTxt = (dir != '') ? `<h2 align="center">${dir}</h2>\n` : `<h2 align="center">base</h2>\n`;
+      const hdrTxt = (dir != '') 
+        ? `<h2 align="center" id="${dir}">${dir}` 
+        : `<h2 align="center" id=base>base`;
       result += hdrTxt
+      result += `- <a class="back-link" href="#diagram_top">(top)</a>`
+      result += `</h2>\n`
 
       // Export graph (only if it exists)
       let outPath = path.join(outDir, dir, "ExportGraph.svg");
       if (fs.existsSync(outPath)) {
         const exportSvgPath = path.join(dir, "ExportGraph.svg");
-        const exportGraphName = path.join(dir, "Exported Functions Graph");
+        const exportGraphName = `${dir} - Module Diagram\n`
         result += this.generateSvgSection(exportGraphName, exportSvgPath);
       }
 
@@ -53,12 +61,12 @@ export class DiagramsGenerator {
       outPath = path.join(outDir, dir, "ClassDiagram.svg");
       if (fs.existsSync(outPath)) {
         const classSvgPath = path.join(dir, "ClassDiagram.svg");
-        const classGraphName = path.join(dir, "Class Diagram");
+        const classGraphName = `${dir} - Class Diagram\n`
         result += this.generateSvgSection(classGraphName, classSvgPath);
       }
     });
 
-    result += `<a class="back-link" href="index.html">&larr; Back to Module Analysis</a>\n`;
+    result += `<a class="back-link" href="${this.indexHTML}">&larr; Back to Module Analysis</a>\n`;
     result += "</body></html>";
     return result;
   }
@@ -84,8 +92,8 @@ export class DiagramsGenerator {
       // Silently ignore if file check fails - will happen in browser context
     }
 
-//    let result = `<h2>${title}</h2>\n`;
     let result = "";
+    result += `<h3 align="left">${title}</h3>\n`;
     result += `<div class="svg-container">\n`;
     result += `<object data="${svgFileName}" type="image/svg+xml" width="100%" height="600px">`;
     result += `Your browser does not support SVG - <a href="${svgFileName}">${linkText}</a>`;

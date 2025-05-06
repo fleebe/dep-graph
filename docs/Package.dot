@@ -1,0 +1,57 @@
+digraph {label="";
+labelloc="t";
+""[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD ALIGN="center" HREF="diagrams.html#" TARGET="_top"></TD></TR>
+<TR><TD ALIGN="left">
+dep-graph.js<BR/>
+DependencyGraphGenerator.js<BR/>
+</TD></TR>
+</TABLE>>];
+"ast"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD ALIGN="center" HREF="diagrams.html#ast" TARGET="_top">ast</TD></TR>
+<TR><TD ALIGN="left">
+ASTProcessor.js<BR/>
+BaseProcessor.js<BR/>
+ClassProcessor.js<BR/>
+ErrorCollector.js<BR/>
+ExportProcessor.js<BR/>
+ImportProcessor.js<BR/>
+UsageProcessor.js<BR/>
+</TD></TR>
+</TABLE>>];
+"generators"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD ALIGN="center" HREF="diagrams.html#generators" TARGET="_top">generators</TD></TR>
+<TR><TD ALIGN="left">
+DiagramsGenerator.js<BR/>
+HtmlGenerator.js<BR/>
+</TD></TR>
+</TABLE>>];
+"graphs"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD ALIGN="center" HREF="diagrams.html#graphs" TARGET="_top">graphs</TD></TR>
+<TR><TD ALIGN="left">
+ClassDiagram.js<BR/>
+ExportGraph.js<BR/>
+GraphBase.js<BR/>
+NodeModulesGraph.js<BR/>
+PackageGraph.js<BR/>
+RelationsGraph.js<BR/>
+</TD></TR>
+</TABLE>>];
+"utils"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD ALIGN="center" HREF="diagrams.html#utils" TARGET="_top">utils</TD></TR>
+<TR><TD ALIGN="left">
+file-utils.js<BR/>
+globals.js<BR/>
+index.js<BR/>
+json.js<BR/>
+list-utils.js<BR/>
+</TD></TR>
+</TABLE>>];
+""->"ast";
+""->"generators";
+""->"utils";
+""->"graphs";
+"ast"->"utils";
+"generators"->"utils";
+"graphs"->"utils";
+}

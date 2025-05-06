@@ -1,0 +1,85 @@
+digraph {label="graphs Class Diagram";
+labelloc="t";
+"ClassDiagram"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD align="left"><B>ClassDiagram:GraphBase</B></TD></TR>
+<TR><TD align="left"><B>properties</B><BR/>
+- #classList<BR/>
+- #dependencyList<BR/>
+</TD></TR>
+<TR><TD align="left"><B>methods</B><BR/>
++ constructor (dependencyList, classList)<BR/>
++ generate (dir)<BR/>
++ createClassNode (classItem)<BR/>
+</TD></TR>
+</TABLE>>];
+"ClassDiagram"->"GraphBase" [arrowhead=empty];
+
+"ExportGraph"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD align="left"><B>ExportGraph:GraphBase</B></TD></TR>
+<TR><TD align="left"><B>properties</B><BR/>
+</TD></TR>
+<TR><TD align="left"><B>methods</B><BR/>
++ constructor (dependencyList, exportList, moduleArray)<BR/>
++ generate (dir)<BR/>
++ createModuleNode (mod, exportList)<BR/>
+</TD></TR>
+</TABLE>>];
+"ExportGraph"->"GraphBase" [arrowhead=empty];
+
+"GraphBase"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD align="left"><B>GraphBase</B></TD></TR>
+<TR><TD align="left"><B>properties</B><BR/>
+</TD></TR>
+<TR><TD align="left"><B>methods</B><BR/>
++ digraph (title)<BR/>
++ nodeStart (title)<BR/>
++ nodeFinish ()<BR/>
++ recordDigraph (title)<BR/>
++ isNodeModule (dep)<BR/>
++ inSameDirectory (dep)<BR/>
++ generate ()<BR/>
+</TD></TR>
+</TABLE>>];
+
+"NodeModulesGraph"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD align="left"><B>NodeModulesGraph:GraphBase</B></TD></TR>
+<TR><TD align="left"><B>properties</B><BR/>
+</TD></TR>
+<TR><TD align="left"><B>methods</B><BR/>
++ constructor (dependencyList, nodeModuleDependents)<BR/>
++ generate ()<BR/>
++ createNodeModulesSection ()<BR/>
+</TD></TR>
+</TABLE>>];
+"NodeModulesGraph"->"GraphBase" [arrowhead=empty];
+
+"PackageGraph"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD align="left"><B>PackageGraph:GraphBase</B></TD></TR>
+<TR><TD align="left"><B>properties</B><BR/>
+- #moduleArray<BR/>
+- #dependencyList<BR/>
+- #diagramsHTML<BR/>
+</TD></TR>
+<TR><TD align="left"><B>methods</B><BR/>
++ constructor (moduleArray, dependencyList)<BR/>
++ generate ()<BR/>
++ createPackageDependencies ()<BR/>
++ createPackageNodes ()<BR/>
+</TD></TR>
+</TABLE>>];
+"PackageGraph"->"GraphBase" [arrowhead=empty];
+
+"RelationsGraph"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD align="left"><B>RelationsGraph:GraphBase</B></TD></TR>
+<TR><TD align="left"><B>properties</B><BR/>
+</TD></TR>
+<TR><TD align="left"><B>methods</B><BR/>
++ constructor (dependencyList, moduleArray)<BR/>
++ generate ()<BR/>
+- #createModuleRelationNode (mod)<BR/>
+- #createNodeModulesSection ()<BR/>
+</TD></TR>
+</TABLE>>];
+"RelationsGraph"->"GraphBase" [arrowhead=empty];
+
+}

@@ -1,0 +1,212 @@
+[
+  {
+    "src": "dep-graph.js",
+    "importSrc": "./DependencyGraphGenerator.js",
+    "relSrcName": "DependencyGraphGenerator.js",
+    "import": "DependencyGraphGenerator"
+  },
+  {
+    "src": "DependencyGraphGenerator.js",
+    "importSrc": "./ast/ASTProcessor.js",
+    "relSrcName": "ast/ASTProcessor.js",
+    "import": "ProcessAST"
+  },
+  {
+    "src": "DependencyGraphGenerator.js",
+    "importSrc": "./generators/DiagramsGenerator.js",
+    "relSrcName": "generators/DiagramsGenerator.js",
+    "import": "DiagramsGenerator"
+  },
+  {
+    "src": "DependencyGraphGenerator.js",
+    "importSrc": "./generators/HtmlGenerator.js",
+    "relSrcName": "generators/HtmlGenerator.js",
+    "import": "HtmlGenerator"
+  },
+  {
+    "src": "DependencyGraphGenerator.js",
+    "importSrc": "./graphs/ClassDiagram.js",
+    "relSrcName": "graphs/ClassDiagram.js",
+    "import": "ClassDiagram"
+  },
+  {
+    "src": "DependencyGraphGenerator.js",
+    "importSrc": "./graphs/ExportGraph.js",
+    "relSrcName": "graphs/ExportGraph.js",
+    "import": "ExportGraph"
+  },
+  {
+    "src": "DependencyGraphGenerator.js",
+    "importSrc": "./graphs/PackageGraph.js",
+    "relSrcName": "graphs/PackageGraph.js",
+    "import": "PackageGraph"
+  },
+  {
+    "src": "DependencyGraphGenerator.js",
+    "importSrc": "./graphs/RelationsGraph.js",
+    "relSrcName": "graphs/RelationsGraph.js",
+    "import": "RelationsGraph"
+  },
+  {
+    "src": "ast/ClassProcessor.js",
+    "importSrc": "../utils/file-utils.js",
+    "relSrcName": "utils/file-utils.js",
+    "import": "moduleName"
+  },
+  {
+    "src": "ast/ExportProcessor.js",
+    "importSrc": "../utils/file-utils.js",
+    "relSrcName": "utils/file-utils.js",
+    "import": "moduleName"
+  },
+  {
+    "src": "ast/ImportProcessor.js",
+    "importSrc": "../utils/file-utils.js",
+    "relSrcName": "utils/file-utils.js",
+    "import": "removeExtension"
+  },
+  {
+    "src": "ast/ImportProcessor.js",
+    "importSrc": "../utils/file-utils.js",
+    "relSrcName": "utils/file-utils.js",
+    "import": "moduleName"
+  },
+  {
+    "src": "DependencyGraphGenerator.js",
+    "importSrc": "./utils/file-utils.js",
+    "relSrcName": "utils/file-utils.js",
+    "import": "safeWriteFile"
+  },
+  {
+    "src": "DependencyGraphGenerator.js",
+    "importSrc": "./utils/file-utils.js",
+    "relSrcName": "utils/file-utils.js",
+    "import": "getRelativePathParts"
+  },
+  {
+    "src": "DependencyGraphGenerator.js",
+    "importSrc": "./utils/file-utils.js",
+    "relSrcName": "utils/file-utils.js",
+    "import": "getDirectoriesRecursive"
+  },
+  {
+    "src": "DependencyGraphGenerator.js",
+    "importSrc": "./utils/file-utils.js",
+    "relSrcName": "utils/file-utils.js",
+    "import": "getFiles"
+  },
+  {
+    "src": "DependencyGraphGenerator.js",
+    "importSrc": "./utils/file-utils.js",
+    "relSrcName": "utils/file-utils.js",
+    "import": "getFilename"
+  },
+  {
+    "src": "graphs/ClassDiagram.js",
+    "importSrc": "../utils/file-utils.js",
+    "relSrcName": "utils/file-utils.js",
+    "import": "cleanDirPath"
+  },
+  {
+    "src": "graphs/ExportGraph.js",
+    "importSrc": "../utils/file-utils.js",
+    "relSrcName": "utils/file-utils.js",
+    "import": "moduleName"
+  },
+  {
+    "src": "graphs/GraphBase.js",
+    "importSrc": "../utils/file-utils.js",
+    "relSrcName": "utils/file-utils.js",
+    "import": "cleanDirPath"
+  },
+  {
+    "src": "graphs/PackageGraph.js",
+    "importSrc": "../utils/file-utils.js",
+    "relSrcName": "utils/file-utils.js",
+    "import": "cleanDirPath"
+  },
+  {
+    "src": "graphs/RelationsGraph.js",
+    "importSrc": "../utils/file-utils.js",
+    "relSrcName": "utils/file-utils.js",
+    "import": "cleanDirPath"
+  },
+  {
+    "src": "graphs/RelationsGraph.js",
+    "importSrc": "../utils/file-utils.js",
+    "relSrcName": "utils/file-utils.js",
+    "import": "moduleName"
+  },
+  {
+    "src": "DependencyGraphGenerator.js",
+    "importSrc": "./utils/json.js",
+    "relSrcName": "utils/json.js",
+    "import": "jsonOut"
+  },
+  {
+    "src": "ast/ASTProcessor.js",
+    "importSrc": "../utils/list-utils.js",
+    "relSrcName": "utils/list-utils.js",
+    "import": "getUsedByList"
+  },
+  {
+    "src": "generators/HtmlGenerator.js",
+    "importSrc": "../utils/list-utils.js",
+    "relSrcName": "utils/list-utils.js",
+    "import": "getUsedByList"
+  },
+  {
+    "src": "generators/HtmlGenerator.js",
+    "importSrc": "../utils/list-utils.js",
+    "relSrcName": "utils/list-utils.js",
+    "import": "getDependsOn"
+  },
+  {
+    "src": "generators/HtmlGenerator.js",
+    "importSrc": "../utils/list-utils.js",
+    "relSrcName": "utils/list-utils.js",
+    "import": "getNodeModuleList"
+  },
+  {
+    "src": "generators/HtmlGenerator.js",
+    "importSrc": "../utils/list-utils.js",
+    "relSrcName": "utils/list-utils.js",
+    "import": "getExportedList"
+  },
+  {
+    "src": "graphs/ExportGraph.js",
+    "importSrc": "../utils/list-utils.js",
+    "relSrcName": "utils/list-utils.js",
+    "import": "getExportedList"
+  },
+  {
+    "src": "graphs/ExportGraph.js",
+    "importSrc": "../utils/list-utils.js",
+    "relSrcName": "utils/list-utils.js",
+    "import": "getDependsOn"
+  },
+  {
+    "src": "graphs/NodeModulesGraph.js",
+    "importSrc": "../utils/list-utils.js",
+    "relSrcName": "utils/list-utils.js",
+    "import": "getNodeModuleList"
+  },
+  {
+    "src": "graphs/RelationsGraph.js",
+    "importSrc": "../utils/list-utils.js",
+    "relSrcName": "utils/list-utils.js",
+    "import": "getUsedByList"
+  },
+  {
+    "src": "graphs/RelationsGraph.js",
+    "importSrc": "../utils/list-utils.js",
+    "relSrcName": "utils/list-utils.js",
+    "import": "getDependsOn"
+  },
+  {
+    "src": "graphs/RelationsGraph.js",
+    "importSrc": "../utils/list-utils.js",
+    "relSrcName": "utils/list-utils.js",
+    "import": "getNodeModuleList"
+  }
+]

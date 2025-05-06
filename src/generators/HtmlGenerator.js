@@ -11,6 +11,13 @@ import { getUsedByList, getDependsOn, getNodeModuleList, getExportedList } from 
  * Class responsible for generating HTML reports of module dependencies
  */
 export class HtmlGenerator {
+
+  #diagramHTML = 'diagrams.html'
+
+constructor(diagramHTML) {
+  this.diagramHTML = diagramHTML;
+}
+
   /**
    * Creates an HTML report of module dependencies and relationships
    * @param {string} symbol - root directory where files are found.
@@ -36,7 +43,7 @@ export class HtmlGenerator {
     
     // Add links to the diagrams page instead of embedding SVGs
     result += `<h2>Diagrams</h2>\n`;
-    result += `<p><a href="diagrams.html" target="_blank">View all module diagrams</a></p>\n`;
+    result += `<p><a href="${this.#diagramHTML}" target="_blank">View all module diagrams</a></p>\n`;
     
     // Generate summary section
     result += this.generateSummarySection(moduleArray, dependencyList);

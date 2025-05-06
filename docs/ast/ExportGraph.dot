@@ -1,0 +1,104 @@
+digraph {label="ast Module Exports";
+labelloc="t";
+"ast/ASTProcessor.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+<TR><TD bgcolor="lightblue" align="center"><B>ast/ASTProcessor.js</B></TD></TR>
+<TR><TD align="left">
+</TD></TR>
+<TR><TD align="center">
+<font color="red"><I>utils/list-utils.js</I></font><BR/>
+getUsedByList<BR/>
+<font color="red"><I>ClassProcessor.js</I></font><BR/>
+ClassProcessor<BR/>
+<font color="red"><I>ErrorCollector.js</I></font><BR/>
+ErrorCollector<BR/>
+<font color="red"><I>ExportProcessor.js</I></font><BR/>
+ExportProcessor<BR/>
+<font color="red"><I>ImportProcessor.js</I></font><BR/>
+ImportProcessor<BR/>
+<font color="red"><I>UsageProcessor.js</I></font><BR/>
+UsageProcessor<BR/>
+<font color="red"><I>@typescript-eslint/parser</I></font><BR/>
+parse<BR/>
+<font color="red"><I>fs</I></font><BR/>
+readFileSync<BR/>
+<font color="red"><I>path</I></font><BR/>
+path<BR/>
+</TD></TR>
+</TABLE>>];
+
+"ast/BaseProcessor.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+<TR><TD bgcolor="lightblue" align="center"><B>ast/BaseProcessor.js</B></TD></TR>
+<TR><TD align="left">
+</TD></TR>
+<TR><TD align="center">
+<font color="red"><I>estraverse</I></font><BR/>
+estraverse<BR/>
+<font color="red"><I>path</I></font><BR/>
+path<BR/>
+</TD></TR>
+</TABLE>>];
+
+"ast/ClassProcessor.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+<TR><TD bgcolor="lightblue" align="center"><B>ast/ClassProcessor.js</B></TD></TR>
+<TR><TD align="left">
+</TD></TR>
+<TR><TD align="center">
+<font color="red"><I>utils/file-utils.js</I></font><BR/>
+moduleName<BR/>
+<font color="red"><I>BaseProcessor.js</I></font><BR/>
+BaseProcessor<BR/>
+<font color="red"><I>estraverse</I></font><BR/>
+estraverse<BR/>
+</TD></TR>
+</TABLE>>];
+
+"ast/ErrorCollector.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+<TR><TD bgcolor="lightblue" align="center"><B>ast/ErrorCollector.js</B></TD></TR>
+<TR><TD align="left">
+</TD></TR>
+<TR><TD align="center">
+<font color="red"><I>BaseProcessor.js</I></font><BR/>
+BaseProcessor<BR/>
+</TD></TR>
+</TABLE>>];
+
+"ast/ExportProcessor.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+<TR><TD bgcolor="lightblue" align="center"><B>ast/ExportProcessor.js</B></TD></TR>
+<TR><TD align="left">
+</TD></TR>
+<TR><TD align="center">
+<font color="red"><I>utils/file-utils.js</I></font><BR/>
+moduleName<BR/>
+<font color="red"><I>BaseProcessor.js</I></font><BR/>
+BaseProcessor<BR/>
+<font color="red"><I>estraverse</I></font><BR/>
+estraverse<BR/>
+</TD></TR>
+</TABLE>>];
+
+"ast/ImportProcessor.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+<TR><TD bgcolor="lightblue" align="center"><B>ast/ImportProcessor.js</B></TD></TR>
+<TR><TD align="left">
+</TD></TR>
+<TR><TD align="center">
+<font color="red"><I>utils/file-utils.js</I></font><BR/>
+removeExtension<BR/>
+moduleName<BR/>
+<font color="red"><I>BaseProcessor.js</I></font><BR/>
+BaseProcessor<BR/>
+<font color="red"><I>estraverse</I></font><BR/>
+estraverse<BR/>
+</TD></TR>
+</TABLE>>];
+
+"ast/UsageProcessor.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+<TR><TD bgcolor="lightblue" align="center"><B>ast/UsageProcessor.js</B></TD></TR>
+<TR><TD align="left">
+</TD></TR>
+<TR><TD align="center">
+<font color="red"><I>BaseProcessor.js</I></font><BR/>
+BaseProcessor<BR/>
+</TD></TR>
+</TABLE>>];
+
+}

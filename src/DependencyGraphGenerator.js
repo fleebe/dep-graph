@@ -44,6 +44,8 @@ export class DependencyGraphGenerator {
   #baseLoc = '';
   #options = {};
   #outputDir = '';
+  diagramHTML = 'diagrams.html';
+  indexHTML = 'index.html'
 
   /**
    * Creates a new DependencyGraphGenerator instance
@@ -138,14 +140,14 @@ export class DependencyGraphGenerator {
 
       // Generate HTML output
       console.log("Generating HTML documentation...");
-      const htmlGenerator = new HtmlGenerator();
+      const htmlGenerator = new HtmlGenerator(this.diagramHTML);
       const modHtml = htmlGenerator.createModuleHtml(this.outputDir, moduleArray, dependencyList, exportList);
-      safeWriteFile(this.outputDir, "index.html", modHtml);
+      safeWriteFile(this.outputDir, this.indexHTML, modHtml);
 
       console.log("Generating diagrams HTML documentation...");
-      const diagramsGenerator = new DiagramsGenerator();
+      const diagramsGenerator = new DiagramsGenerator(this.indexHTML);
       const diagHtml = diagramsGenerator.createDiagramsHtml(this.outputDir, moduleArray);
-      safeWriteFile(this.outputDir, "diagrams.html", diagHtml);
+      safeWriteFile(this.outputDir, this.diagramHTML, diagHtml);
 
 
     } catch (error) {

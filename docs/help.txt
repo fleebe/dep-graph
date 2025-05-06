@@ -1,0 +1,13 @@
+Hello!
+Usage: dep-graph [options] <file | directory>
+
+A cli to generate documentation for dependencies of a javascript file | directory.
+
+Options:
+  -V, --version      output the version number
+  -g --graph         produce a .dot file that graphviz can use to generate a
+                     graph of the dependencies to output directory.
+  -j --json          produce .json object files of the dependencies to output
+                     directory.
+  -o --output <dir>  directory that the outputs are sent to. (default: "./out")
+  -h, --help         display help for command

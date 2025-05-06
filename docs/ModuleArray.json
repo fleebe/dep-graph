@@ -1,0 +1,156 @@
+[
+  {
+    "dir": "",
+    "file": "dep-graph.js",
+    "dependsOnCnt": 5,
+    "usedByCnt": 0,
+    "exportCnt": 1
+  },
+  {
+    "dir": "",
+    "file": "DependencyGraphGenerator.js",
+    "dependsOnCnt": 12,
+    "usedByCnt": 1,
+    "exportCnt": 1
+  },
+  {
+    "dir": "ast",
+    "file": "ASTProcessor.js",
+    "dependsOnCnt": 9,
+    "usedByCnt": 1,
+    "exportCnt": 1
+  },
+  {
+    "dir": "ast",
+    "file": "BaseProcessor.js",
+    "dependsOnCnt": 2,
+    "usedByCnt": 0,
+    "exportCnt": 1
+  },
+  {
+    "dir": "ast",
+    "file": "ClassProcessor.js",
+    "dependsOnCnt": 3,
+    "usedByCnt": 0,
+    "exportCnt": 1
+  },
+  {
+    "dir": "ast",
+    "file": "ErrorCollector.js",
+    "dependsOnCnt": 1,
+    "usedByCnt": 0,
+    "exportCnt": 1
+  },
+  {
+    "dir": "ast",
+    "file": "ExportProcessor.js",
+    "dependsOnCnt": 3,
+    "usedByCnt": 0,
+    "exportCnt": 1
+  },
+  {
+    "dir": "ast",
+    "file": "ImportProcessor.js",
+    "dependsOnCnt": 3,
+    "usedByCnt": 0,
+    "exportCnt": 1
+  },
+  {
+    "dir": "ast",
+    "file": "UsageProcessor.js",
+    "dependsOnCnt": 1,
+    "usedByCnt": 0,
+    "exportCnt": 1
+  },
+  {
+    "dir": "generators",
+    "file": "DiagramsGenerator.js",
+    "dependsOnCnt": 2,
+    "usedByCnt": 1,
+    "exportCnt": 1
+  },
+  {
+    "dir": "generators",
+    "file": "HtmlGenerator.js",
+    "dependsOnCnt": 1,
+    "usedByCnt": 1,
+    "exportCnt": 4
+  },
+  {
+    "dir": "graphs",
+    "file": "ClassDiagram.js",
+    "dependsOnCnt": 2,
+    "usedByCnt": 1,
+    "exportCnt": 1
+  },
+  {
+    "dir": "graphs",
+    "file": "ExportGraph.js",
+    "dependsOnCnt": 3,
+    "usedByCnt": 1,
+    "exportCnt": 1
+  },
+  {
+    "dir": "graphs",
+    "file": "GraphBase.js",
+    "dependsOnCnt": 1,
+    "usedByCnt": 0,
+    "exportCnt": 1
+  },
+  {
+    "dir": "graphs",
+    "file": "NodeModulesGraph.js",
+    "dependsOnCnt": 2,
+    "usedByCnt": 0,
+    "exportCnt": 1
+  },
+  {
+    "dir": "graphs",
+    "file": "PackageGraph.js",
+    "dependsOnCnt": 2,
+    "usedByCnt": 1,
+    "exportCnt": 1
+  },
+  {
+    "dir": "graphs",
+    "file": "RelationsGraph.js",
+    "dependsOnCnt": 4,
+    "usedByCnt": 1,
+    "exportCnt": 1
+  },
+  {
+    "dir": "utils",
+    "file": "file-utils.js",
+    "dependsOnCnt": 3,
+    "usedByCnt": 9,
+    "exportCnt": 15
+  },
+  {
+    "dir": "utils",
+    "file": "globals.js",
+    "dependsOnCnt": 0,
+    "usedByCnt": 0,
+    "exportCnt": 1
+  },
+  {
+    "dir": "utils",
+    "file": "index.js",
+    "dependsOnCnt": 2,
+    "usedByCnt": 0,
+    "exportCnt": 4
+  },
+  {
+    "dir": "utils",
+    "file": "json.js",
+    "dependsOnCnt": 2,
+    "usedByCnt": 1,
+    "exportCnt": 4
+  },
+  {
+    "dir": "utils",
+    "file": "list-utils.js",
+    "dependsOnCnt": 1,
+    "usedByCnt": 5,
+    "exportCnt": 10
+  }
+]

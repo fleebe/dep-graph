@@ -1,0 +1,57 @@
+digraph {label=" Module Exports";
+labelloc="t";
+"dep-graph.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+<TR><TD bgcolor="lightblue" align="center"><B>dep-graph.js</B></TD></TR>
+<TR><TD align="left">
+</TD></TR>
+<TR><TD align="center">
+<font color="red"><I>DependencyGraphGenerator.js</I></font><BR/>
+DependencyGraphGenerator<BR/>
+<font color="red"><I>commander</I></font><BR/>
+Command<BR/>
+<font color="red"><I>fs</I></font><BR/>
+fs<BR/>
+<font color="red"><I>path</I></font><BR/>
+path<BR/>
+<font color="red"><I>url</I></font><BR/>
+fileURLToPath<BR/>
+</TD></TR>
+</TABLE>>];
+
+"DependencyGraphGenerator.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+<TR><TD bgcolor="lightblue" align="center"><B>DependencyGraphGenerator.js</B></TD></TR>
+<TR><TD align="left">
+</TD></TR>
+<TR><TD align="center">
+<font color="red"><I>ast/ASTProcessor.js</I></font><BR/>
+ProcessAST<BR/>
+<font color="red"><I>generators/DiagramsGenerator.js</I></font><BR/>
+DiagramsGenerator<BR/>
+<font color="red"><I>generators/HtmlGenerator.js</I></font><BR/>
+HtmlGenerator<BR/>
+<font color="red"><I>graphs/ClassDiagram.js</I></font><BR/>
+ClassDiagram<BR/>
+<font color="red"><I>graphs/ExportGraph.js</I></font><BR/>
+ExportGraph<BR/>
+<font color="red"><I>graphs/PackageGraph.js</I></font><BR/>
+PackageGraph<BR/>
+<font color="red"><I>graphs/RelationsGraph.js</I></font><BR/>
+RelationsGraph<BR/>
+<font color="red"><I>utils/file-utils.js</I></font><BR/>
+safeWriteFile<BR/>
+getRelativePathParts<BR/>
+getDirectoriesRecursive<BR/>
+getFiles<BR/>
+getFilename<BR/>
+<font color="red"><I>utils/json.js</I></font><BR/>
+jsonOut<BR/>
+<font color="red"><I>child_process</I></font><BR/>
+spawn<BR/>
+<font color="red"><I>fs</I></font><BR/>
+fs<BR/>
+<font color="red"><I>path</I></font><BR/>
+path<BR/>
+</TD></TR>
+</TABLE>>];
+
+}

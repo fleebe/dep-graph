@@ -1,0 +1,36 @@
+digraph {label="generators Class Diagram";
+labelloc="t";
+"DiagramsGenerator"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD align="left"><B>DiagramsGenerator</B></TD></TR>
+<TR><TD align="left"><B>properties</B><BR/>
++ indexHTML<BR/>
++ diagramsHTML<BR/>
+</TD></TR>
+<TR><TD align="left"><B>methods</B><BR/>
++ constructor (indexHTML)<BR/>
++ createDiagramsHtml (outDir, moduleArray)<BR/>
++ generateSvgSection (title, svgFileName, linkText)<BR/>
+</TD></TR>
+</TABLE>>];
+
+"HtmlGenerator"[shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD align="left"><B>HtmlGenerator</B></TD></TR>
+<TR><TD align="left"><B>properties</B><BR/>
+- #diagramHTML<BR/>
+</TD></TR>
+<TR><TD align="left"><B>methods</B><BR/>
++ constructor (diagramHTML)<BR/>
++ createModuleHtml (symbol, moduleArray, dependencyList, exportList)<BR/>
++ generateSummarySection (moduleArray, dependencyList)<BR/>
++ generateModuleSummaryTable (moduleArray)<BR/>
++ generateUnusedModulesTable (unusedModules)<BR/>
++ generateModuleDetails (moduleArray, dependencyList, exportList)<BR/>
++ generateExportsTable (exportList, usedList, fileName)<BR/>
++ generateDependsOnTable (dependencyList, fileName)<BR/>
++ generateUsedByTable (usedList, fileName)<BR/>
++ generateNodeModulesSection (dependencyList)<BR/>
++ getUniqueNodeModules (dependencyList)<BR/>
+</TD></TR>
+</TABLE>>];
+
+}

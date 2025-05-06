@@ -1,0 +1,59 @@
+digraph {label="utils Module Exports";
+labelloc="t";
+"utils/file-utils.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+<TR><TD bgcolor="lightblue" align="center"><B>utils/file-utils.js</B></TD></TR>
+<TR><TD align="left">
+</TD></TR>
+<TR><TD align="center">
+<font color="red"><I>globals.js</I></font><BR/>
+EXT_LIST<BR/>
+<font color="red"><I>fs</I></font><BR/>
+fs<BR/>
+<font color="red"><I>path</I></font><BR/>
+path<BR/>
+</TD></TR>
+</TABLE>>];
+
+"utils/globals.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+<TR><TD bgcolor="lightblue" align="center"><B>utils/globals.js</B></TD></TR>
+<TR><TD align="left">
+</TD></TR>
+<TR><TD align="center">
+</TD></TR>
+</TABLE>>];
+
+"utils/index.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+<TR><TD bgcolor="lightblue" align="center"><B>utils/index.js</B></TD></TR>
+<TR><TD align="left">
+</TD></TR>
+<TR><TD align="center">
+<font color="red"><I>file-utils.js</I></font><BR/>
+fileUtils<BR/>
+<font color="red"><I>list-utils.js</I></font><BR/>
+listUtils<BR/>
+</TD></TR>
+</TABLE>>];
+
+"utils/json.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+<TR><TD bgcolor="lightblue" align="center"><B>utils/json.js</B></TD></TR>
+<TR><TD align="left">
+</TD></TR>
+<TR><TD align="center">
+<font color="red"><I>file-utils.js</I></font><BR/>
+safeWriteFile<BR/>
+<font color="red"><I>fs</I></font><BR/>
+fs<BR/>
+</TD></TR>
+</TABLE>>];
+
+"utils/list-utils.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+<TR><TD bgcolor="lightblue" align="center"><B>utils/list-utils.js</B></TD></TR>
+<TR><TD align="left">
+</TD></TR>
+<TR><TD align="center">
+<font color="red"><I>path</I></font><BR/>
+path<BR/>
+</TD></TR>
+</TABLE>>];
+
+}

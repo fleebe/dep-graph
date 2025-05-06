@@ -1,0 +1,34 @@
+{
+  "plugins": [],
+  "recurseDepth": 10,
+  "source": {
+    "includePattern": ".+\\.js(doc|x)?$",
+    "excludePattern": "(^|\\/|\\\\)_",
+    "exclude": [
+      "node_modules"
+    ],
+    "include": [
+      "C:\\Code\\dep-graph\\src"
+    ]
+  },
+  "sourceType": "module",
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": [
+      "jsdoc",
+      "closure"
+    ]
+  },
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": false
+  },
+  "opts": {
+    "recurse": true,
+    "destination": "C:\\Code\\dep-graph\\docs\\jsdoc",
+    "encoding": "utf8",
+    "template": "templates/default",
+    "verbose": true,
+    "sourcemap": false
+  }
+}

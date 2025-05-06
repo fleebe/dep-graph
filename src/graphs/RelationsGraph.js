@@ -25,7 +25,7 @@ export class RelationsGraph extends GraphBase {
    * @returns {string} - DOT file content for relations graph
    */
   generate() {
-    let result = this.digraph();
+    let result = this.digraph("");
 
     // Process each module
     this.moduleArray.forEach((mod) => {
@@ -48,23 +48,23 @@ export class RelationsGraph extends GraphBase {
   #createModuleRelationNode(mod) {
     // Node header with module name
     const modName = moduleName(mod);
-    let result = "";
-    
+
     // Create HTML table-based label instead of record
-    let nodeContent = `"${modName}" [label=<
-      <table border="0" cellborder="1" cellspacing="0">
-        <tr><td bgcolor="lightgrey"><b>${modName}</b></td></tr>
-        <tr><td align="left">Depend On : ${mod.dependsOnCnt}<br/>Used By : ${mod.usedByCnt}</td></tr>`;
+    let nodeContent = this.nodeStart(modName);
+    nodeContent += `<TR><TD ALIGN="center">${modName}</TD></TR>\n`
+    nodeContent += `<TR><TD ALIGN="left">Depend On : ${mod.dependsOnCnt}<BR/>\n`
+    nodeContent += `Used By : ${mod.usedByCnt}</TD></TR>\n`;
 
     // Second section: modules this depends on
-    let dependsOnSection = '<tr><td align="left" balign="left">';
+    let dependsOnSection = '<TR><TD align="left">';
     let prevDependency = "";
+    let result = "";
 
     const depsOn = getDependsOn(this.dependencyList, modName);
     for (const dep of depsOn) {
       if (prevDependency !== dep.relSrcName) {
         prevDependency = dep.relSrcName;
-        
+
         // Handle node_module vs local module dependencies
         if (this.isNodeModule(dep)) {
           // This is a node_module dependency
@@ -81,26 +81,24 @@ export class RelationsGraph extends GraphBase {
           }
         }
 
-        dependsOnSection += `${prevDependency}<br align="left"/>`;
+        dependsOnSection += `${prevDependency}<BR />`;
       }
     }
-    dependsOnSection += '</td></tr>';
-    
+    dependsOnSection += '</TD></TR>';
+
     // Third section: modules that use this module
-    let usedBySection = '<tr><td align="left" balign="left">';
+    let usedBySection = '<TR><TD align="left">';
     prevDependency = "";
 
     const usedList = getUsedByList(this.dependencyList, mod);
     for (const dep of usedList) {
       if (prevDependency !== dep.src) {
         prevDependency = dep.src;
-        usedBySection += `${prevDependency}<br align="left"/>`;
+        usedBySection += `${prevDependency}<BR/>`;
       }
     }
-    usedBySection += '</td></tr>';
 
-    // Complete the node
-    return nodeContent + dependsOnSection + usedBySection + `</table>>];\n\n` + result;
+    return nodeContent + dependsOnSection + usedBySection + this.nodeFinish() + result;
   }
 
   /**
@@ -110,11 +108,11 @@ export class RelationsGraph extends GraphBase {
    */
   #createNodeModulesSection() {
     // Create node_modules node with HTML label
-    let nodeContent = `"node-modules" [label=<
+    let nodeContent = `"node-modules" [shape=none, label=<
       <table border="0" cellborder="1" cellspacing="0">
         <tr><td bgcolor="lightgrey"><b>node-modules</b></td></tr>
         <tr><td align="left" balign="left">`;
-    
+
     let prevModule = "";
 
     // Add each unique node module
