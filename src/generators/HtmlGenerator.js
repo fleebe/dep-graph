@@ -13,7 +13,8 @@ import {
  */
 export class HtmlGenerator {
 
-  #diagramHTML = 'diagrams.html'
+  #diagramHTML = 'diagrams.html';
+  #JSDocHTML = 'jsdocs/index.html';
 
 constructor(diagramHTML) {
   this.diagramHTML = diagramHTML;
@@ -46,6 +47,10 @@ constructor(diagramHTML) {
     result += `<h2>Diagrams</h2>\n`;
     result += `<p><a href="${this.#diagramHTML}" target="_blank">View all module diagrams</a></p>\n`;
     
+    result += `<h2>JS Docs</h2>\n`;
+    result += `<p><a href="${this.#JSDocHTML}" target="_blank">View JS Docs</a></p>\n`;
+
+
     // Generate summary section
     result += this.generateSummarySection(moduleArray, dependencyList);
     

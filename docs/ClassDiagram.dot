@@ -13,7 +13,9 @@ labelloc="t";
 + constructor (baseLoc, options)<BR/>
 + generate ()<BR/>
 - #getModuleArray (stats)<BR/>
-- #generateJSDoc (source)<BR/>
+- #generateJSDoc (config)<BR/>
+- #showJsdocPath ()<BR/>
+- #createTempJsdocConfig ()<BR/>
 - #createExportDirGraph (graphName, dirArray, exportGraph, svgPromises)<BR/>
 - #createClassDirGraph (graphName, dirArray, classDiagram, svgPromises)<BR/>
 - #generateSvgFromDot (dotFilePath, svgFilePath)<BR/>

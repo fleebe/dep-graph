@@ -21,7 +21,7 @@
   }, 
   "opts" : {
     "recurse" : true,
-    "destination" : "./docs/jsdoc",
+    "destination" : "./docs/jsdocs",
     "encoding" : "utf8",
     "template": "templates/default",
     "verbose" : true

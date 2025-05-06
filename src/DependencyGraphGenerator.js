@@ -153,7 +153,11 @@ export class DependencyGraphGenerator {
 
       // Run JSDoc if requested
       if (this.#options.jsdoc) {
-        this.#generateJSDoc(this.baseLoc);
+        let actualConfigFile = this.#options.jsdocConfig
+        if (!actualConfigFile) {
+          actualConfigFile = this.#createTempJsdocConfig()
+        }
+        this.#generateJSDoc(actualConfigFile);
       }
 
       // Wait for all SVG generation processes to complete
@@ -230,76 +234,16 @@ export class DependencyGraphGenerator {
    * @param {string} configFile - Path to JSDoc configuration file (optional)
    * @returns {void}
    */
-  #generateJSDoc(source) {
-    let actualConfigFile = this.#options.configFile;
-
-    if (this.#options.configFile) {
-      // Read the config file
-      const config = JSON.parse(fs.readFileSync(this.#options.configFile, 'utf8'));
-
-      // Set the source to the absolute path
-      config.source.include = [path.resolve(source)];
-
-      // Ensure node_modules are excluded
-      if (!config.source.exclude) {
-        config.source.exclude = ["node_modules"];
-      } else if (!config.source.exclude.includes("node_modules")) {
-        config.source.exclude.push("node_modules");
-      }
-
-      // Add source map configuration
-      if (!config.sourceType) {
-        config.sourceType = "module";
-      }
-
-      // Disable source maps if not explicitly enabled
-      if (config.opts && typeof config.opts.sourcemap === 'undefined') {
-        config.opts.sourcemap = false;
-      }
-
-      // Set the destination to absolute path
-      const jsdocOutput = path.resolve(this.outputDir, 'jsdoc');
-      // Ensure the destination directory exists
-      fs.mkdirSync(jsdocOutput, { recursive: true });
-      // Set the destination
-      config.opts.destination = jsdocOutput;
-
-      // Write the modified config to a temp file
-      const tempConfigPath = path.join(this.outputDir, 'temp-jsdoc-config.json');
-      fs.writeFileSync(tempConfigPath, JSON.stringify(config, null, 2));
-
-      // Use the temp config
-      actualConfigFile = tempConfigPath;
-    } else {
-      // If no config file is provided, create a basic one
-      const basicConfig = {
-        source: {
-          include: [path.resolve(source)],
-          exclude: ["node_modules"]
-        },
-        sourceType: "module",
-        opts: {
-          destination: path.resolve(this.outputDir, 'jsdoc'),
-          recurse: true,
-          sourcemap: false
-        },
-        plugins: ["plugins/markdown"]
-      };
-
-      const jsdocOutput = path.resolve(this.outputDir, 'jsdoc');
-      fs.mkdirSync(jsdocOutput, { recursive: true });
-
-      const tempConfigPath = path.join(this.outputDir, 'temp-jsdoc-config.json');
-      fs.writeFileSync(tempConfigPath, JSON.stringify(basicConfig, null, 2));
-
-      actualConfigFile = tempConfigPath;
-    }
-
+  #generateJSDoc(config) {
     // Pass the config file to JSDoc
-    const args = ['--configure', actualConfigFile];
+    const args = ['--configure', config];
+    //    this.#showJsdocPath();
 
+    // Using shell: true can help resolve .cmd files and PATH issues on Windows
     const jsdocProcess = spawn('jsdoc', args, {
-      stdio: ['inherit', 'pipe', 'pipe']
+      stdio: ['inherit', 'pipe', 'pipe'],
+      // On Windows, shell should be true to correctly execute .cmd files like jsdoc.cmd
+      shell: process.platform === 'win32' ? true : false
     });
 
     jsdocProcess.stdout.on('data', (data) => {
@@ -311,7 +255,7 @@ export class DependencyGraphGenerator {
     });
 
     jsdocProcess.on('error', (err) => {
-      if (err.name === 'ENOENT') {
+      if (err.code === 'ENOENT') {
         console.error(`Error: JSDoc command not found. Please ensure JSDoc is installed globally (npm install -g jsdoc) or as a dependency in your project.`);
       } else {
         console.error(`Error running JSDoc: ${err.message}`);
@@ -325,6 +269,49 @@ export class DependencyGraphGenerator {
         console.error(`JSDoc process exited with code ${code}`);
       }
     });
+  }
+
+  #showJsdocPath() {
+    // Log the PATH environment variable for debugging
+    const currentPath = process.env.PATH || process.env.Path;
+    if (currentPath) {
+      //      console.log("Full PATH environment variable as seen by Node.js:");
+      //      console.log(currentPath);
+      const pathSegments = currentPath.split(path.delimiter);
+      const npmPaths = pathSegments.filter(segment => segment.toLowerCase().includes('npm'));
+      if (npmPaths.length > 0) {
+        console.log("\nNPM related paths found in PATH:");
+        npmPaths.forEach(npmPath => console.log(npmPath));
+      } else {
+        console.log("\nNo NPM related paths found in PATH.");
+      }
+    } else {
+      console.log("PATH environment variable not found.");
+    }
+  }
+
+  #createTempJsdocConfig() {
+    // If no config file is provided, create a basic one
+    const basicConfig = {
+      source: {
+        include: [path.resolve(this.outputDir)],
+        exclude: ["node_modules"]
+      },
+      sourceType: "module",
+      opts: {
+        destination: path.resolve(this.outputDir, 'jsdocs'),
+        recurse: true,
+        sourcemap: false
+      },
+      plugins: ["plugins/markdown"]
+    };
+
+    const jsdocOutput = path.resolve(this.outputDir, 'jsdocs');
+    fs.mkdirSync(jsdocOutput, { recursive: true });
+
+    const tempConfigPath = path.join(this.outputDir, 'temp-jsdoc-config.json');
+    fs.writeFileSync(tempConfigPath, JSON.stringify(basicConfig, null, 2));
+    return tempConfigPath;
   }
 
   /**

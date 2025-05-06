@@ -17,6 +17,7 @@ labelloc="t";
 <TR><TD align="left"><B>HtmlGenerator</B></TD></TR>
 <TR><TD align="left"><B>properties</B><BR/>
 - #diagramHTML<BR/>
+- #JSDocHTML<BR/>
 </TD></TR>
 <TR><TD align="left"><B>methods</B><BR/>
 + constructor (diagramHTML)<BR/>

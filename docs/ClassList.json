@@ -29,7 +29,21 @@
         "kind": "method",
         "isStatic": false,
         "isPrivate": true,
-        "parameters": "(source)"
+        "parameters": "(config)"
+      },
+      {
+        "name": "#showJsdocPath",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": true,
+        "parameters": "()"
+      },
+      {
+        "name": "#createTempJsdocConfig",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": true,
+        "parameters": "()"
       },
       {
         "name": "#createExportDirGraph",
@@ -533,6 +547,12 @@
     "properties": [
       {
         "name": "#diagramHTML",
+        "isStatic": false,
+        "isPrivate": true,
+        "hasDefaultValue": true
+      },
+      {
+        "name": "#JSDocHTML",
         "isStatic": false,
         "isPrivate": true,
         "hasDefaultValue": true

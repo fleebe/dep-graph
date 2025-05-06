@@ -130,6 +130,7 @@ dist
 .pnp.*
 
 # Documentation
+docs/jsdocs/
 docs/jsdoc/
 documentation/
 old_src/

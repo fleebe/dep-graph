@@ -89,9 +89,14 @@ export class PackageGraph extends GraphBase {
     const dirList = new Set(this.#moduleArray.map(a => a.dir));
 
     // For each directory, create a node with its files
+    let displayDir = "";
+    let htmlID = "";
     for (const directory of dirList) {
       nodeContent += this.nodeStart(directory);
-      nodeContent += `<TR><TD ALIGN="center" HREF="${this.#diagramsHTML}#${directory}" TARGET="_top">${directory}</TD></TR>\n`;
+      (directory === "") ?  displayDir = "./" : displayDir = directory;
+      (directory === "") ? htmlID = "base" : htmlID = directory;
+
+      nodeContent += `<TR><TD ALIGN="center" HREF="${this.#diagramsHTML}#${htmlID}" TARGET="_top">${displayDir}</TD></TR>\n`;
       nodeContent += `<TR><TD ALIGN="left">\n`
 
       // Add each file in the directory to the node

@@ -1,7 +1,7 @@
 digraph {label="";
 labelloc="t";
 "" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
-<TR><TD ALIGN="center" HREF="diagrams.html#" TARGET="_top"></TD></TR>
+<TR><TD ALIGN="center" HREF="diagrams.html#base" TARGET="_top">./</TD></TR>
 <TR><TD ALIGN="left">
 dep-graph.js<BR/>
 DependencyGraphGenerator.js<BR/>
