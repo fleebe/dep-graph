@@ -2,7 +2,6 @@
  * @fileoverview Command-line interface for the Dependency Graph Generator
  * @description This module provides the command-line interface for generating
  * dependency documentation, graphs, and analysis for JavaScript projects.
- * @module dep-graph
  * @requires commander
  * @requires fs
  * @requires path

@@ -1,5 +1,7 @@
 import { cleanDirPath } from "../utils/file-utils.js";
 import { GraphBase } from "./GraphBase.js";
+//import path from "path";
+import { removeExtension } from "../utils/file-utils.js";
 
 /**
  * Generates a package dependency graph showing directory-level dependencies
@@ -26,11 +28,11 @@ export class PackageGraph extends GraphBase {
    * 
    * @returns {string} - DOT file content as string
    */
-  generate() {
+  generate(jsdocConfig) {
     let result = this.digraph("");
 
     // Add packages to the graph
-    result += this.createPackageNodes();
+    result += this.createPackageNodes(jsdocConfig);
 
     // Create the dependencies for the package map
     result += this.createPackageDependencies();
@@ -83,7 +85,7 @@ export class PackageGraph extends GraphBase {
    * 
    * @returns {string} - DOT syntax for package nodes
    */
-  createPackageNodes() {
+  createPackageNodes(jsdocConfig) {
     let nodeContent = "";
     // Get unique set of directories
     const dirList = new Set(this.#moduleArray.map(a => a.dir));
@@ -91,9 +93,13 @@ export class PackageGraph extends GraphBase {
     // For each directory, create a node with its files
     let displayDir = "";
     let htmlID = "";
+    let link = ""
+    if (jsdocConfig) {
+//      link = path.join(jsdocConfig.opts.destination, "module-");
+    }
     for (const directory of dirList) {
       nodeContent += this.nodeStart(directory);
-      (directory === "") ?  displayDir = "./" : displayDir = directory;
+      (directory === "") ? displayDir = "./" : displayDir = directory;
       (directory === "") ? htmlID = "base" : htmlID = directory;
 
       nodeContent += `<TR><TD ALIGN="center" HREF="${this.#diagramsHTML}#${htmlID}" TARGET="_top">${displayDir}</TD></TR>\n`;
@@ -101,8 +107,17 @@ export class PackageGraph extends GraphBase {
 
       // Add each file in the directory to the node
       const filesInDir = this.#moduleArray.filter(a => directory === a.dir);
+      if (link != "") {
+        (directory != "") ? displayDir = directory.replaceAll("/", "_") + "_" : displayDir = directory;
+        link = `${link}${displayDir}`;
+      }
       for (const dirFile of filesInDir) {
-        nodeContent += `${dirFile.file}<BR/>\n`;
+        if (link != "") {
+          const href = `<a href="${link}${removeExtension(dirFile.file)}.html">${dirFile.file}</a>`
+          nodeContent += `${href}<BR/>\n`;
+        } else { 
+          nodeContent += `${dirFile.file}<BR/>\n`; 
+        }
       }
 
       nodeContent += this.nodeFinish();

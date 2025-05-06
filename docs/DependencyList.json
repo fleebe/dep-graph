@@ -372,6 +372,12 @@
     "import": "GraphBase"
   },
   {
+    "src": "graphs/PackageGraph.js",
+    "importSrc": "../utils/file-utils.js",
+    "relSrcName": "utils/file-utils.js",
+    "import": "removeExtension"
+  },
+  {
     "src": "graphs/RelationsGraph.js",
     "importSrc": "path",
     "relSrcName": "path",

@@ -1,9 +1,4 @@
 import path from 'path';
-/**
- * @module utils/list-utils
- * @description List Utilities Module
- * Provides utility functions for managing and filtering module dependencies
- */
 
 /**
  * Adds a value to an array stored in a Map, ensuring uniqueness

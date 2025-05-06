@@ -3,7 +3,7 @@
   "graph": true,
   "class": true,
   "output": "C:/Code/dep-graph/docs",
-  "jsdoc": false,
+  "jsdoc": true,
   "jsdocConfig": "./jsdoc.json",
   "ignore": []
 }

@@ -108,9 +108,9 @@
 <polygon fill="none" stroke="black" points="892.5,-217.5 892.5,-293.5 1157.5,-293.5 1157.5,-217.5 892.5,-217.5"/>
 <text text-anchor="start" x="999" y="-280.3" font-family="Times New Roman,serif" font-weight="bold" font-size="14.00">methods</text>
 <text text-anchor="start" x="895.5" y="-266.3" font-family="Times New Roman,serif" font-size="14.00">+ constructor (moduleArray, dependencyList)</text>
-<text text-anchor="start" x="989.5" y="-252.3" font-family="Times New Roman,serif" font-size="14.00">+ generate ()</text>
+<text text-anchor="start" x="955" y="-252.3" font-family="Times New Roman,serif" font-size="14.00">+ generate (jsdocConfig)</text>
 <text text-anchor="start" x="933.5" y="-238.3" font-family="Times New Roman,serif" font-size="14.00">+ createPackageDependencies ()</text>
-<text text-anchor="start" x="954" y="-224.3" font-family="Times New Roman,serif" font-size="14.00">+ createPackageNodes ()</text>
+<text text-anchor="start" x="919.5" y="-224.3" font-family="Times New Roman,serif" font-size="14.00">+ createPackageNodes (jsdocConfig)</text>
 <polygon fill="none" stroke="black" points="891,-217 891,-378 1158,-378 1158,-217 891,-217"/>
 </g>
 <!-- PackageGraph&#45;&gt;GraphBase -->

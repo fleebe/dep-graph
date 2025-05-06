@@ -1,12 +1,6 @@
 import {
   getUsedByList, getDependsOn, getUniqueNodeModules,  getExportedList } from "../utils/list-utils.js";
 
-/**
- *  @module commands/html
- *  @description
- * HTML Command Module
- * Provides functionality to generate HTML reports of module dependencies
- */
 
 /**
  * Class responsible for generating HTML reports of module dependencies

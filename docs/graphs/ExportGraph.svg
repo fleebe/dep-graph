@@ -73,17 +73,18 @@
 <!-- graphs/PackageGraph.js -->
 <g id="node5" class="node">
 <title>graphs/PackageGraph.js</title>
-<polygon fill="lightblue" stroke="transparent" points="783,-224 783,-245 943,-245 943,-224 783,-224"/>
-<polygon fill="none" stroke="black" points="783,-224 783,-245 943,-245 943,-224 783,-224"/>
-<text text-anchor="start" x="786" y="-231.8" font-family="Times New Roman,serif" font-weight="bold" font-size="14.00">graphs/PackageGraph.js</text>
-<polygon fill="none" stroke="black" points="783,-203 783,-224 943,-224 943,-203 783,-203"/>
-<text text-anchor="start" x="786" y="-209.8" font-family="Times New Roman,serif" font-size="14.00">PackageGraph</text>
-<polygon fill="none" stroke="black" points="783,-141 783,-203 943,-203 943,-141 783,-141"/>
-<text text-anchor="start" x="819.5" y="-189.8" font-family="Times New Roman,serif" font-style="italic" font-size="14.00" fill="red">utils/file&#45;utils.js</text>
-<text text-anchor="start" x="827.5" y="-175.8" font-family="Times New Roman,serif" font-size="14.00">cleanDirPath</text>
-<text text-anchor="start" x="823.5" y="-161.8" font-family="Times New Roman,serif" font-style="italic" font-size="14.00" fill="red">GraphBase.js</text>
-<text text-anchor="start" x="831.5" y="-147.8" font-family="Times New Roman,serif" font-size="14.00">GraphBase</text>
-<polygon fill="none" stroke="black" points="782,-140 782,-246 944,-246 944,-140 782,-140"/>
+<polygon fill="lightblue" stroke="transparent" points="783,-231 783,-252 943,-252 943,-231 783,-231"/>
+<polygon fill="none" stroke="black" points="783,-231 783,-252 943,-252 943,-231 783,-231"/>
+<text text-anchor="start" x="786" y="-238.8" font-family="Times New Roman,serif" font-weight="bold" font-size="14.00">graphs/PackageGraph.js</text>
+<polygon fill="none" stroke="black" points="783,-210 783,-231 943,-231 943,-210 783,-210"/>
+<text text-anchor="start" x="786" y="-216.8" font-family="Times New Roman,serif" font-size="14.00">PackageGraph</text>
+<polygon fill="none" stroke="black" points="783,-134 783,-210 943,-210 943,-134 783,-134"/>
+<text text-anchor="start" x="819.5" y="-196.8" font-family="Times New Roman,serif" font-style="italic" font-size="14.00" fill="red">utils/file&#45;utils.js</text>
+<text text-anchor="start" x="827.5" y="-182.8" font-family="Times New Roman,serif" font-size="14.00">cleanDirPath</text>
+<text text-anchor="start" x="814.5" y="-168.8" font-family="Times New Roman,serif" font-size="14.00">removeExtension</text>
+<text text-anchor="start" x="823.5" y="-154.8" font-family="Times New Roman,serif" font-style="italic" font-size="14.00" fill="red">GraphBase.js</text>
+<text text-anchor="start" x="831.5" y="-140.8" font-family="Times New Roman,serif" font-size="14.00">GraphBase</text>
+<polygon fill="none" stroke="black" points="782,-133 782,-253 944,-253 944,-133 782,-133"/>
 </g>
 <!-- graphs/RelationsGraph.js -->
 <g id="node6" class="node">

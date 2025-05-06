@@ -68,9 +68,9 @@ labelloc="t";
 </TD></TR>
 <TR><TD align="left"><B>methods</B><BR/>
 + constructor (moduleArray, dependencyList)<BR/>
-+ generate ()<BR/>
++ generate (jsdocConfig)<BR/>
 + createPackageDependencies ()<BR/>
-+ createPackageNodes ()<BR/>
++ createPackageNodes (jsdocConfig)<BR/>
 </TD></TR>
 </TABLE>>];
 "PackageGraph"->"GraphBase" [arrowhead=empty];

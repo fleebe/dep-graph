@@ -778,7 +778,7 @@
         "kind": "method",
         "isStatic": false,
         "isPrivate": false,
-        "parameters": "()"
+        "parameters": "(jsdocConfig)"
       },
       {
         "name": "createPackageDependencies",
@@ -792,7 +792,7 @@
         "kind": "method",
         "isStatic": false,
         "isPrivate": false,
-        "parameters": "()"
+        "parameters": "(jsdocConfig)"
       }
     ],
     "properties": [

@@ -57,6 +57,7 @@ PackageGraph<BR/>
 <TR><TD align="center">
 <font color="red"><I>utils/file-utils.js</I></font><BR/>
 cleanDirPath<BR/>
+removeExtension<BR/>
 <font color="red"><I>GraphBase.js</I></font><BR/>
 GraphBase<BR/>
 </TD></TR>

@@ -1,9 +1,3 @@
-/**
- * @module utils/index
- * @description Utils Module
- * Provides common utility functions for file operations and dependency management
- */
-
 import fileUtils from './file-utils.js';
 import listUtils from './list-utils.js';
 

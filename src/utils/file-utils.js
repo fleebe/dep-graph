@@ -2,12 +2,6 @@ import path from "path";
 import fs from "fs";
 import { EXT_LIST } from "./globals.js";
 
-/**
- * @module utils/file-utils
- * @description File Utilities Module 
- * Provides file system operations and path normalization functions
- */
-
 export function moduleName(mod) {
   return cleanPath(path.join(mod.dir, mod.file).replaceAll("\\", "/"));
 }

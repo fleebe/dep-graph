@@ -2,12 +2,6 @@ import fs from "fs";
 import { safeWriteFile } from "./file-utils.js";
 
 /**
- * @module commands/json
- * @description JSON Command Module
- * Provides functionality to save and load JSON data structures
- */
-
-/**
  * Saves data structures to JSON files
  * Maps are automatically converted to objects since they can't be directly stringified
  * 

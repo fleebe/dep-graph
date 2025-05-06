@@ -3,7 +3,6 @@
  * @description Core module for analyzing JavaScript code and generating dependency graphs,
  * class diagrams, and documentation. This module handles the processing of JavaScript files,
  * analyzes their imports/exports, and generates various visualization outputs.
- * @module DependencyGraphGenerator
  * @requires fs
  * @requires path
  * @requires child_process
@@ -118,7 +117,11 @@ export class DependencyGraphGenerator {
       // Generate Package.dot
       console.log("Generating package graph...");
       const packageGraph = new PackageGraph(moduleArray, dependencyList);
-      const pgkGraph = packageGraph.generate();
+      let config = null
+      if (this.#options.jsdoc) {
+        config = JSON.parse(fs.readFileSync(this.#options.jsdocConfig, 'utf8'));
+      }
+      const pgkGraph = packageGraph.generate(config);
       safeWriteFile(this.outputDir, "Package.dot", pgkGraph);
       svgPromises.push(this.#generateSvgFromDot(path.join(this.outputDir, "Package.dot"), path.join(this.outputDir, "Package.svg")));
 
