@@ -30,13 +30,15 @@ export class ExportGraph extends GraphBase {
   generate(dir) {
     let result = this.digraph(`${dir} Module Exports`);
 
+    const modules = this.#moduleArray.filter(mod => mod.dir === dir)
+
     // Create nodes for each module
-    this.#moduleArray
-    .filter(mod => mod.dir === dir)
-    .forEach((mod) => {
+    modules.forEach((mod) => {
       const exp = getExportedList(this.#exportList, moduleName(mod));
       result += this.createModuleNode(mod, exp);
     });
+
+    result += this.#createRelations(modules);
 
     // Add graph footer
     result += '}\n';
@@ -46,13 +48,15 @@ export class ExportGraph extends GraphBase {
   /**
    * Creates a node for a single module
    * 
-   * @param {Object} mod - Module object
+   * @param {Object} mod - Module object from ModuleArray.json
    * @param {Array} exportList - List of exported functions for this module
    * @returns {string} - DOT syntax for module node
    */
   createModuleNode(mod, exportList) {
     const modName = moduleName(mod);
-    let nodeContent = `"${modName}" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">\n`
+    const nodeModuleDependents = new Set();
+
+    let nodeContent = this.nodeStart(modName);
     nodeContent += `<TR><TD bgcolor="lightblue" align="center"><B>${modName}</B></TD></TR>\n`;
     nodeContent += `<TR><TD align="left">\n`;
     
@@ -69,16 +73,67 @@ export class ExportGraph extends GraphBase {
     nodeContent += `<TR><TD align="center">\n`;
 
     const depsOn = getDependsOn(this.#dependencyList, modName);
-    let prevDependency = "";
+    // Group imports by their source module
+    const importsBySource = new Map();
     for (const dep of depsOn) {
-      if (prevDependency !== dep.relSrcName) {
-        prevDependency = dep.relSrcName;  
-        nodeContent += `<font color="red"><I>${dep.relSrcName}</I></font><BR/>\n`;
+      if (this.isNodeModule(dep)) {
+        // This is a node_module dependency
+        nodeModuleDependents.add(dep);
+        continue;
       }
-      nodeContent += `${dep.import}<BR/>\n`;
+
+      if (!importsBySource.has(dep.relSrcName)) {
+        importsBySource.set(dep.relSrcName, new Set());
+      }
+      importsBySource.get(dep.relSrcName).add(dep.import);
     }
-    
-    nodeContent += `</TD></TR>\n`;
-    return `${nodeContent}</TABLE>>];\n\n`;
+    // Add grouped imports to the node content
+    for (const [source, imports] of importsBySource.entries()) {
+      nodeContent += `<font color="red"><I>${source}</I></font><BR/>\n`; // Add the source module name
+      imports.forEach(imp => nodeContent += `${imp}<BR/>\n`); // Add each import from that source
+    }
+    nodeContent += this.nodeFinish();
+    nodeContent += this.#createNodeModulesRelations(modName, nodeModuleDependents)
+
+    return nodeContent;
+  }
+
+  #createNodeModulesRelations(modName, nodeMods) {
+    if (nodeMods.size < 1) return ''
+    const nodeName = modName + "-node_modules"
+    let nodeContent = this.nodeStart(nodeName);
+    nodeContent += `<TR><TD>node_modules</TD></TR>\n`;
+    nodeContent += `<TR><TD align="center">\n`;
+    nodeMods.forEach(dep => {
+      nodeContent += `<font color="red"><I>${dep.relSrcName}</I></font><BR/>\n`
+      nodeContent += `${dep.import}<BR/>\n`
+    })
+    nodeContent += this.nodeFinish();
+    nodeContent +=  `"${modName}"->"${nodeName}"\n`
+
+    return nodeContent;
+
+  }
+
+  #createRelations(modules) {
+    let result = "";
+    // Create a set of module names that are part of this specific diagram for quick lookups
+    const moduleNamesInDiagram = new Set(modules.map(m => moduleName(m)));
+
+    modules.forEach((mod) => {
+      const modName = moduleName(mod);
+      const depsOn = getDependsOn(this.#dependencyList, modName);
+      const linkedSources = new Set(); // Keep track of linked sources for this module to avoid duplicates
+
+      depsOn.forEach(dep => {
+        const sourceName = dep.relSrcName;
+        // Check if the dependency source is also in the current diagram and not already linked
+        if (moduleNamesInDiagram.has(sourceName) && !linkedSources.has(sourceName)) {
+          result += `"${modName}"->"${sourceName}";\n`;
+          linkedSources.add(sourceName); // Mark this source as linked for the current modName
+        }
+      });
+    });
+    return result;
   }
 }

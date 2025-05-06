@@ -1,6 +1,5 @@
 import path from "path";
 import fs from "fs";
-
 /**
  * Class responsible for generating HTML pages for SVG diagrams
  */
@@ -52,7 +51,7 @@ export class DiagramsGenerator {
       // Export graph (only if it exists)
       let outPath = path.join(outDir, dir, "ExportGraph.svg");
       if (fs.existsSync(outPath)) {
-        const exportSvgPath = path.join(dir, "ExportGraph.svg");
+        const exportSvgPath = path.join(dir, "ExportGraph.svg").replaceAll("\\", "/");
         const exportGraphName = `${dir} - Module Diagram\n`
         result += this.generateSvgSection(exportGraphName, exportSvgPath);
       }
@@ -60,7 +59,7 @@ export class DiagramsGenerator {
       // Class diagram (only if it exists)
       outPath = path.join(outDir, dir, "ClassDiagram.svg");
       if (fs.existsSync(outPath)) {
-        const classSvgPath = path.join(dir, "ClassDiagram.svg");
+        const classSvgPath = path.join(dir, "ClassDiagram.svg").replaceAll("\\", "/");
         const classGraphName = `${dir} - Class Diagram\n`
         result += this.generateSvgSection(classGraphName, classSvgPath);
       }

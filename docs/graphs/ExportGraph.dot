@@ -1,6 +1,6 @@
 digraph {label="graphs Module Exports";
 labelloc="t";
-"graphs/ClassDiagram.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+"graphs/ClassDiagram.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD bgcolor="lightblue" align="center"><B>graphs/ClassDiagram.js</B></TD></TR>
 <TR><TD align="left">
 ClassDiagram<BR/>
@@ -12,8 +12,7 @@ cleanDirPath<BR/>
 GraphBase<BR/>
 </TD></TR>
 </TABLE>>];
-
-"graphs/ExportGraph.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+"graphs/ExportGraph.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD bgcolor="lightblue" align="center"><B>graphs/ExportGraph.js</B></TD></TR>
 <TR><TD align="left">
 ExportGraph<BR/>
@@ -28,8 +27,7 @@ getDependsOn<BR/>
 GraphBase<BR/>
 </TD></TR>
 </TABLE>>];
-
-"graphs/GraphBase.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+"graphs/GraphBase.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD bgcolor="lightblue" align="center"><B>graphs/GraphBase.js</B></TD></TR>
 <TR><TD align="left">
 GraphBase<BR/>
@@ -39,8 +37,7 @@ GraphBase<BR/>
 cleanDirPath<BR/>
 </TD></TR>
 </TABLE>>];
-
-"graphs/NodeModulesGraph.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+"graphs/NodeModulesGraph.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD bgcolor="lightblue" align="center"><B>graphs/NodeModulesGraph.js</B></TD></TR>
 <TR><TD align="left">
 NodeModulesGraph<BR/>
@@ -52,8 +49,7 @@ getNodeModuleList<BR/>
 GraphBase<BR/>
 </TD></TR>
 </TABLE>>];
-
-"graphs/PackageGraph.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+"graphs/PackageGraph.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD bgcolor="lightblue" align="center"><B>graphs/PackageGraph.js</B></TD></TR>
 <TR><TD align="left">
 PackageGraph<BR/>
@@ -65,8 +61,7 @@ cleanDirPath<BR/>
 GraphBase<BR/>
 </TD></TR>
 </TABLE>>];
-
-"graphs/RelationsGraph.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+"graphs/RelationsGraph.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD bgcolor="lightblue" align="center"><B>graphs/RelationsGraph.js</B></TD></TR>
 <TR><TD align="left">
 RelationsGraph<BR/>
@@ -81,9 +76,14 @@ getDependsOn<BR/>
 getNodeModuleList<BR/>
 <font color="red"><I>GraphBase.js</I></font><BR/>
 GraphBase<BR/>
+</TD></TR>
+</TABLE>>];
+"graphs/RelationsGraph.js-node_modules" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD>node_modules</TD></TR>
+<TR><TD align="center">
 <font color="red"><I>path</I></font><BR/>
 path<BR/>
 </TD></TR>
 </TABLE>>];
-
+"graphs/RelationsGraph.js"->"graphs/RelationsGraph.js-node_modules"
 }

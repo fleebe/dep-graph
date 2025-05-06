@@ -85,7 +85,7 @@ export class DependencyGraphGenerator {
    * @returns {void}
    * @throws {Error} When there's an issue processing the files
    */
-  generate() {
+  async generate() {
     try {
       // symbol will be full path to the file or directory
       // Get file/directory stats
@@ -111,25 +111,28 @@ export class DependencyGraphGenerator {
         jsonOut(this.outputDir, "UsedList", usedList);
       }
 
+      // Array to hold promises for SVG generation
+      const svgPromises = [];
+
       // Generate and write output files
       // Generate Package.dot
       console.log("Generating package graph...");
       const packageGraph = new PackageGraph(moduleArray, dependencyList);
       const pgkGraph = packageGraph.generate();
       safeWriteFile(this.outputDir, "Package.dot", pgkGraph);
-      this.#generateSvgFromDot(path.join(this.outputDir, "Package.dot"), path.join(this.outputDir, "Package.svg"));
+      svgPromises.push(this.#generateSvgFromDot(path.join(this.outputDir, "Package.dot"), path.join(this.outputDir, "Package.svg")));
 
       console.log("Generating relations graph...");
       const relationsGraph = new RelationsGraph(dependencyList, moduleArray);
       const relGraph = relationsGraph.generate();
       safeWriteFile(this.outputDir, "Relations.dot", relGraph);
-      this.#generateSvgFromDot(path.join(this.outputDir, "Relations.dot"), path.join(this.outputDir, "Relations.svg"));
+      svgPromises.push(this.#generateSvgFromDot(path.join(this.outputDir, "Relations.dot"), path.join(this.outputDir, "Relations.svg")));
 
-      console.log("Generating node modules graph...");	
+      console.log("Generating node modules graph...");
       const nodeModulesGraph = new NodeModulesGraph(dependencyList);
       const nmGraph = nodeModulesGraph.generate();
       safeWriteFile(this.outputDir, "NodeModules.dot", nmGraph);
-      this.#generateSvgFromDot(path.join(this.outputDir, "NodeModules.dot"), path.join(this.outputDir, "NodeModules.svg"));
+      svgPromises.push(this.#generateSvgFromDot(path.join(this.outputDir, "NodeModules.dot"), path.join(this.outputDir, "NodeModules.svg")));
 
 
       const dirArray = [...new Set(moduleArray.map(module => module.dir))];
@@ -138,19 +141,28 @@ export class DependencyGraphGenerator {
       if (this.#options.class) {
         console.log("Generating class diagram...");
         const classDiagram = new ClassDiagram(dependencyList, classList);
-        this.#createClassDirGraph("ClassDiagram", dirArray, classDiagram);
+        this.#createClassDirGraph("ClassDiagram", dirArray, classDiagram, svgPromises);
       }
 
       // create the graph file for packages or directories for all the modules. -g option
       if (this.#options.graph) {
         console.log("Generating export graph...");
         const exportGraph = new ExportGraph(dependencyList, exportList, moduleArray);
-        this.#createExportDirGraph("ExportGraph", dirArray, exportGraph)
+        this.#createExportDirGraph("ExportGraph", dirArray, exportGraph, svgPromises)
       }
 
       // Run JSDoc if requested
       if (this.#options.jsdoc) {
         this.#generateJSDoc(this.baseLoc);
+      }
+
+      // Wait for all SVG generation processes to complete
+      console.log(`Waiting for ${svgPromises.length} SVG generation processes...`);
+      try {
+        await Promise.all(svgPromises);
+        console.log("All SVG generation processes finished.");
+      } catch (error) {
+        console.error("Error during SVG generation:", error);
       }
 
       // Generate HTML output
@@ -317,11 +329,11 @@ export class DependencyGraphGenerator {
 
   /**
    * Creates graph files for a specific graph type and all directories
-   * @param {string} graphName - Name of the graph to create (Relations, ClassDiagram, ExportGraph)
-   * @param {Array} dirArray - Array of modules with their information
+   * @param {ExportGraph} exportGraph - The graph generator instance
+   * @param {Promise[]} svgPromises - Array to collect SVG generation promises
    * @returns {void}
    */
-  #createExportDirGraph(graphName, dirArray, exportGraph) {
+  #createExportDirGraph(graphName, dirArray, exportGraph, svgPromises) {
 
     dirArray.forEach(dir => {
       const graph = exportGraph.generate(dir);
@@ -332,18 +344,19 @@ export class DependencyGraphGenerator {
       }
 
       safeWriteFile(fileDir, `${graphName}.dot`, graph);
-      
-      this.#generateSvgFromDot(path.join(fileDir, `${graphName}.dot`), path.join(fileDir, `${graphName}.svg`));
+
+      svgPromises.push(this.#generateSvgFromDot(path.join(fileDir, `${graphName}.dot`), path.join(fileDir, `${graphName}.svg`)));
     })
   }
 
   /**
      * Creates graph files for a specific graph type and all directories
-     * @param {string} graphName - Name of the graph to create (Relations, ClassDiagram, ExportGraph)
-     * @param {Array} dirArray - Array of modules with their information
+     * @param {Array} dirArray - Array of directory names
+     * @param {ClassDiagram} classDiagram - The class diagram generator instance
+     * @param {Promise[]} svgPromises - Array to collect SVG generation promises
      * @returns {void}
      */
-  #createClassDirGraph(graphName, dirArray, classDiagram) {
+  #createClassDirGraph(graphName, dirArray, classDiagram, svgPromises) {
 
     dirArray.forEach(dir => {
       const graph = classDiagram.generate(dir);
@@ -355,7 +368,7 @@ export class DependencyGraphGenerator {
 
       safeWriteFile(fileDir, `${graphName}.dot`, graph);
 
-      this.#generateSvgFromDot(path.join(fileDir, `${graphName}.dot`), path.join(fileDir, `${graphName}.svg`));
+      svgPromises.push(this.#generateSvgFromDot(path.join(fileDir, `${graphName}.dot`), path.join(fileDir, `${graphName}.svg`)));
     })
   }
 
@@ -364,40 +377,48 @@ export class DependencyGraphGenerator {
    * Generate SVG file from DOT file using Graphviz CLI
    * @param {string} dotFilePath - Path to the DOT file
    * @param {string} svgFilePath - Path where the SVG should be saved
-   * @returns {void}
+  * @returns {Promise<void>} A promise that resolves when the SVG is generated or rejects on error.
    * @throws {Error} When Graphviz encounters an error
    */
   #generateSvgFromDot(dotFilePath, svgFilePath) {
-
-    try {
-      // Check if file exists and delete it
-      if (fs.existsSync(svgFilePath)) {
-        fs.unlinkSync(svgFilePath);
-      }
-      if (!fs.existsSync(dotFilePath)) {
-        return
-      }
-
-      const graphvizProcess = spawn('dot', ['-Tsvg', dotFilePath, '-o', svgFilePath]);
-
-      graphvizProcess.on('error', (err) => {
-        if (err.name === 'ENOENT') {
-          console.error('Error: Graphviz dot command not found. Please ensure Graphviz is installed on your system.');
-        } else {
-          console.error(`Error running Graphviz: ${err.message}`);
+    return new Promise((resolve, reject) => {
+      try {
+        // Check if dot file exists
+        if (!fs.existsSync(dotFilePath)) {
+          // console.warn(`Skipping SVG generation: DOT file not found at ${dotFilePath}`);
+          resolve(); // Resolve immediately if no dot file exists
+          return;
         }
-      });
-
-      graphvizProcess.on('close', (code) => {
-        if (code === 0) {
-          //          console.log(`SVG file successfully generated: ${svgFilePath}`);
-        } else {
-          console.error(`Graphviz process exited with code ${code}`);
+        // Check if SVG file exists and delete it to ensure regeneration
+        if (fs.existsSync(svgFilePath)) {
+          fs.unlinkSync(svgFilePath);
         }
-      });
-    } catch (error) {
-      console.error(`Error generating SVG: ${error.message}`);
-    }
+
+        const graphvizProcess = spawn('dot', ['-Tsvg', dotFilePath, '-o', svgFilePath]);
+
+        graphvizProcess.on('error', (err) => {
+          if (err.code === 'ENOENT') { // Use err.code for spawn errors
+            console.error(`Error: Graphviz 'dot' command not found. Please ensure Graphviz is installed and in your system's PATH.`);
+            reject(new Error(`Graphviz 'dot' command not found.`));
+          } else {
+            console.error(`Error spawning Graphviz: ${err.message}`);
+            reject(err);
+          }
+        });
+
+        graphvizProcess.on('close', (code) => {
+          if (code === 0) {
+            // console.log(`SVG file successfully generated: ${svgFilePath}`);
+            resolve();
+          } else {
+            console.error(`Graphviz process for ${dotFilePath} exited with code ${code}`);
+            reject(new Error(`Graphviz process exited with code ${code} for ${dotFilePath}`));
+          }
+        });
+      } catch (error) {
+        console.error(`Error setting up SVG generation for ${dotFilePath}: ${error.message}`);
+        reject(error);
+      }
+    });
   }
-
 }

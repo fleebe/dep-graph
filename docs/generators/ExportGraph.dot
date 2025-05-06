@@ -1,10 +1,15 @@
 digraph {label="generators Module Exports";
 labelloc="t";
-"generators/DiagramsGenerator.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+"generators/DiagramsGenerator.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD bgcolor="lightblue" align="center"><B>generators/DiagramsGenerator.js</B></TD></TR>
 <TR><TD align="left">
 DiagramsGenerator<BR/>
 </TD></TR>
+<TR><TD align="center">
+</TD></TR>
+</TABLE>>];
+"generators/DiagramsGenerator.js-node_modules" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD>node_modules</TD></TR>
 <TR><TD align="center">
 <font color="red"><I>fs</I></font><BR/>
 fs<BR/>
@@ -12,8 +17,8 @@ fs<BR/>
 path<BR/>
 </TD></TR>
 </TABLE>>];
-
-"generators/HtmlGenerator.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+"generators/DiagramsGenerator.js"->"generators/DiagramsGenerator.js-node_modules"
+"generators/HtmlGenerator.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD bgcolor="lightblue" align="center"><B>generators/HtmlGenerator.js</B></TD></TR>
 <TR><TD align="left">
 HtmlGenerator<BR/>
@@ -26,5 +31,4 @@ getUniqueNodeModules<BR/>
 getExportedList<BR/>
 </TD></TR>
 </TABLE>>];
-
 }

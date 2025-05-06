@@ -51,12 +51,12 @@ export class RelationsGraph extends GraphBase {
 
     // Create HTML table-based label instead of record
     let nodeContent = this.nodeStart(modName);
-    nodeContent += `<TR><TD ALIGN="center">${modName}</TD></TR>\n`
+    nodeContent += `<TR><TD ALIGN="left">${modName}</TD></TR>\n`
     nodeContent += `<TR><TD ALIGN="left">Depend On : ${mod.dependsOnCnt}<BR/>\n`
     nodeContent += `Used By : ${mod.usedByCnt}</TD></TR>\n`;
 
     // Second section: modules this depends on
-    let dependsOnSection = '<TR><TD align="left">';
+    let dependsOnSection = '<TR><TD ALIGN="left">';
     let prevDependency = "";
     let result = "";
 
@@ -71,8 +71,7 @@ export class RelationsGraph extends GraphBase {
           this.nodeModuleDependents.add(mod.file);
         } else {
           if (this.inSameDirectory(dep)) {
-            const src = path.join(cleanDirPath(dep.src), dep.relSrcName);
-            prevDependency = src.replaceAll("\\", "/");
+            prevDependency = path.join(cleanDirPath(dep.src), dep.relSrcName).replaceAll("\\", "/");
           }
 
           // not a local module dependency
@@ -81,20 +80,20 @@ export class RelationsGraph extends GraphBase {
           }
         }
 
-        dependsOnSection += `${prevDependency}<BR />`;
+        dependsOnSection += `${prevDependency}<BR/>\n`;
       }
     }
-    dependsOnSection += '</TD></TR>';
+    dependsOnSection += '</TD></TR>\n';
 
     // Third section: modules that use this module
-    let usedBySection = '<TR><TD align="left">';
+    let usedBySection = '<TR><TD ALIGN="left">';
     prevDependency = "";
 
     const usedList = getUsedByList(this.dependencyList, mod);
     for (const dep of usedList) {
       if (prevDependency !== dep.src) {
         prevDependency = dep.src;
-        usedBySection += `${prevDependency}<BR/>`;
+        usedBySection += `${prevDependency}<BR/>\n`;
       }
     }
 
@@ -108,10 +107,9 @@ export class RelationsGraph extends GraphBase {
    */
   #createNodeModulesSection() {
     // Create node_modules node with HTML label
-    let nodeContent = `"node-modules" [shape=none, label=<
-      <table border="0" cellborder="1" cellspacing="0">
-        <tr><td bgcolor="lightgrey"><b>node-modules</b></td></tr>
-        <tr><td align="left" balign="left">`;
+    let nodeContent = `"node-modules" [shape=none, label=<<table border="0" align="left" cellborder="1" cellspacing="0">\n`;
+    nodeContent += `<tr><td bgcolor="lightgrey"><b>node-modules</b></td></tr>\n`
+    nodeContent += `<tr><td align="left">`;
 
     let prevModule = "";
 
@@ -120,10 +118,10 @@ export class RelationsGraph extends GraphBase {
     for (const dep of nodeMods) {
       if (prevModule !== dep.importSrc) {
         prevModule = dep.importSrc;
-        nodeContent += `${prevModule}<br align="left"/>`;
+        nodeContent += `${prevModule}<BR/>\n`;
       }
     }
-    nodeContent += `</td></tr></table>>];\n`;
+    nodeContent += `</td></tr>\n</table>>];\n`;
 
     // Optionally add connections from modules to node-modules
     let relationships = "";

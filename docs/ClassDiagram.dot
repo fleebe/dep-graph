@@ -14,8 +14,8 @@ labelloc="t";
 + generate ()<BR/>
 - #getModuleArray (stats)<BR/>
 - #generateJSDoc (source)<BR/>
-- #createExportDirGraph (graphName, dirArray, exportGraph)<BR/>
-- #createClassDirGraph (graphName, dirArray, classDiagram)<BR/>
+- #createExportDirGraph (graphName, dirArray, exportGraph, svgPromises)<BR/>
+- #createClassDirGraph (graphName, dirArray, classDiagram, svgPromises)<BR/>
 - #generateSvgFromDot (dotFilePath, svgFilePath)<BR/>
 </TD></TR>
 </TABLE>>];

@@ -1,6 +1,6 @@
 digraph {label=" Module Exports";
 labelloc="t";
-"dep-graph.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+"dep-graph.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD bgcolor="lightblue" align="center"><B>dep-graph.js</B></TD></TR>
 <TR><TD align="left">
 runProgram<BR/>
@@ -8,6 +8,11 @@ runProgram<BR/>
 <TR><TD align="center">
 <font color="red"><I>DependencyGraphGenerator.js</I></font><BR/>
 DependencyGraphGenerator<BR/>
+</TD></TR>
+</TABLE>>];
+"dep-graph.js-node_modules" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD>node_modules</TD></TR>
+<TR><TD align="center">
 <font color="red"><I>commander</I></font><BR/>
 Command<BR/>
 <font color="red"><I>fs</I></font><BR/>
@@ -18,8 +23,8 @@ path<BR/>
 fileURLToPath<BR/>
 </TD></TR>
 </TABLE>>];
-
-"DependencyGraphGenerator.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+"dep-graph.js"->"dep-graph.js-node_modules"
+"DependencyGraphGenerator.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD bgcolor="lightblue" align="center"><B>DependencyGraphGenerator.js</B></TD></TR>
 <TR><TD align="left">
 DependencyGraphGenerator<BR/>
@@ -49,6 +54,11 @@ getFiles<BR/>
 getFilename<BR/>
 <font color="red"><I>utils/json.js</I></font><BR/>
 jsonOut<BR/>
+</TD></TR>
+</TABLE>>];
+"DependencyGraphGenerator.js-node_modules" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD>node_modules</TD></TR>
+<TR><TD align="center">
 <font color="red"><I>child_process</I></font><BR/>
 spawn<BR/>
 <font color="red"><I>fs</I></font><BR/>
@@ -57,5 +67,6 @@ fs<BR/>
 path<BR/>
 </TD></TR>
 </TABLE>>];
-
+"DependencyGraphGenerator.js"->"DependencyGraphGenerator.js-node_modules"
+"dep-graph.js"->"DependencyGraphGenerator.js";
 }

@@ -25,6 +25,8 @@ labelloc="t";
 + constructor (dependencyList, exportList, moduleArray)<BR/>
 + generate (dir)<BR/>
 + createModuleNode (mod, exportList)<BR/>
+- #createNodeModulesRelations (modName, nodeMods)<BR/>
+- #createRelations (modules)<BR/>
 </TD></TR>
 </TABLE>>];
 "ExportGraph"->"GraphBase" [arrowhead=empty];

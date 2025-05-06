@@ -1,6 +1,6 @@
 digraph {label="ast Module Exports";
 labelloc="t";
-"ast/ASTProcessor.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+"ast/ASTProcessor.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD bgcolor="lightblue" align="center"><B>ast/ASTProcessor.js</B></TD></TR>
 <TR><TD align="left">
 processAST<BR/>
@@ -18,6 +18,11 @@ ExportProcessor<BR/>
 ImportProcessor<BR/>
 <font color="red"><I>UsageProcessor.js</I></font><BR/>
 UsageProcessor<BR/>
+</TD></TR>
+</TABLE>>];
+"ast/ASTProcessor.js-node_modules" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD>node_modules</TD></TR>
+<TR><TD align="center">
 <font color="red"><I>@typescript-eslint/parser</I></font><BR/>
 parse<BR/>
 <font color="red"><I>fs</I></font><BR/>
@@ -26,12 +31,17 @@ readFileSync<BR/>
 path<BR/>
 </TD></TR>
 </TABLE>>];
-
-"ast/BaseProcessor.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+"ast/ASTProcessor.js"->"ast/ASTProcessor.js-node_modules"
+"ast/BaseProcessor.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD bgcolor="lightblue" align="center"><B>ast/BaseProcessor.js</B></TD></TR>
 <TR><TD align="left">
 BaseProcessor<BR/>
 </TD></TR>
+<TR><TD align="center">
+</TD></TR>
+</TABLE>>];
+"ast/BaseProcessor.js-node_modules" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD>node_modules</TD></TR>
 <TR><TD align="center">
 <font color="red"><I>estraverse</I></font><BR/>
 estraverse<BR/>
@@ -39,8 +49,8 @@ estraverse<BR/>
 path<BR/>
 </TD></TR>
 </TABLE>>];
-
-"ast/ClassProcessor.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+"ast/BaseProcessor.js"->"ast/BaseProcessor.js-node_modules"
+"ast/ClassProcessor.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD bgcolor="lightblue" align="center"><B>ast/ClassProcessor.js</B></TD></TR>
 <TR><TD align="left">
 ClassProcessor<BR/>
@@ -50,12 +60,17 @@ ClassProcessor<BR/>
 moduleName<BR/>
 <font color="red"><I>BaseProcessor.js</I></font><BR/>
 BaseProcessor<BR/>
+</TD></TR>
+</TABLE>>];
+"ast/ClassProcessor.js-node_modules" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD>node_modules</TD></TR>
+<TR><TD align="center">
 <font color="red"><I>estraverse</I></font><BR/>
 estraverse<BR/>
 </TD></TR>
 </TABLE>>];
-
-"ast/ErrorCollector.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+"ast/ClassProcessor.js"->"ast/ClassProcessor.js-node_modules"
+"ast/ErrorCollector.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD bgcolor="lightblue" align="center"><B>ast/ErrorCollector.js</B></TD></TR>
 <TR><TD align="left">
 ErrorCollector<BR/>
@@ -65,8 +80,7 @@ ErrorCollector<BR/>
 BaseProcessor<BR/>
 </TD></TR>
 </TABLE>>];
-
-"ast/ExportProcessor.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+"ast/ExportProcessor.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD bgcolor="lightblue" align="center"><B>ast/ExportProcessor.js</B></TD></TR>
 <TR><TD align="left">
 ExportProcessor<BR/>
@@ -76,12 +90,17 @@ ExportProcessor<BR/>
 moduleName<BR/>
 <font color="red"><I>BaseProcessor.js</I></font><BR/>
 BaseProcessor<BR/>
+</TD></TR>
+</TABLE>>];
+"ast/ExportProcessor.js-node_modules" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD>node_modules</TD></TR>
+<TR><TD align="center">
 <font color="red"><I>estraverse</I></font><BR/>
 estraverse<BR/>
 </TD></TR>
 </TABLE>>];
-
-"ast/ImportProcessor.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+"ast/ExportProcessor.js"->"ast/ExportProcessor.js-node_modules"
+"ast/ImportProcessor.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD bgcolor="lightblue" align="center"><B>ast/ImportProcessor.js</B></TD></TR>
 <TR><TD align="left">
 ImportProcessor<BR/>
@@ -92,12 +111,17 @@ removeExtension<BR/>
 moduleName<BR/>
 <font color="red"><I>BaseProcessor.js</I></font><BR/>
 BaseProcessor<BR/>
+</TD></TR>
+</TABLE>>];
+"ast/ImportProcessor.js-node_modules" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD>node_modules</TD></TR>
+<TR><TD align="center">
 <font color="red"><I>estraverse</I></font><BR/>
 estraverse<BR/>
 </TD></TR>
 </TABLE>>];
-
-"ast/UsageProcessor.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+"ast/ImportProcessor.js"->"ast/ImportProcessor.js-node_modules"
+"ast/UsageProcessor.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD bgcolor="lightblue" align="center"><B>ast/UsageProcessor.js</B></TD></TR>
 <TR><TD align="left">
 UsageProcessor<BR/>
@@ -107,5 +131,4 @@ UsageProcessor<BR/>
 BaseProcessor<BR/>
 </TD></TR>
 </TABLE>>];
-
 }

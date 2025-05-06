@@ -36,14 +36,14 @@
         "kind": "method",
         "isStatic": false,
         "isPrivate": true,
-        "parameters": "(graphName, dirArray, exportGraph)"
+        "parameters": "(graphName, dirArray, exportGraph, svgPromises)"
       },
       {
         "name": "#createClassDirGraph",
         "kind": "method",
         "isStatic": false,
         "isPrivate": true,
-        "parameters": "(graphName, dirArray, classDiagram)"
+        "parameters": "(graphName, dirArray, classDiagram, svgPromises)"
       },
       {
         "name": "#generateSvgFromDot",
@@ -608,6 +608,20 @@
         "isStatic": false,
         "isPrivate": false,
         "parameters": "(mod, exportList)"
+      },
+      {
+        "name": "#createNodeModulesRelations",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": true,
+        "parameters": "(modName, nodeMods)"
+      },
+      {
+        "name": "#createRelations",
+        "kind": "method",
+        "isStatic": false,
+        "isPrivate": true,
+        "parameters": "(modules)"
       }
     ],
     "properties": [

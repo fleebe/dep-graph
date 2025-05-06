@@ -1,6 +1,6 @@
 digraph {label="utils Module Exports";
 labelloc="t";
-"utils/file-utils.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+"utils/file-utils.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD bgcolor="lightblue" align="center"><B>utils/file-utils.js</B></TD></TR>
 <TR><TD align="left">
 cleanDirPath<BR/>
@@ -18,14 +18,19 @@ safeWriteFile<BR/>
 <TR><TD align="center">
 <font color="red"><I>globals.js</I></font><BR/>
 EXT_LIST<BR/>
+</TD></TR>
+</TABLE>>];
+"utils/file-utils.js-node_modules" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD>node_modules</TD></TR>
+<TR><TD align="center">
 <font color="red"><I>fs</I></font><BR/>
 fs<BR/>
 <font color="red"><I>path</I></font><BR/>
 path<BR/>
 </TD></TR>
 </TABLE>>];
-
-"utils/globals.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+"utils/file-utils.js"->"utils/file-utils.js-node_modules"
+"utils/globals.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD bgcolor="lightblue" align="center"><B>utils/globals.js</B></TD></TR>
 <TR><TD align="left">
 EXT_LIST<BR/>
@@ -33,8 +38,7 @@ EXT_LIST<BR/>
 <TR><TD align="center">
 </TD></TR>
 </TABLE>>];
-
-"utils/index.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+"utils/index.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD bgcolor="lightblue" align="center"><B>utils/index.js</B></TD></TR>
 <TR><TD align="left">
 undefined<BR/>
@@ -48,8 +52,7 @@ fileUtils<BR/>
 listUtils<BR/>
 </TD></TR>
 </TABLE>>];
-
-"utils/json.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+"utils/json.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD bgcolor="lightblue" align="center"><B>utils/json.js</B></TD></TR>
 <TR><TD align="left">
 jsonIn<BR/>
@@ -58,12 +61,17 @@ jsonOut<BR/>
 <TR><TD align="center">
 <font color="red"><I>file-utils.js</I></font><BR/>
 safeWriteFile<BR/>
+</TD></TR>
+</TABLE>>];
+"utils/json.js-node_modules" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD>node_modules</TD></TR>
+<TR><TD align="center">
 <font color="red"><I>fs</I></font><BR/>
 fs<BR/>
 </TD></TR>
 </TABLE>>];
-
-"utils/list-utils.js" [shape=none, label=<<TABLE cellspacing="0" cellborder="1">
+"utils/json.js"->"utils/json.js-node_modules"
+"utils/list-utils.js" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
 <TR><TD bgcolor="lightblue" align="center"><B>utils/list-utils.js</B></TD></TR>
 <TR><TD align="left">
 addToMapArray<BR/>
@@ -74,9 +82,14 @@ getUniqueNodeModules<BR/>
 getUsedByList<BR/>
 </TD></TR>
 <TR><TD align="center">
+</TD></TR>
+</TABLE>>];
+"utils/list-utils.js-node_modules" [shape = none, label =<<TABLE cellspacing="0" cellborder="1" align="left">
+<TR><TD>node_modules</TD></TR>
+<TR><TD align="center">
 <font color="red"><I>path</I></font><BR/>
 path<BR/>
 </TD></TR>
 </TABLE>>];
-
+"utils/list-utils.js"->"utils/list-utils.js-node_modules"
 }
